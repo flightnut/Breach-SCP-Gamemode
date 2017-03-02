@@ -88,6 +88,10 @@ SPCS = {
 	func = function(pl)
 		pl:SetSCP1048a()
 	end},
+	{name = "SCP 457",
+	func = function(pl)
+		pl:SetSCP457()
+	end},	
 }
 
 /*
