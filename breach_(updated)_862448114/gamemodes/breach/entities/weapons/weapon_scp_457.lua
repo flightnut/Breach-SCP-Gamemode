@@ -36,13 +36,28 @@ SWEP.Secondary.ClipSize		= -1
 SWEP.Secondary.DefaultClip	= -1
 SWEP.Secondary.Automatic	= false
 
+--------------------------------------------------------------------------
+--	Configure Health and Wait time between heals here					--
+-- Do note that the heal amount is per player burning					--
+-- Example:  Amount is set to 1, cooldown to 0.3; There's 5 players		--
+--				It will heal 457 by 5 hp every 0.3 seconds on average	--
+--------------------------------------------------------------------------
+Link2006_457BurnHealAmount = 1 
+Link2006_457BurnHealCooldown = 0.2 
+--Heal system by Link2006, Please optimize it 
+
+
 function SWEP:Deploy()
 	self.Owner:DrawViewModel( false )
 end
 function SWEP:DrawWorldModel()
 end
-function SWEP:Initialize()
+function SWEP:Initialize() --Init the weapon
 	self:SetHoldType("normal")
+	--Link2006's Heal System 
+	if self.Cooldown == nil then --Is there a table inside the weapon? 
+		self.Cooldown = {} --Init a table please, we need it later.
+	end 
 end
 
 function SWEP:Think()
@@ -52,6 +67,22 @@ function SWEP:Think()
 			if v:IsPlayer() then
 				if v:Team() != TEAM_SCP and v:Team() != TEAM_SPEC then
 					v:Ignite(0.3,100)
+					--Heal buff by Link2006, Please optimize it. I put it here just in case it's needed
+					if self.Cooldown == nil then --this is nil.
+						print("[SCP-457] CoolDown table for 457 is nil while we're in Think()? FIX ME")
+						self.Cooldown = {} --Init a table please
+					end 
+					
+					if self.Cooldown[v:UserID()] == nil and v:IsOnFire() then --If there is no value in that table for this UserID and that IS on fire.
+						--print("Burning "..v:UserID()) -- Debug 
+						self.Cooldown[v:UserID()] = true  --Set it to true 
+						self.Owner:SetHealth(self.Owner:Health()+Link2006_457BurnHealAmount) --Heal the owner 
+						timer.Simple(Link2006_457BurnHealCooldown, function() --wait 0.3 seconds
+							self.Cooldown[v:UserID()] = nil --make it nil 
+							--Then remove it maybe? 
+						end)
+					end
+					--END--
 				end
 			end
 		end
