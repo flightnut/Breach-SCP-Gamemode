@@ -1,4 +1,4 @@
---CURRENT VERSION:  1.4
+--CURRENT VERSION:  1.41
 
 if CLIENT then return end --This should be in /autorun/server/, clients can't do anything 
 
@@ -13,9 +13,15 @@ local doorDamage = 0 -- Default: 0 (RECOMMENDED)
 
 --FREEZES ALL PROPS
 print("[Link2006] Script made by: http://steamcommunity.com/profiles/76561197971790479/  :)")
---Updated 1.4 [BREAKING CHANGES]
+--Update 1.41
+--	Fixed people with br_spectate spawning anyway
+--	Added ulx.fancyLogAdmin to tell if an admin spawned spectators
+--	Commented debug text
+--	Added !spawnspec alias 
+
+--Update 1.4 [BREAKING CHANGES]
 -- Changed PostCleanupMap hook name to Link2006_NewRound
--- Added !spawnspec to respawn spectators (as Class D)
+-- Added !specspawn to respawn spectators (as Class D)
 -- Added automatic respawn of spectators 10 seconds after hook was called, should fix an issue where some would be stuck as spectator.
 -- Removed Door damage (they will not re-open automaticly
 -- Removed Elevator damage (It was abused)
@@ -88,7 +94,7 @@ function Link2006_FixDoors()
 	print("[Link2006] Doors fixed")
 end 
 
-function Link2006_RespawnSpecs() 
+function Link2006_RespawnSpecs(pAdmin) 
 	--Respawns spectators into Class Ds
 	--GET POSSIBLE SPAWNS
 	local tSpecSpawns = {}  --table SpecSpawns, This is a table we'll use to store all possible spawns for the Spectators
@@ -107,7 +113,7 @@ function Link2006_RespawnSpecs()
 	print("[Link2006] We have "..#tSpecSpawns.." valid spawns for spectators...")
 	
 	for k,spec in pairs(player.GetAll()) do
-		if spec:Team() == TEAM_SPEC then
+		if (spec:Team() == TEAM_SPEC) and (spec.ActivePlayer ~= false) then --Don't spawn people that have br_spectate set 
 			spec:SetClassD()
 			if #tSpecSpawns > 0 then 
 				specNewSpawn,specKey = table.Random(tSpecSpawns)
@@ -115,9 +121,14 @@ function Link2006_RespawnSpecs()
 				table.remove(tSpecSpawns,specKey)
 				spec:SetPos(specNewSpawn)
 			else
-				print("[Link2006] WARN: RAN OUT OF SPAWNS FOR SPECTATORS!")
+				--We did run out of spawns, let's ignore this for now and spawn them normally...
+				--print("[Link2006] WARN: RAN OUT OF SPAWNS FOR SPECTATORS!")
 			end 
 		end 
+	end 
+	
+	if (pAdmin ~= nil) and (ulx ~= nil) then --Just making sure we do have ulx installed and the admin do exist
+		ulx.fancyLogAdmin( pAdmin, "#A respawned spectators") --Tell everyone which admin respawned spectators.
 	end 
 	print("[Link2006] Spectators have been respawned as Class Ds")
 end 
@@ -125,12 +136,11 @@ end
 print("[Link2006] Creating PlayerSay hook...")
 
 hook.Add( "PlayerSay", "Link2006_SpecSpawn", function( ply, text)
-	if text == "!specspawn" then 
-		print("DEBUG: someone said  !specspawn")
+	if text == "!specspawn" or text == "!spawnspec" then 
+		--print("DEBUG: someone said  !specspawn")
 		if ply:IsAdmin() or ply:IsSuperAdmin() then
-			print("DEBUG: And is an admin!")
-			ply:ChatPrint("Respawning spectators...")
-			Link2006_RespawnSpecs() --Call RespawnSpecs 
+			--print("DEBUG: And is an admin!")
+			Link2006_RespawnSpecs(ply) --Call RespawnSpecs and pass the admin entity through
 			return ""
 		end 
 	end 
@@ -147,7 +157,7 @@ hook.Add("PostCleanupMap","Link2006_NewRound",function() --On New Round
 		Link2006_FixDoors()
 	end)
 	timer.Simple(10, function()
-		Link2006_RespawnSpecs() --:)
+		Link2006_RespawnSpecs(nil) --:)
 	end)
 end)
 
