@@ -1,9 +1,11 @@
---CURRENT VERSION:  1.3 (beta)
+--CURRENT VERSION:  1.4
 
 if CLIENT then return end --This should be in /autorun/server/, clients can't do anything 
 
---Configurable eleavtor damage 
-local elevDamage = 1
+--Configurable damage for elevators and doors 
+local elevDamage = 0 -- Default: 0 (RECOMMENDED)
+local doorDamage = 0 -- Default: 0 (RECOMMENDED)
+
 
 --DON'T TOUCH BELOW PLEASE, THANK YOU 
 -- by http://steamcommunity.com/profiles/76561197971790479/
@@ -11,6 +13,12 @@ local elevDamage = 1
 
 --FREEZES ALL PROPS
 print("[Link2006] Script made by: http://steamcommunity.com/profiles/76561197971790479/  :)")
+--Updated 1.4 [BREAKING CHANGES]
+-- Changed PostCleanupMap hook name to Link2006_NewRound
+-- Added !spawnspec to respawn spectators (as Class D)
+-- Added automatic respawn of spectators 10 seconds after hook was called, should fix an issue where some would be stuck as spectator.
+-- Removed Door damage (they will not re-open automaticly
+-- Removed Elevator damage (It was abused)
 
 --Update 1.3
 -- Attempts to not freeze
@@ -33,7 +41,9 @@ end
 
 --Removing my function before we update it, in case it's still there.
 print("[Link2006] Cleaning old hook...")
-hook.Remove("PostCleanupMap","Link2006_BlockDamage")
+hook.Remove("PostCleanupMap","Link2006_BlockDamage") -- LEGACY, I CHANGED THE HOOK NAME
+hook.Remove("PostCleanupMap","Link2006_NewRound") 
+hook.Remove("PlayerSay","Link2006_SpecSpawn")
 
 --Generating Functions...
 print("[Link2006] Creating Functions...")
@@ -58,7 +68,7 @@ function Link2006_FreezeAllProps()
 end
 
 function Link2006_FixElevators()
-		for k,elev in pairs(ents.FindByClass("func_movelinear")) do --For every entities of func_movelinear; 
+	for k,elev in pairs(ents.FindByClass("func_movelinear")) do --For every entities of func_movelinear; 
 		--Set Crushing damage to 1000 for ALL elevators/func_movelinear, not just a few (<,<)
 		elev:SetKeyValue("BlockDamage",elevDamage)
 		--And set collision_group to only playes (and props); items/weapons goes through.
@@ -67,20 +77,84 @@ function Link2006_FixElevators()
 	print("[Link2006] Elevators fixed")
 end
 
+function Link2006_FixDoors()
+	-- What.
+	for k,door in pairs(ents.FindByClass("func_door")) do --For every fucking doors (aaa)
+		--Disable damage... That's about it really...
+		door:SetKeyValue("dmg",doorDamage) --Remove damage from the func_door
+		--Fixes items making doors stuck ( ... :) )
+		door:SetCollisionGroup(COLLISION_GROUP_PLAYER)
+	end 
+	print("[Link2006] Doors fixed")
+end 
+
+function Link2006_RespawnSpecs() 
+	--Respawns spectators into Class Ds
+	--GET POSSIBLE SPAWNS
+	local tSpecSpawns = {}  --table SpecSpawns, This is a table we'll use to store all possible spawns for the Spectators
+	-- warning, if we exhaust our list; it's RIP and they spawn at the normal one... but it shouldnt be really a problem i guess
+	
+	for k,SpawnPos in pairs(SPAWN_CLASSD) do --We use the original table, add ones without a player to a table
+		--Make a box around that spawn to make sure we can spawn spectators...
+		local SpawnPos_Start = SpawnPos - Vector(24,24,16)
+		local SpawnPos_End = SpawnPos + Vector(24,24,64) --48x48x72 box, makes sure we're safe. 
+		local SpawnPos_Ents = ents.FindInBox(SpawnPos_Start,SpawnPos_End)
+		
+		if #SpawnPos_Ents == 0 then 
+			table.insert(tSpecSpawns,SpawnPos) --Valid spawn for spectators :)
+		end 
+	end 
+	print("[Link2006] We have "..#tSpecSpawns.." valid spawns for spectators...")
+	
+	for k,spec in pairs(player.GetAll()) do
+		if spec:Team() == TEAM_SPEC then
+			spec:SetClassD()
+			if #tSpecSpawns > 0 then 
+				specNewSpawn,specKey = table.Random(tSpecSpawns)
+				--table.RemoveByValue(specNewSpawn,tSpecSpawns)
+				table.remove(tSpecSpawns,specKey)
+				spec:SetPos(specNewSpawn)
+			else
+				print("[Link2006] WARN: RAN OUT OF SPAWNS FOR SPECTATORS!")
+			end 
+		end 
+	end 
+	print("[Link2006] Spectators have been respawned as Class Ds")
+end 
+
+print("[Link2006] Creating PlayerSay hook...")
+
+hook.Add( "PlayerSay", "Link2006_SpecSpawn", function( ply, text)
+	if text == "!specspawn" then 
+		print("DEBUG: someone said  !specspawn")
+		if ply:IsAdmin() or ply:IsSuperAdmin() then
+			print("DEBUG: And is an admin!")
+			ply:ChatPrint("Respawning spectators...")
+			Link2006_RespawnSpecs() --Call RespawnSpecs 
+			return ""
+		end 
+	end 
+end)
+
 print("[Link2006] Creating PostCleanupMap hook...")
 
-hook.Add("PostCleanupMap","Link2006_BlockDamage",function() --On New Round
+hook.Add("PostCleanupMap","Link2006_NewRound",function() --On New Round
 	print("[Link2006] CleanUpMap() called, Waiting a bit...")
 	timer.Simple(1.0,function()
 		print("[Link2006] Running Fixes...")
 		Link2006_FixElevators()
 		Link2006_FreezeAllProps()
+		Link2006_FixDoors()
+	end)
+	timer.Simple(10, function()
+		Link2006_RespawnSpecs() --:)
 	end)
 end)
 
 print("[Link2006] Forcing changes to the map immediately...")
 Link2006_FixElevators()
 Link2006_FreezeAllProps()
+Link2006_FixDoors()
 print("[Link2006] Ready.")
 
 
