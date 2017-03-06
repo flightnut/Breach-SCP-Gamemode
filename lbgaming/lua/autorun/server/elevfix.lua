@@ -1,4 +1,4 @@
-Link2006_version = "1.42"
+Link2006_version = "1.43"
 
 if CLIENT then return end --This should be in /autorun/server/, clients can't do anything
 
@@ -19,6 +19,11 @@ link2006_SpawnPerms = CreateConVar("spawn_perms","Assistant",FCVAR_SERVER_CAN_EX
 
 --FREEZES ALL PROPS
 print("[Link2006] Script made by: http://steamcommunity.com/profiles/76561197971790479/  :)")
+
+--Update 1.43
+--	Added announcement when a player is spawned (Chaos are announced as "MTF", Intended.)
+--	Improved look of messages in chat about Spawning a player
+
 --Update 1.42
 --	Fixed !specspawn not always working (Made it a table instead of text=="!specspawn")
 --	Added spawn_perms ConVar to change who has access to respawn a player.
@@ -67,6 +72,22 @@ hook.Remove("PlayerSay","Link2006_SpecSpawn")
 
 --Generating Functions...
 print("[Link2006] Creating Functions...")
+
+function Link2006_tSayColor(pAdmin, ...) --Calling Admin (to allow us to say "You" to the admin) then Text/Color ad infinitum :)
+	if pAdmin ~= nil then
+		for k,ply in pairs(player.GetAll()) do
+			if pAdmin == ply then
+				ULib.tsayColor(ply,true,team.GetColor(pAdmin:Team()),"You ",Color(255,255,255), ...)
+			else
+				ULib.tsayColor(ply,true,team.GetColor(pAdmin:Team()),pAdmin:Nick().." ",Color(255,255,255), ...)
+			end
+		end
+	else
+		--How the fuck did we get here?
+		--Seriously what the fuck have you done to my code.
+		ULib.tsayColor(ply,true,Color(0,0,0),"(CONSOLE) ",Color(255,255,255), ...)
+	end
+end
 
 
 function Link2006_FixDoors()
@@ -235,7 +256,8 @@ function Link2006_RespawnSpecs(pAdmin,sClass)
 		end
 	end
 	if (pAdmin ~= nil) and (ulx ~= nil) then --Just making sure we do have ulx installed and the admin do exist
-		ulx.fancyLogAdmin( pAdmin, "#A respawned spectators as "..sClass) --Tell everyone which admin respawned spectators.
+		--ulx.fancyLogAdmin( pAdmin, "#A respawned spectators as "..sClass) --Tell everyone which admin respawned spectators.
+		Link2006_tSayColor(pAdmin,"respawned spectators as "..sClass)
 	end
 	print("[Link2006] Spectators have been respawned as "..sClass)
 end
@@ -284,43 +306,75 @@ hook.Add( "PlayerSay", "Link2006_SpecSpawn", function( ply, text)
 						if string.lower(spec_chatArgs[3]) == "classd" then --Class D
 							plySpawn:SetClassD()
 							plySpawn:SetPos(table.Random(SPAWN_CLASSD))
+							--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as class D",plySpawn) --Tell everyone an admin respawned a player as what
+							Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as class D")
 						elseif string.lower(spec_chatArgs[3]) == "scientist" or string.lower(spec_chatArgs[3]) == "researcher" then
 						--Researcher
 							plySpawn:SetScientist()
 							plySpawn:SetPos(table.Random(SPAWN_SCIENT))
+							--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as a researcher",plySpawn) --Tell everyone an admin respawned a player as what
+							Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as a researcher")
 						elseif string.lower(spec_chatArgs[3]) == "commander" then
 							plySpawn:SetCommander()
 							plySpawn:SetPos(table.Random(SPAWN_GUARD))
+							--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as a MTF Commander",plySpawn) --Tell everyone an admin respawned a player as what
+							Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as an MTF Command")
 						elseif string.lower(spec_chatArgs[3]) == "mtf" then
 							plySpawn:SetGuard()
 							plySpawn:SetPos(table.Random(SPAWN_GUARD))
+							--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as a MTF Guard",plySpawn) --Tell everyone an admin respawned a player as what
+							Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as an MTF Guard")
 						elseif string.lower(spec_chatArgs[3]) == "chaos" then
 							plySpawn:SetChaosInsurgency(3)
 							plySpawn:SetPos(table.Random(SPAWN_OUTSIDE))
+							--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as a MTF Nine Tailed Fox",plySpawn) --Tell everyone an admin respawned a player as what
+							--Oh yeah this part i need to make sure the chat doesn't betray my lie ;)
+							Link2006_tSayColor(ply,"respawned ",team.GetColor(TEAM_GUARD),plySpawn:Nick(),Color(255,255,255)," as an MTF Nine Tailed Fox")
+							print("[Link2006] Admin Spawned a Chaos")
 						elseif string.lower(spec_chatArgs[3]) == "sitedirector" then
 							plySpawn:SetSiteDirector(true) --Uh
 							plySpawn:SetPos(table.Random(SPAWN_SCIENT)) --idk where else to put him.
+							--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as a site director",plySpawn) --Tell everyone an admin respawned a player as what
+							Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as a site director")
 						elseif string.lower(spec_chatArgs[3]) == "ntf" then
 							plySpawn:SetNTF()
 							plySpawn:SetPos(table.Random(SPAWN_OUTSIDE))
+							--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as a MTF Nine Tailed Fox",plySpawn) --Tell everyone an admin respawned a player as what
+							Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as an MTF Nine Tailed Fox")
 						elseif string.lower(spec_chatArgs[3]) == "scp-173" then
 							plySpawn:SetSCP173()
+							--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as SCP-173",plySpawn) --Tell everyone an admin respawned a player as what
+							Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as SCP-173")
 						elseif string.lower(spec_chatArgs[3]) == "scp-1048a" then
 							plySpawn:SetSCP1048a()
+							--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as SCP-1048a",plySpawn) --Tell everyone an admin respawned a player as what
+							Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as SCP-1048A")
 						elseif string.lower(spec_chatArgs[3]) == "scp-106" then
 							plySpawn:SetSCP106()
+							--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as SCP-106",plySpawn) --Tell everyone an admin respawned a player as what
+							Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as SCP-106")
 						elseif string.lower(spec_chatArgs[3]) == "scp-049" then
 							plySpawn:SetSCP049()
+							--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as SCP-049",plySpawn) --Tell everyone an admin respawned a player as what
+							Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as SCP-049")
 						elseif string.lower(spec_chatArgs[3]) == "scp-457" then
 							plySpawn:SetSCP457()
+							--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as SCP-457",plySpawn) --Tell everyone an admin respawned a player as what
+							Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as SCP-457")
 						elseif string.lower(spec_chatArgs[3]) == "scp-008-2" then
 							plySpawn:SetSCP0082() --Plague Zombie (Infects players)
 							plySpawn:SetPos(table.Random(SPAWN_ZOMBIES))
+							--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as a SCP-008-2",plySpawn) --Tell everyone an admin respawned a player as what
+							Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as an SCP-008-2")
 						elseif string.lower(spec_chatArgs[3]) == "scp-049-2" or string.lower(spec_chatArgs[3]) == "ntfs" then --real ntf
 							plySpawn:SetSCP0492() --SCP049 Zombie (Kills players)
 							plySpawn:SetPos(table.Random(SPAWN_ZOMBIES))
+							--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as a SCP-049-2",plySpawn) --Tell everyone an admin respawned a player as what
+							Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as an SCP-049-2")
 						elseif string.lower(spec_chatArgs[3]) == "scp-035" or string.lower(spec_chatArgs[3]) == "mtfs" then
 							plySpawn:SetSCP035()
+							--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as SCP-035",plySpawn) --Tell everyone an admin respawned a player as what
+							Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as SCP-035")
 						else
 							ULib.tsayError(ply,"Invalid class specified, Valid Choices are: ",true)
 							ULib.tsayError(ply,"classd,researcher,commander,mtf,chaos,sitedirector,ntf",true)
@@ -350,10 +404,12 @@ hook.Add( "PlayerSay", "Link2006_SpecSpawn", function( ply, text)
 			if (spec_chatArgs[2] ~= nil and spec_chatArgs[2] ~= "") then
 				--Find Player by Name  here
 				local plySpawn,plyErr = ULib.getUser(spec_chatArgs[2],true,ply)
-
+				--TODO: Maybe check if the target is a spectator or not
 				if plySpawn then
 					plySpawn:SetClassD()
 					plySpawn:SetPos(table.Random(SPAWN_CLASSD))
+					--ulx.fancyLogAdmin( pAdmin, "#A respawned #T",plySpawn) --Tell everyone an admin respawned a player as what
+					Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as a class D")
 				else
 					if plyErr then
 						ULib.tsayError(ply,plyErr,true) -- An error occured in ULib.getUser...
