@@ -1,4 +1,4 @@
-Link2006_version = "1.43"
+Link2006_version = "1.44"
 
 if CLIENT then return end --This should be in /autorun/server/, clients can't do anything
 
@@ -19,6 +19,8 @@ link2006_SpawnPerms = CreateConVar("spawn_perms","Assistant",FCVAR_SERVER_CAN_EX
 
 --FREEZES ALL PROPS
 print("[Link2006] Script made by: http://steamcommunity.com/profiles/76561197971790479/  :)")
+--Update 1.44
+--	Added resource.AddFile generation at the bottom :)
 
 --Update 1.43
 --	Added announcement when a player is spawned (Chaos are announced as "MTF", Intended.)
@@ -72,6 +74,8 @@ hook.Remove("PlayerSay","Link2006_SpecSpawn")
 
 --Generating Functions...
 print("[Link2006] Creating Functions...")
+
+
 
 function Link2006_tSayColor(pAdmin, ...) --Calling Admin (to allow us to say "You" to the admin) then Text/Color ad infinitum :)
 	if pAdmin ~= nil then
@@ -448,7 +452,27 @@ print("[Link2006] Forcing changes to the map immediately...")
 Link2006_FixElevators()
 Link2006_FreezeAllProps()
 Link2006_FixDoors()
-print("[Link2006] Ready. Version "..Link2006_version)
+print("[Link2006] Generating list of files needed by clients...")
 
+
+--Taken from https://facepunch.com/showthread.php?t=1469993, heavily modified to be used as resource.AddFile instead
+
+function Link2006_AddFiles(name,remLength)
+	local files, directories = file.Find(name .. "/*", "GAME");
+	-- Delete files
+	for _, f in pairs(files) do
+		--the +1 there is only so we start at "s" from "sound" instead of "/" ...
+		resource.AddFile(string.sub(name.."/"..f,remLength+1))
+	end
+	-- Recurse directories
+	for _, d in pairs(directories) do
+		Link2006_AddFiles(name .. "/" .. d,remLength);
+	end
+end
+
+Link2006_AddFiles("addons/lbgaming/sound",string.len("addons/lbgaming/")) -- string Folder, string (length) to remove
+
+
+print("[Link2006] Ready. Version "..Link2006_version)
 
 --Link2006 was here
