@@ -30,7 +30,7 @@ SWEP.Primary.Ammo			= "AR2"
 SWEP.Primary.NumShots		= 1 -- That's not how you set a burst shot (3), setting this to 1...
 SWEP.Primary.Recoil			= 2.9
 SWEP.Primary.Cone			= 0.0035
-SWEP.Primary.Delay			= 0.2
+SWEP.Primary.Delay			= 0.1
 
 SWEP.Secondary.Ammo			= "none"
 SWEP.DeploySpeed			= 1
