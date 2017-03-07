@@ -47,7 +47,7 @@ end
 --Link2006 fix Start (originally was just SCP173 three times)
 ROLE_SCP035 = "SCP-035"
 ROLE_SCP1048A = "SCP-1048A"
---link2006 fix end 
+--link2006 fix end
 ROLE_SCP173 = "SCP-173"
 ROLE_SCP106 = "SCP-106"
 ROLE_SCP049 = "SCP-049"
@@ -197,7 +197,7 @@ function GM:ScalePlayerDamage( ply, hitgroup, dmginfo )
 				end
 				if postround == false then
 					if at:Team() == TEAM_GUARD then
-						if ply:Team() == TEAM_GUARD then 
+						if ply:Team() == TEAM_GUARD then
 							rdm = true
 						elseif ply:Team() == TEAM_SCI then
 							rdm = true
@@ -215,7 +215,7 @@ function GM:ScalePlayerDamage( ply, hitgroup, dmginfo )
 							rdm = true
 						end
 					elseif at:Team() == TEAM_SCI then
-						if ply:Team() == TEAM_GUARD or ply:Team() == TEAM_SCI then 
+						if ply:Team() == TEAM_GUARD or ply:Team() == TEAM_SCI then
 							rdm = true
 						end
 					end
@@ -225,13 +225,14 @@ function GM:ScalePlayerDamage( ply, hitgroup, dmginfo )
 					if rdm then
 						at:ReduceKarma(KarmaReduce())
 					else
-						mply:AddExp( math.Round(dmginfo:GetDamage() / 3) )
+						--mply:AddExp( math.Round(dmginfo:GetDamage() / 3) )
+						at:AddExp( math.Round(dmginfo:GetDamage() / 3) )
 					end
 				end
 			end
 		end
 	end
-	
+
 	if (hitgroup == HITGROUP_HEAD) then
 		mul = 1.5
 	end
@@ -259,5 +260,3 @@ function GM:ScalePlayerDamage( ply, hitgroup, dmginfo )
 		dmginfo:ScaleDamage(mul)
 	end
 end
-
-

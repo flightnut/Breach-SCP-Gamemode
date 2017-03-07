@@ -22,6 +22,10 @@ local rdmTable = {
         TEAM_SCI,
         TEAM_GUARD
     },
+    [ TEAM_SCP ] = {
+        --They can kill Anyone, No Check here.
+        --Adds support for Preventing SCP vs SCP tho :)
+    },
 }
 
 --KEEP THIS CLOSE, MIGHT BE NEEDED LATER
@@ -34,10 +38,12 @@ hook.Remove("PlayerDeath","AntiRDM")
 hook.Add("PlayerDeath","AntiRDM_lbgaming",function(victim, inflictor, attacker)
     if postround ~= true then
         if attacker:IsPlayer() then --If it's an entity, ignore, it's probably the tesla.
-            if table.HasValue( rdmTable[ attacker:Team() ], victim:Team() ) and (attacker ~= victim) then --attacker is not nil
-                --AWARN ATTACKER
-                print("[AntiRDM] Warning \""..attacker:Nick().."\" for RDM")
-                RunConsoleCommand("awarn_warn",attacker:SteamID(),"\"RDM Detected by AntiRDM\"")
+            if rdmTable[ attacker:Team() ] then --I FORGOT TO CHECK IF THE ATTACKER'S TABLE EXISTED
+                if table.HasValue( rdmTable[ attacker:Team() ], victim:Team() ) and (attacker ~= victim) then --attacker is not nil
+                    --AWARN ATTACKER
+                    print("[AntiRDM] Warning \""..attacker:Nick().."\" for RDM")
+                    RunConsoleCommand("awarn_warn",attacker:SteamID(),"\"RDM Detected by AntiRDM\"")
+                end
             end
         end
     end
