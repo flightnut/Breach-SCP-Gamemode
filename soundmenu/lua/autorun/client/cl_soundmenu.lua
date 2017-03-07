@@ -2,7 +2,25 @@ sm = nil
 Color1 = Color(39,39,39)
 Color2 = Color(199,0,0)
 
-function sm_toggle()
+if not sm then
+	sm = nil
+end
+
+
+function sm_close()
+	if ispanel(sm) then
+		if sm.Close then
+			sm:Close()
+		end
+		if sm.Remove then
+			sm:Remove()
+		end
+	end
+end
+
+function sm_open()
+	if IsValid(sm) then return end
+	--sm doesn't seem to exist
 	if !IsValid(sm) then
 		sm = vgui.Create("DFrame")
 		sm:SetSize(350, 400)
@@ -75,8 +93,8 @@ function sm_toggle()
 			end
 			temp = temp + 31
 		end
-		
-		--Close button 
+
+		--Close button
 		local bClose = vgui.Create("DButton", sm)
 		bClose:SetSize(sm:GetWide()-10, 30)
 		bClose:SetPos(5, temp) --at the bottom
@@ -85,7 +103,8 @@ function sm_toggle()
 			draw.RoundedBox(0,0,0,bClose:GetWide(),bClose:GetTall(),Color1)
 		end
 		bClose.DoClick = function()
-			sm:Remove()
+			--sm:Remove()
+			sm_close()
 		end
 		bClose.OnCursorEntered = function()
 			bClose.Paint = function()
@@ -108,14 +127,32 @@ function sm_toggle()
 			end
 			bClose:DoClick()
 		end
-		
+
 	else
-		sm:Remove()
+		sm_close()
 	end
 end
 
+hook.Add( "KeyPress", "SM_ACTION_PRESS", function( ply, key )
+	if ply:Team() != TEAM_SCP then return end
+	if ply:GetNClass() != ROLE_SCP049 then return end
+	if ( key == IN_ZOOM ) then
+		sm_open()
+	end
+end )
+hook.Add( "KeyRelease", "SM_ACTION_RELEASE", function( ply, key )
+	if ply:Team() != TEAM_SCP then return end
+	if ply:GetNClass() != ROLE_SCP049 then return end
+	if ( key == IN_ZOOM ) then
+		sm_close()
+	end
+end )
+
+--This method spams errors because it runs every tick :|
+--[[
 hook.Add( "Tick", "SM_ACTION", function()
 	if LocalPlayer():GetNClass() != ROLE_SCP049 then return end
 	if LocalPlayer():KeyPressed( IN_ZOOM ) then sm_toggle() end
 	if LocalPlayer():KeyReleased( IN_ZOOM ) then sm_toggle() end
 end )
+]]--

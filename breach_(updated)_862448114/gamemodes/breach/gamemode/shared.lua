@@ -226,7 +226,8 @@ function GM:ScalePlayerDamage( ply, hitgroup, dmginfo )
 						at:ReduceKarma(KarmaReduce())
 					else
 						--mply:AddExp( math.Round(dmginfo:GetDamage() / 3) )
-						at:AddExp( math.Round(dmginfo:GetDamage() / 3) )
+						at:AddKarma( math.Round(dmginfo:GetDamage() / 3) )
+						--print("AddKarma: "..math.Round(dmginfo:GetDamage() / 3)) --I believe this is AddKarma and not AddExp? Idunno ill do some tests.
 					end
 				end
 			end
