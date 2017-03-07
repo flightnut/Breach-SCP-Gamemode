@@ -91,7 +91,7 @@ concommand.Add("antirdm_status",function(ply,cmd,args)
     if !SERVER then
         if !(ply:IsAdmin() or ply:IsSuperAdmin()) then return end
     end
-    ply:PrintMessage(HUD_PRINTCONSOLE, "AntiRDM enabled : "..antirdm_enabled)
+    ply:PrintMessage(HUD_PRINTCONSOLE, "AntiRDM enabled : "..tostring(antirdm_enabled))
 end)
 
 print("[AntiRDM] AntiRDM "..AntiRDMVersion.." by Link2006 & DMX, Ready.")

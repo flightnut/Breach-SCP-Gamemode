@@ -1,19 +1,37 @@
---Version 2.0 of gm_site19 config by Link2006
+--Version 2.1 of gm_site19 config by Link2006
 
 ------------------------------------------------------------------------------
 --Changlog:																	--
+--	2.1																		--
+--	*Moved SCP-035's Spawn 													--
+--	*Changed how some doors works, unlocking them in the process			--
+--	2.0																		--
 --	*Forked current version of mapconfig from workshop as of 27th february	--
 --	*Puts back MTF in medbay BECAUSE LOL NO >_>...							--
 --	*Fixes Gate A															--
 ------------------------------------------------------------------------------
+function Link2006_DoorCheck(ply,ent)
+	if preparing then
+		--ent:Fire("lock")
+		return false
+	else
+		if ent:GetSaveTable( ).m_bLocked then --The door is locked! Unlock it!
+			print("Forcing door unlock!")
+			ent:Fire("unlock")
+			ent:Fire("use") --Open it now so the user doesnt have to press it again :)
+		end
+		return true
+	end
 
-// Serverside map config file, if you want to use a diffrent map change these variables
+end
+-- Serverside map config file, if you want to use a diffrent map change these variables
 
 SPAWN_173 = Vector(1073.8309326172, 1666.5076904297, 229.00595092773)
 SPAWN_106 = Vector(2615.4692382813, 4062.5620117188, -372.16552734375)
 SPAWN_049 = Vector(4664.01171875, -574.69091796875, -443.28875732422)
 SPAWN_457 = Vector(2094.861816, 1733.473389, 0.031250)
-SPAWN_035 = Vector(4137.497070, -176.827774, -443.28875732422)
+--SPAWN_035 = Vector(4137.497070, -176.827774, -443.28875732422)
+SPAWN_035 = Vector(5362.450684,-823.380737,0.031250)
 ENTER914 = Vector(1648.743164, -601.740234, 59.760605)
 EXIR914 = Vector(1651.584229, -1052.149902, 7.470211)
 OUTSIDESOUNDS = Vector(-94.663620, 5188.103027, 860.134155)
@@ -119,7 +137,7 @@ SPAWN_GUARD = {
 }
 --]]
 SPAWN_GUARD = {
-	--FIXED BY LINK2006 OK THX HAVE FUN NOW PLEASE DONT BOTHER ME ANYMORE :( 
+	--FIXED BY LINK2006 OK THX HAVE FUN NOW PLEASE DONT BOTHER ME ANYMORE :(
 	--I generated these, not manually picked, SHOULD STILL WORK
 	--If it doesnt then uh ill fix it again ok thx
 	Vector(-1451,3436,10),
@@ -250,7 +268,7 @@ SPAWN_KEYCARD3 = {
 		Vector(644.41900634766, -1186.9499511719, 61.03125),
 		Vector(555.92492675781, -1381.3018798828, 25.03125),
 		Vector(683.50408935547, -1688.6999511719, 25.03125),
-		Vector(1269.9512939453, 1787.2283935547, 153.03125), // in 173
+		Vector(1269.9512939453, 1787.2283935547, 153.03125), -- in 173
 	},
 	scp372 = {
 		Vector(-1098.166015625, -590.10766601563, 25.03125),
@@ -476,7 +494,7 @@ BUTTONS = {
 		usesounds = true,
 		clevel = 3
 	},
-	{	--Fixed by Link2006 
+	{	--Fixed by Link2006
 		name = "Control room",
 		pos = Vector(-2328, 3775, 53),
 		clevel = 4
@@ -591,6 +609,16 @@ BUTTONS = {
 		pos = Vector(3664.000000, 2156.000000, 59.000000),
 		usesounds = true,
 		clevel = 5
+	},
+	{
+		name = "SCP 035",
+		pos = Vector(5480.000000,-521.000000,53.000000),
+		canactivate = function(pl, ent) return Link2006_DoorCheck(pl,ent) end --You can't open the door yet.
+	},
+	{
+		name = "HCZ Elevators", --What can i do to force this entity to always open :c?
+		pos = Vector(4809.000000,-152.000000,53.000000),
+		canactivate = function(pl, ent) return Link2006_DoorCheck(pl,ent) end --
 	}
 
 }
