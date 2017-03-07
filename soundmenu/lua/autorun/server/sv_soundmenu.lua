@@ -25,7 +25,13 @@ net.Receive("sm_emitsound",function(ln, ply)
 	
 	local Snd = says[SndKey][1] --The sound file in the table,with the key that the client sent. :) 
 	
-	ply:EmitSound( Sound(Snd), 100, 100, 1, CHAN_AUTO )
+	--sound,level,pitch,volume,channel
+	--ply:EmitSound( Sound(Snd), 100, 100, 1, CHAN_AUTO )
+	--Attempt at making this actually 3D
+	
+	--EmitSound( string soundName, Vector position, number entity, number channel=CHAN_AUTO, number volume=1, number soundLevel=75, number soundFlags=0, number pitch=100 )
+	EmitSound(Sound(Snd),ply:GetPos(),ply:EntIndex(), CHAN_AUTO, 1, SNDLVL_80dB, SND_NOFLAGS, 100)
+	
 	ply:SetNWBool("sm_emitallowed",false)
 
 	timer.Create("sm"..math.random(30100,30500),5,1,function()

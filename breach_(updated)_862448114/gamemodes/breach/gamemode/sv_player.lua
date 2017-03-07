@@ -181,7 +181,7 @@ function mply:SetSCP1048a()
 	self:SetPos(SPAWN_173 + Vector(0, 30, 0))
 	self:StripWeapons()
 	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_SCP) 
+	self:SetTeam(TEAM_SCP)
 	self:SetNClass(ROLE_SCP1048A)
 	self:SetModel("models/player/mrsilver/SCP-1048-A.mdl")
 	self:SetHealth(500)
@@ -232,12 +232,15 @@ function mply:SetSCP035()
 	self:SetNoTarget( true )
 	timer.Create( "035weps", 5, 1, function()
 	if self:GetNClass() == ROLE_SCP035 then
-	self:GiveNTFwep()
-	self:GiveAmmo(450, "SMG1", true)
-	self:GiveAmmo(450, "AR2", true)
+	--self:GiveNTFwep()
+	self:Give("weapon_mtf_deagle") --YOU GET A DEAGLE INSTEAD. >:(
+	--self:GiveAmmo(450, "SMG1", true) --No.
+	--self:GiveAmmo(450, "AR2", true) -- Nope.
+	self:GiveAmmo(1000, "Pistol") --Yes.
 	self:Give("weapon_crowbar")
 	self:Give("keycard_level3")
 	self:Give("item_radio")
+	self:SelectWeapon("weapon_mtf_deagle")
 	end
 	end)
 	self:SetupHands()
@@ -785,7 +788,7 @@ end )
 function mply:SpectatePlayerRight()
 	if !self:Alive() then return end
 	if self:GetObserverMode() != OBS_MODE_IN_EYE and
-	   self:GetObserverMode() != OBS_MODE_CHASE 
+	   self:GetObserverMode() != OBS_MODE_CHASE
 	then return end
 	self:SetNoDraw(true)
 	local allply = GetAlivePlayers()
@@ -795,7 +798,7 @@ function mply:SpectatePlayerRight()
 	end
 	self.SpecPly = self.SpecPly - 1
 	if self.SpecPly < 1 then
-		self.SpecPly = #allply 
+		self.SpecPly = #allply
 	end
 	for k,v in pairs(allply) do
 		if k == self.SpecPly then
@@ -807,7 +810,7 @@ end
 function mply:SpectatePlayerLeft()
 	if !self:Alive() then return end
 	if self:GetObserverMode() != OBS_MODE_IN_EYE and
-	   self:GetObserverMode() != OBS_MODE_CHASE 
+	   self:GetObserverMode() != OBS_MODE_CHASE
 	then return end
 	self:SetNoDraw(true)
 	local allply = GetAlivePlayers()
@@ -843,7 +846,7 @@ function mply:ChangeSpecMode()
 		self:Spectate(OBS_MODE_CHASE)
 	end
 	*/
-	
+
 	if m == OBS_MODE_IN_EYE then
 		self:Spectate(OBS_MODE_CHASE)
 		self:SpectatePlayerLeft()
@@ -855,7 +858,7 @@ function mply:ChangeSpecMode()
 	else
 		self:Spectate(OBS_MODE_ROAMING)
 	end
-	
+
 end
 
 --Moved everything into ONE function so i don't have to keep editing BOTH code
@@ -863,8 +866,8 @@ end
 function Link2006_RespawnPlayer(ply,num,target)  --Calling Player (admins), Selected Team (example: Class D), Target Player (Who is getting respawned)
 	--Just to be REALLY safe :)
 	if !target:IsValid() then return end --Is it a valid target? If not, Abort spawn
-	if !target:IsPlayer() then return end  --Is the target a player? If not, Abort spawn 
-	
+	if !target:IsPlayer() then return end  --Is the target a player? If not, Abort spawn
+
 	--if ( table.HasValue( { "Developer", "superadmin", "developer", "admin"}, ply:GetUserGroup() ) ) then
 	if ply:IsAdmin() or ply:IsSuperAdmin() then --If admin called the respawn, Respawn target.
 		if num == 1 then
@@ -910,17 +913,16 @@ function Link2006_RespawnPlayer(ply,num,target)  --Calling Player (admins), Sele
 			target:SetSCP035()
 		end
 	end
-end 
+end
 
 net.Receive( "spawnas", function( len, ply )
 	local num = net.ReadInt( 32 )
 	Link2006_RespawnPlayer(ply,num,ply) --Admin respawns themselves
-	
+
 end)
-	
+
 net.Receive( "spawnthemas", function( len, ply )
 	local num = net.ReadInt( 32 )
 	local trg = net.ReadEntity()
 	Link2006_RespawnPlayer(ply,num,trg) --Admin respawns a player
 end)
-
