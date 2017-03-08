@@ -61,8 +61,11 @@ local function antirdm_respawn(victim,rl,vicTeam)
         victim:SetSCP457()
     elseif rl == ROLE_SCP0492 then
         victim:SetSCP0492()
-    elseif rl == ROLE_MTFGUARD then
+    elseif rl == ROLE_MTFGUARD and vicTeam == TEAM_GUARD then --If they are MTF
         victim:SetGuard()
+        victim:SetPos(table.Random(SPAWN_GUARD))
+    elseif rl == ROLE_MTFGUARD and vicTeam == TEAM_CHAOS then --If they are MTF CI
+        victim:SetChaosInsurgency(1) --Normal CI
         victim:SetPos(table.Random(SPAWN_GUARD))
     elseif rl == ROLE_MTFCOM then
         victim:SetCommander()
@@ -70,8 +73,8 @@ local function antirdm_respawn(victim,rl,vicTeam)
     elseif rl == ROLE_MTFNTF and vicTeam == TEAM_GUARD then -- If they are NTF...
         victim:SetNTF() --Respawn as NTF, they were NTF
         victim:SetPos(table.Random(SPAWN_OUTSIDE))
-    elseif rl == ROLE_MTFNTF and vicTeam == TEAM_CHAOS then --if they are Chaos (Spy)
-        victim:SetChaosInsurgency(3) --Respawn as Chaos, they were Chaos :)
+    elseif rl == ROLE_MTFNTF and vicTeam == TEAM_CHAOS then --if they are NTF Chaos (Spy)
+        victim:SetChaosInsurgency(3) --Respawn as NTF Chaos
         victim:SetPos(table.Random(SPAWN_OUTSIDE))
     elseif rl == ROLE_CLASSD then
         victim:SetClassD()
@@ -98,6 +101,7 @@ local function antirdm(victim, inflictor, attacker)
                 if table.HasValue( rdmTable[ attacker:Team() ], victim:Team() ) and (attacker ~= victim) then --attacker is not nil
                     --AWARN ATTACKER
                     print("[AntiRDM] Warning \""..attacker:Nick().."\" for RDM")
+                    ULib.tsayColor(nil,true,Color(255,255,255),"[AntiRDM] \"",team.GetColor(attacker:Team()),attacker:Nick(),Color(255,255,255),"\" was warned for killing \"",team.GetColor(victim:Team()),victim:Nick(),Color(255,255,255),"\"")
                     RunConsoleCommand("awarn_warn",attacker:SteamID(),"\"RDM Detected by AntiRDM\"")
                     local rl = victim:GetNClass()
                     local vicTeam = victim:Team()
