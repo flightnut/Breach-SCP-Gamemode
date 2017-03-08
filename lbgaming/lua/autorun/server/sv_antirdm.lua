@@ -103,7 +103,7 @@ local function antirdm(victim, inflictor, attacker)
                     local rl = victim:GetNClass()
                     local vicTeam = victim:Team()
                     if postround ~= true then
-                        ULib.tsayColor(ply,true,Color(0,255,0),"[AntiRDM] You will be respawned in a few moments")
+                        ULib.tsayColor(victim,true,Color(0,255,0),"[AntiRDM] You will be respawned in a few moments")
                     end
                     timer.Simple(7,function() --7 seconds JUST To be sure...
                         if (postround ~= true) and victim:Team() == TEAM_SPEC then --Respawn if the round didn't end yet AND the victim is _still_ dead (Fixes respawning when they're alive)
