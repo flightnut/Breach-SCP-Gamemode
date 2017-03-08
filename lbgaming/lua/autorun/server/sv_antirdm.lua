@@ -46,7 +46,6 @@ timer.Simple(1,rdmTableInit)
 hook.Remove("PlayerDeath","AntiRDM_lbgaming")
 
 local function antirdm_respawn(victim,rl,vicTeam)
-
     -- I copy-pasted from how it checks languages
     if rl == ROLE_SCP035 then
         victim:SetSCP035()
@@ -68,7 +67,7 @@ local function antirdm_respawn(victim,rl,vicTeam)
     elseif rl == ROLE_MTFCOM then
         victim:SetCommander()
         victim:SetPos(table.Random(SPAWN_GUARD))
-    elseif rl == ROLEMTFNTF and vicTeam == TEAM_GUARD then -- If they are NTF...
+    elseif rl == ROLE_MTFNTF and vicTeam == TEAM_GUARD then -- If they are NTF...
         victim:SetNTF() --Respawn as NTF, they were NTF
         victim:SetPos(table.Random(SPAWN_OUTSIDE))
     elseif rl == ROLE_MTFNTF and vicTeam == TEAM_CHAOS then --if they are Chaos (Spy)
