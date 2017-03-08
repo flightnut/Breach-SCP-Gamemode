@@ -45,6 +45,53 @@ timer.Simple(1,rdmTableInit)
 --Just to make sure we dont have dupes while testing.
 hook.Remove("PlayerDeath","AntiRDM_lbgaming")
 
+local function antirdm_respawn(victim,rl,vicTeam)
+
+    -- I copy-pasted from how it checks languages
+    if rl == ROLE_SCP035 then
+        victim:SetSCP035()
+    elseif rl == ROLE_SCP1048A then
+        victim:SetSCP1048a()
+    elseif rl == ROLE_SCP173 then
+        victim:SetSCP173()
+    elseif rl == ROLE_SCP106 then
+        victim:SetSCP106()
+    elseif rl == ROLE_SCP049 then
+        victim:SetSCP049()
+    elseif rl == ROLE_SCP457 then
+        victim:SetSCP457()
+    elseif rl == ROLE_SCP0492 then
+        victim:SetSCP0492()
+    elseif rl == ROLE_MTFGUARD then
+        victim:SetGuard()
+        victim:SetPos(table.Random(SPAWN_GUARD))
+    elseif rl == ROLE_MTFCOM then
+        victim:SetCommander()
+        victim:SetPos(table.Random(SPAWN_GUARD))
+    elseif rl == ROLEMTFNTF and vicTeam == TEAM_GUARD then -- If they are NTF...
+        victim:SetNTF() --Respawn as NTF, they were NTF
+        victim:SetPos(table.Random(SPAWN_OUTSIDE))
+    elseif rl == ROLE_MTFNTF and vicTeam == TEAM_CHAOS then --if they are Chaos (Spy)
+        victim:SetChaosInsurgency(3) --Respawn as Chaos, they were Chaos :)
+        victim:SetPos(table.Random(SPAWN_OUTSIDE))
+    elseif rl == ROLE_CLASSD then
+        victim:SetClassD()
+        victim:SetPos(table.Random(SPAWN_CLASSD))
+    elseif rl == ROLE_RES then
+        victim:SetScientist()
+        victim:SetPos(table.Random(SPAWN_SCIENT))
+    elseif rl == ROLE_CHAOS then --TDM Chaos (Unused!)
+        victim:SetChaosInsurgency() --Not the spy version.
+        victim:SetPos(table.Random(SPAWN_OUTSIDE)) --Idk where to spawn normal CI
+        print("WARN: THIS IS USUALLY NEVER CALLED, WHAT HAPPENED?")
+    else
+        print("Role was "..rl)
+        print("Team was "..vicTeam)
+        print("We could not respawn the RDM Victim, Role not found.")
+    end
+
+end
+
 local function antirdm(victim, inflictor, attacker)
     if postround ~= true then
         if attacker:IsPlayer() then --If it's an entity, ignore, it's probably the tesla.
@@ -53,6 +100,16 @@ local function antirdm(victim, inflictor, attacker)
                     --AWARN ATTACKER
                     print("[AntiRDM] Warning \""..attacker:Nick().."\" for RDM")
                     RunConsoleCommand("awarn_warn",attacker:SteamID(),"\"RDM Detected by AntiRDM\"")
+                    local rl = victim:GetNClass()
+                    local vicTeam = victim:Team()
+                    if postround ~= true then
+                        ULib.tsayColor(ply,true,Color(0,255,0),"[AntiRDM] You will be respawned in a few moments")
+                    end
+                    timer.Simple(7,function() --7 seconds JUST To be sure...
+                        if (postround ~= true) and victim:Team() == TEAM_SPEC then --Respawn if the round didn't end yet AND the victim is _still_ dead (Fixes respawning when they're alive)
+                            antirdm_respawn(victim,rl,vicTeam)
+                        end
+                    end)
                 end
             end
         end

@@ -291,11 +291,16 @@ hook.Add( "PlayerSay", "Link2006_SpecSpawn", function( ply, text)
 					Link2006_RespawnSpecs(ply,"ntf") --Respawn as NTF
 				elseif string.lower(spec_chatArgs[2]) == "mtf" or string.lower(spec_chatArgs[2]) == "mtfs" then
 					Link2006_RespawnSpecs(ply,"mtf") --Respawn as MTF
-				else --Class D (invalid args or simply "classd")
+				elseif string.lower(spec_chatArgs[2]) == "classd" then --Class D (invalid args or simply "classd")
 					Link2006_RespawnSpecs(ply,"classd") --Call RespawnSpecs and pass the admin entity through
+				else
+					ULib.tsayError(ply,"Invalid class specified, Valid Choices are: ",true)
+					ULib.tsayError(ply,"classd,researcher,mtf,chaos,ntf",true)
 				end
 			else -- No arguments or player is an assistant.
-				Link2006_RespawnSpecs(ply,"classd") --Assistant only
+				--Link2006_RespawnSpecs(ply,"classd") --Assistant only
+				ULib.tsayError(ply,"No class specified, Valid Choices are: ",true)
+				ULib.tsayError(ply,"classd,researcher,mtf,chaos,ntf",true)
 			end
 			--Silence chat
 			return ""
