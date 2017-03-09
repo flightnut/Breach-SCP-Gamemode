@@ -451,10 +451,18 @@ hook.Add( "PlayerSay", "Link2006_SpecSpawn", function( ply, text)
 				local plySpawn,plyErr = ULib.getUser(spec_chatArgs[2],true,ply)
 				--TODO: Maybe check if the target is a spectator or not
 				if plySpawn then
-					plySpawn:SetClassD()
-					plySpawn:SetPos(table.Random(SPAWN_CLASSD))
-					--ulx.fancyLogAdmin( pAdmin, "#A respawned #T",plySpawn) --Tell everyone an admin respawned a player as what
-					Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as a class D")
+					if plySpawn.ActivePlayer ~= false then
+						plySpawn:SetClassD()
+						plySpawn:SetPos(table.Random(SPAWN_CLASSD))
+						--ulx.fancyLogAdmin( pAdmin, "#A respawned #T",plySpawn) --Tell everyone an admin respawned a player as what
+						Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as a class D")
+					else
+						if plySpawn == ply then
+							ULib.tsayError(ply,"You have br_spectate set to true",true)
+						else
+							ULib.tsayError(ply,plySpawn:Nick().." has br_spectate set to true, sorry",true)
+						end
+					end
 				else
 					if plyErr then
 						ULib.tsayError(ply,plyErr,true) -- An error occured in ULib.getUser...
