@@ -121,7 +121,7 @@ english.starttexts = {
 	{
 		"You are the SCP-035",
 		{"Your objective is to escape the facility",
-		"You behave like a human but you aren't"}
+		"Cooperate with Class Ds to escape safely"}
 	},
 	{
 		"You are the SCP-1048-A",

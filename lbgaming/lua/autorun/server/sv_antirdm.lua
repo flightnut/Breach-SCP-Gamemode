@@ -1,10 +1,10 @@
 --Anti RDM using AWarn
 --  Original by DMX
 --  Modified by Link2006
---Version 1.0
+--Version 1.2
 
 print("[AntiRDM] Loading AntiRDM...")
-local AntiRDMVersion = "1.0" --:)
+local AntiRDMVersion = "1.2" --I should have an habit of updating this :|
 local rdmTable = {}
 local AntiRDM
 function rdmTableInit()
@@ -29,8 +29,7 @@ function rdmTableInit()
                 TEAM_GUARD
             },
             [ TEAM_SCP ] = {
-                --They can kill Anyone, No Check here.
-                --Adds support for Preventing SCP vs SCP tho :)
+                --Do not set anyone here, simply here to prevent crashes
             },
         }
     end
@@ -43,7 +42,6 @@ timer.Simple(1,rdmTableInit)
 --      --AWARN
 --  end
 --Just to make sure we dont have dupes while testing.
-hook.Remove("PlayerDeath","AntiRDM_lbgaming")
 
 local function antirdm_respawn(victim,rl,vicTeam)
     -- I copy-pasted from how it checks languages
@@ -98,7 +96,8 @@ local function antirdm(victim, inflictor, attacker)
     if postround ~= true then
         if attacker:IsPlayer() then --If it's an entity, ignore, it's probably the tesla.
             if rdmTable[ attacker:Team() ] then --I FORGOT TO CHECK IF THE ATTACKER'S TABLE EXISTED
-                if table.HasValue( rdmTable[ attacker:Team() ], victim:Team() ) and (attacker ~= victim) then --attacker is not nil
+                if (table.HasValue( rdmTable[ attacker:Team() ], victim:Team() ) and (attacker ~= victim)) --If Attacker and Victim were allies
+                or (attacker:GetNClass() == ROLE_SCP035 and victim:Team() == TEAM_CLASSD) then --OR SCP-035 killed a Class D
                     --AWARN ATTACKER
                     print("[AntiRDM] Warning \""..attacker:Nick().."\" for RDM")
                     ULib.tsayColor(nil,true,Color(255,255,255),"[AntiRDM] \"",team.GetColor(attacker:Team()),attacker:Nick(),Color(255,255,255),"\" was warned for killing \"",team.GetColor(victim:Team()),victim:Nick(),Color(255,255,255),"\"")
@@ -119,7 +118,15 @@ local function antirdm(victim, inflictor, attacker)
     end
 end
 
-hook.Add("PlayerDeath","AntiRDM_lbgaming",antirdm)
+hook.Remove("PlayerDeath","AntiRDM_lbgaming") --Remove the hook (I moved it to here so hooks are all grouped in 1 place.)
+hook.Add("PlayerDeath","AntiRDM_lbgaming",antirdm) --Remake it
+
+--TODO: Track people who made most damage until the victim dies.
+--      Then, Sort the table to have the MOST damage be first
+--      and when someone dies, if they're in the same team as attacker, warn attacker
+--      AND if the most damage was ALSO in the same team, warn them as well
+--      (I probably should do a check for the killer if they made less than 40% damage, not flag the RDM )
+
 
 antirdm_enabled = true
 
