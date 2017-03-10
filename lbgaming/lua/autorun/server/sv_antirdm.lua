@@ -1,10 +1,11 @@
 --Anti RDM using AWarn
 --  Original by DMX
 --  Modified by Link2006
---Version 1.2
+--Version 1.3
 
 print("[AntiRDM] Loading AntiRDM...")
-local AntiRDMVersion = "1.2" --I should have an habit of updating this :|
+local AntiRDMVersion = "1.3" --I should have an habit of updating this :|
+antirdm_enabled = true --Global so we can have it everywhere, also put it here so it's easy to find
 local rdmTable = {}
 local AntiRDM
 function rdmTableInit()
@@ -141,8 +142,12 @@ local function antirdm(victim, inflictor, attacker)
                 or (attacker:GetNClass() == ROLE_SCP035 and victim:Team() == TEAM_CLASSD) then --OR SCP-035 killed a Class D
                     --AWARN ATTACKER
                     print("[AntiRDM] Warning \""..attacker:Nick().."\" for RDM")
-                    ULib.tsayColor(nil,true,Color(255,255,255),"[AntiRDM] \"",team.GetColor(attacker:Team()),attacker:Nick(),Color(255,255,255),"\" was warned for killing \"",team.GetColor(victim:Team()),victim:Nick(),Color(255,255,255),"\"")
-                    RunConsoleCommand("awarn_warn",attacker:SteamID(),"\"RDM Detected by AntiRDM\"")
+                    if antirdm_enabled and (tostring(roundtype.name) ~= "Trouble in SCP Town") then --As long it's not TTT lol ...
+                        ULib.tsayColor(nil,true,Color(255,0,0),"[AntiRDM]",Color(255,255,255)," \"",team.GetColor(attacker:Team()),attacker:Nick(),Color(255,255,255),"\" was warned for killing \"",team.GetColor(victim:Team()),victim:Nick(),Color(255,255,255),"\"")
+                        RunConsoleCommand("awarn_warn",attacker:SteamID(),"\"RDM Detected by AntiRDM\"")
+                    else
+                        ULib.tsayColor(attacker,true,Color(255,0,0),"[AntiRDM]",Color(255,255,255)," Be careful, You killed \"",team.GetColor(victim:Team()),victim:Nick(),Color(255,255,255),"\"")
+                    end
                     local rl = victim:GetNClass()
                     local vicTeam = victim:Team()
                     if postround ~= true then
@@ -171,7 +176,6 @@ hook.Add("PlayerDeath","AntiRDM_lbgaming",antirdm) --Remake it
 --      (I probably should do a check for the killer if they made less than 40% damage, not flag the RDM )
 
 
-antirdm_enabled = true
 
 concommand.Add("antirdm_disable",function(ply,cmd,args)
     if !SERVER then
@@ -180,7 +184,7 @@ concommand.Add("antirdm_disable",function(ply,cmd,args)
 
     if antirdm_enabled == true then
         antirdm_enabled = false
-        hook.Remove("PlayerDeath","AntiRDM_lbgaming")
+        --hook.Remove("PlayerDeath","AntiRDM_lbgaming")
         ply:PrintMessage(HUD_PRINTCONSOLE, "AntiRDM disabled")
     end
 end)
@@ -192,7 +196,7 @@ concommand.Add("antirdm_enable",function(ply,cmd,args)
 
     if antirdm_enabled == false then
         antirdm_enabled = true
-        hook.Add("PlayerDeath","AntiRDM_lbgaming",antirdm)
+        --hook.Add("PlayerDeath","AntiRDM_lbgaming",antirdm)
         ply:PrintMessage(HUD_PRINTCONSOLE, "AntiRDM enabled")
     end
 end)
