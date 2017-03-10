@@ -512,7 +512,11 @@ BUTTONS = {
 		pos = Vector(-1928.000000, 3551.000000, 53.000000),
 		customdenymsg = "Wait for the round to start",
 		canactivate = function(pl, ent)
-			//if roundtype.mtfandscpdelay == false then return true end
+			if roundtype then
+				if roundtype.mtfandscpdelay == false then
+					return true
+				end
+			end
 			if preparing then
 				//pl:PrintMessage(HUD_PRINTCENTER, "Wait for the round to start")
 				return false
@@ -618,7 +622,7 @@ BUTTONS = {
 	{
 		name = "HCZ Elevators", --What can i do to force this entity to always open :c?
 		pos = Vector(4809.000000,-152.000000,53.000000),
-		canactivate = function(pl, ent) return Link2006_DoorCheck(pl,ent) end --
+		canactivate = function(pl, ent) return Link2006_DoorCheck(pl,ent) end
 	}
 
 }

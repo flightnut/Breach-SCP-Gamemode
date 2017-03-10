@@ -17,7 +17,7 @@ function ZombieGamemode()
 	local all = GetActivePlayers()
 	local allspawns = {}
 	table.Add(allspawns, SPAWN_GUARD)
-	//table.Add(allspawns, SPAWN_OUTSIDE)
+	--table.Add(allspawns, SPAWN_OUTSIDE)
 	table.Add(allspawns, SPAWN_SCIENT)
 	table.Add(allspawns, SPAWN_CLASSD)
 	for i=1, #all do
@@ -28,14 +28,24 @@ function ZombieGamemode()
 		table.RemoveByValue(allspawns, spawn)
 		table.RemoveByValue(all, pl)
 	end
+
+	--Link2006's ZombieGamemode fix
+	InfectPeople()
 end
 
 function InfectPeople()
 	local all = GetActivePlayers()
+	local zombSpawns = table.Copy(SPAWN_ZOMBIES)
 	for i=1, #all / 4 do
-		local pl = table.Random(all)
-		pl:SetSCP0082()
-		table.RemoveByValue(all, pl)
+		if #zombSpawns > 0 then --Shuffle players into random Zombie spawns until we have no more spawns available for them.
+			local pl = table.Random(all)
+			pl:SetSCP0082()
+			--Link2006's ZombieGamemode Fix
+			local newZomb = table.Random(zombSpawns)
+			pl:SetPos(newZomb)
+			table.RemoveByValue(zombSpawns,newZomb)
+			table.RemoveByValue(all, pl)
+		end
 	end
 end
 
@@ -115,6 +125,6 @@ ROUNDS = {
 		minplayers = 6,
 		allowntfspawn = false,
 		mtfandscpdelay = false,
-		onroundstart = InfectPeople
+		--onroundstart = InfectPeople --Disabled to make it so people gets Infected
 	},
 }

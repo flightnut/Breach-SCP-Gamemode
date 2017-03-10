@@ -29,7 +29,7 @@ function rdmTableInit()
                 TEAM_GUARD
             },
             [ TEAM_SCP ] = {
-                --Do not set anyone here, simply here to prevent crashes
+                TEAM_SCP --Because of course SCP-035 gets point for killing other SCPs ... Why ?
             },
         }
     end
@@ -70,10 +70,26 @@ local function antirdm_respawn(victim,rl,vicTeam)
         victim:SetPos(table.Random(SPAWN_GUARD))
     elseif rl == ROLE_MTFNTF and vicTeam == TEAM_GUARD then -- If they are NTF...
         victim:SetNTF() --Respawn as NTF, they were NTF
-        victim:SetPos(table.Random(SPAWN_OUTSIDE))
+        if roundtype then
+            if (roundtype.name == "Assault") then --If it's the Assault gamemode
+                victim:SetPos(table.Random(SPAWN_GUARD))
+            else
+                victim:SetPos(table.Random(SPAWN_OUTSIDE))
+            end
+        else
+            victim:SetPos(table.Random(SPAWN_OUTSIDE))
+        end
     elseif rl == ROLE_MTFNTF and vicTeam == TEAM_CHAOS then --if they are NTF Chaos (Spy)
         victim:SetChaosInsurgency(3) --Respawn as NTF Chaos
-        victim:SetPos(table.Random(SPAWN_OUTSIDE))
+        if roundtype then
+            if (roundtype.name == "Trouble in SCP Town") then --If it's the TTT Gamemode, respawn them lmao
+                victim:SetPos(table.Random(SPAWN_GUARD))
+            else
+                victim:SetPos(table.Random(SPAWN_OUTSIDE))
+            end
+        else
+            victim:SetPos(table.Random(SPAWN_OUTSIDE))
+        end
     elseif rl == ROLE_CLASSD then
         victim:SetClassD()
         victim:SetPos(table.Random(SPAWN_CLASSD))
@@ -82,17 +98,42 @@ local function antirdm_respawn(victim,rl,vicTeam)
         victim:SetPos(table.Random(SPAWN_SCIENT))
     elseif rl == ROLE_CHAOS then --TDM Chaos (Unused!)
         victim:SetChaosInsurgency() --Not the spy version.
-        victim:SetPos(table.Random(SPAWN_OUTSIDE)) --Idk where to spawn normal CI
-        print("WARN: THIS IS USUALLY NEVER CALLED, WHAT HAPPENED?")
+        if roundtype then
+            if (roundtype.name == "Assault") then --If it's the Assault gamemode
+                victim:SetChaosInsurgency(4) --Reset their class to the assault one, needs to be 4 apparently.
+                victim:SetPos(table.Random(SPAWN_CLASSD))
+            else
+                victim:SetPos(table.Random(SPAWN_OUTSIDE)) --Idk where to spawn normal CI
+            end
+        else
+            victim:SetPos(table.Random(SPAWN_OUTSIDE)) --Idk where to spawn normal CI
+        end
+        --print("WARN: THIS IS USUALLY NEVER CALLED, WHAT HAPPENED?")
     else
-        print("Role was "..rl)
-        print("Team was "..vicTeam)
-        print("We could not respawn the RDM Victim, Role not found.")
+        print('[AntiRDM] RESPAWN FAILED: ')
+        print("[AntiRDM] Role was "..rl)
+        vicTeam_name= {
+            TEAM_SCP = "Team SCP (1)",
+            TEAM_GUARD = "Team Guard(2)",
+            TEAM_CLASSD = "Team ClassD(3)",
+            TEAM_SPEC = "Team Spec(4)",
+            TEAM_SCI = "Team_SCI(5)",
+            TEAM_CHAOS = "Team_Chaos(6)",
+        }
+        print("[AntiRDM] Team was "..vicTeam_name[TEAM_SCP])
+        print("[AntiRDM] We could not respawn the RDM Victim, Role not found.")
     end
 
 end
 
+if br_roundnospec == nil then
+    br_roundnospec = GetConVar("br_roundnospec")
+end
+
 local function antirdm(victim, inflictor, attacker)
+    if br_roundnospec == nil then
+        br_roundnospec = GetConVar("br_roundnospec")
+    end
     if postround ~= true then
         if attacker:IsPlayer() then --If it's an entity, ignore, it's probably the tesla.
             if rdmTable[ attacker:Team() ] then --I FORGOT TO CHECK IF THE ATTACKER'S TABLE EXISTED
@@ -107,11 +148,13 @@ local function antirdm(victim, inflictor, attacker)
                     if postround ~= true then
                         ULib.tsayColor(victim,true,Color(0,255,0),"[AntiRDM] You will be respawned in a few moments")
                     end
-                    timer.Simple(7,function() --7 seconds JUST To be sure...
-                        if (postround ~= true) and victim:Team() == TEAM_SPEC then --Respawn if the round didn't end yet AND the victim is _still_ dead (Fixes respawning when they're alive)
-                            antirdm_respawn(victim,rl,vicTeam)
-                        end
-                    end)
+                    if br_roundnospec:GetBool() ~= true then
+                        timer.Simple(7,function() --7 seconds JUST To be sure...
+                            if (postround ~= true) and victim:Team() == TEAM_SPEC then --Respawn if the round didn't end yet AND the victim is _still_ dead (Fixes respawning when they're alive)
+                                antirdm_respawn(victim,rl,vicTeam)
+                            end
+                        end)
+                    end
                 end
             end
         end

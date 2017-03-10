@@ -91,7 +91,7 @@ SPCS = {
 	{name = "SCP 457",
 	func = function(pl)
 		pl:SetSCP457()
-	end},	
+	end},
 }
 
 /*
@@ -337,7 +337,7 @@ function SpawnAllItems()
 			wep:SetPos( v + Vector(0,0,-25) )
 		end
 	end
-	
+
 	for k,v in pairs(SPAWN_KEYCARD2) do
 		local item = ents.Create( "keycard_level2" )
 		if IsValid( item ) then
@@ -345,7 +345,7 @@ function SpawnAllItems()
 			item:SetPos( table.Random(v) )
 		end
 	end
-	
+
 	for k,v in pairs(SPAWN_KEYCARD3) do
 		local item = ents.Create( "keycard_level3" )
 		if IsValid( item ) then
@@ -353,7 +353,7 @@ function SpawnAllItems()
 			item:SetPos( table.Random(v) )
 		end
 	end
-	
+
 	for k,v in pairs(SPAWN_KEYCARD4) do
 		local item = ents.Create( "keycard_level4" )
 		if IsValid( item ) then
@@ -361,11 +361,11 @@ function SpawnAllItems()
 			item:SetPos( table.Random(v) )
 		end
 	end
-	
+
 	local resps_items = table.Copy(SPAWN_MISCITEMS)
 	local resps_melee = table.Copy(SPAWN_MELEEWEPS)
 	local resps_medkits = table.Copy(SPAWN_MEDKITS)
-	
+
 	local item = ents.Create( "item_medkit" )
 	if IsValid( item ) then
 		local spawn4 = table.Random(resps_medkits)
@@ -373,7 +373,7 @@ function SpawnAllItems()
 		item:SetPos( spawn4 )
 		table.RemoveByValue(resps_medkits, spawn4)
 	end
-	
+
 	local item = ents.Create( "item_medkit" )
 	if IsValid( item ) then
 		local spawn4 = table.Random(resps_medkits)
@@ -381,7 +381,7 @@ function SpawnAllItems()
 		item:SetPos( spawn4 )
 		table.RemoveByValue(resps_medkits, spawn4)
 	end
-	
+
 	local item = ents.Create( "item_radio" )
 	if IsValid( item ) then
 		local spawn4 = table.Random(resps_items)
@@ -389,7 +389,7 @@ function SpawnAllItems()
 		item:SetPos( spawn4 )
 		table.RemoveByValue(resps_items, spawn4)
 	end
-	
+
 	local item = ents.Create( "item_eyedrops" )
 	if IsValid( item ) then
 		local spawn4 = table.Random(resps_items)
@@ -397,7 +397,7 @@ function SpawnAllItems()
 		item:SetPos( spawn4 )
 		table.RemoveByValue(resps_items, spawn4)
 	end
-	
+
 	local item = ents.Create( "item_snav_300" )
 	if IsValid( item ) then
 		local spawn4 = table.Random(resps_items)
@@ -405,7 +405,7 @@ function SpawnAllItems()
 		item:SetPos( spawn4 )
 		table.RemoveByValue(resps_items, spawn4)
 	end
-	
+
 	local item = ents.Create( "item_snav_ultimate" )
 	if IsValid( item ) then
 		local spawn4 = table.Random(resps_items)
@@ -413,7 +413,7 @@ function SpawnAllItems()
 		item:SetPos( spawn4 )
 		table.RemoveByValue(resps_items, spawn4)
 	end
-	
+
 	local item = ents.Create( "weapon_crowbar" )
 	if IsValid( item ) then
 		local spawn4 = table.Random(resps_melee)
@@ -421,7 +421,7 @@ function SpawnAllItems()
 		item:SetPos( spawn4 )
 		table.RemoveByValue(resps_melee, spawn4)
 	end
-	
+
 	local item = ents.Create( "weapon_crowbar" )
 	if IsValid( item ) then
 		local spawn4 = table.Random(resps_melee)
@@ -429,7 +429,7 @@ function SpawnAllItems()
 		item:SetPos( spawn4 )
 		table.RemoveByValue(resps_melee, spawn4)
 	end
-	
+
 end
 
 function GetSCPLeavers()
@@ -467,7 +467,8 @@ end
 
 spawnedntfs = 0
 function SpawnNTFS()
-	//if roundtype.allowntfspawn == false then return end
+	--Link2006 SPECIAL ROUND FIXES
+	if roundtype.allowntfspawn == false then return end
 	if spawnedntfs > 6 then return end
 	local allspecs = {}
 	for k,v in pairs(team.GetPlayers(TEAM_SPEC)) do
@@ -691,4 +692,3 @@ end
 function GM:OnEntityCreated( ent )
 	ent:SetShouldPlayPickupSound( false )
 end
-

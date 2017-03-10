@@ -40,7 +40,7 @@ function RoundRestart()
 	//PrintMessage(HUD_PRINTTALK, "Prepare, round will start in ".. GetPrepTime() .." seconds")
 	preparing = true
 	postround = false
-	/*
+	--Link2006 SPECIAL ROUNDS START
 	nextspecialround = nil
 	//CloseSCPDoors()
 	// lua_run nextspecialround = spies
@@ -79,17 +79,20 @@ function RoundRestart()
 	if roundtype == nil then
 		roundtype = normalround
 	end
-	*/
-	//roundtype.playersetup()
-	SetupPlayers( GetRoleTable(#GetActivePlayers()) )
-	
+	--Link2006 SPECIAL ROUNDS ENDS
+	--	Comment this block if you dont want special rounds.
+
+	--Link2006 USE ROUNDTYPE'S PLAYER SETUP
+	roundtype.playersetup()
+	--SetupPlayers( GetRoleTable(#GetActivePlayers()) )
+
 	net.Start("UpdateRoundType")
-		//net.WriteString(roundtype.name)
-		net.WriteString("Containment Breach")
+		net.WriteString(roundtype.name)
+		--net.WriteString("Containment Breach")
 	net.Broadcast()
 	print("round: roundtypeworking good")
 	gamestarted = true
-	
+
 	BroadcastLua('gamestarted = true')
 	print("round: gamestarted")
 	if GetConVar("br_spawnzombies"):GetBool() == true then
@@ -102,14 +105,16 @@ function RoundRestart()
 			end
 		end
 	end
-	
+
 	SpawnAllItems()
 	timer.Create("NTFEnterTime", GetNTFEnterTime(), 0, function()
 		SpawnNTFS()
 	end)
-	//if roundtype.mtfandscpdelay == false then
-		//OpenSCPDoors()
-	//end
+
+	--Link2006 Special Rounds MTF/SCP Delay
+	if roundtype.mtfandscpdelay == false then
+		OpenSCPDoors()
+	end
 	net.Start("PrepStart")
 		net.WriteInt(GetPrepTime(), 8)
 	net.Broadcast()
@@ -121,13 +126,14 @@ function RoundRestart()
 		end
 		preparing = false
 		postround = false
-		//if roundtype != nil then
-		//	if isfunction(roundtype.onroundstart) == true then
-		//		roundtype.onroundstart()
-		//	end
-		//end
+		--Link2006 SPECIAL ROUND OnRoundStart
+		if roundtype != nil then
+			if isfunction(roundtype.onroundstart) then -- why was this doing == true? Just do the call.
+				roundtype.onroundstart()
+			end
+		end
 		//PrintMessage(HUD_PRINTTALK, "Game is live, good luck!")
-		/*
+		/* --Idunno whats this so im not gonna touch it.
 		if GetConVar("br_opengatea_enabled"):GetBool() == true then
 			PrintMessage(HUD_PRINTTALK, "Game is live, Gate A will be opened in ".. math.Round(GetGateOpenTime() / 60, 1) .." minutes")
 			timer.Create("GateOpen", GetGateOpenTime(), 1, function()
@@ -138,9 +144,10 @@ function RoundRestart()
 			PrintMessage(HUD_PRINTTALK, "Game is live, good luck!")
 		end
 		*/
-		//if roundtype.mtfandscpdelay == true then
+		--Link2006 SPECIAL ROUNDS mtfAndScpDelay == enabled
+		if roundtype.mtfandscpdelay == true then
 			OpenSCPDoors()
-		//end
+		end
 		net.Start("RoundStart")
 			net.WriteInt(GetRoundTime(), 12)
 		net.Broadcast()
@@ -153,7 +160,7 @@ function RoundRestart()
 			net.Start("SendRoundInfo")
 				net.WriteTable(roundstats)
 			net.Broadcast()
-			
+
 			net.Start("PostStart")
 				net.WriteInt(GetPostTime(), 6)
 				net.WriteInt(1, 4)
@@ -311,7 +318,7 @@ end
 function WinCheck()
 	if #player.GetAll() < 2 then return end
 	if postround then return end
-	
+
 	local endround = false
 	local ds = team.NumPlayers(TEAM_CLASSD)
 	local mtfs = team.NumPlayers(TEAM_GUARD)
@@ -319,9 +326,9 @@ function WinCheck()
 	local scps = team.NumPlayers(TEAM_SCP)
 	local chaos = team.NumPlayers(TEAM_CHAOS)
 	local all = #GetAlivePlayers()
-	
+
 	local why = "idk man"
-	
+
 	if scps == all then
 		endround = true
 		why = "there are only scps"
@@ -354,7 +361,7 @@ function WinCheck()
 		net.Start("SendRoundInfo")
 			net.WriteTable(roundstats)
 		net.Broadcast()
-		
+
 		net.Start("PostStart")
 			net.WriteInt(GetPostTime(), 6)
 			net.WriteInt(2, 4)
@@ -372,5 +379,3 @@ function StopRound()
 	timer.Stop("GateOpen")
 	timer.Stop("PlayerInfo")
 end
-
-
