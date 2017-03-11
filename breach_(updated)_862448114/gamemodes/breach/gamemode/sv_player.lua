@@ -862,7 +862,6 @@ function mply:ChangeSpecMode()
 
 end
 
-
 --simple and it works (for link)
 function mply:SetFrozen(frozen,twalkSpeed,tRunSpeed)
 
@@ -876,8 +875,18 @@ function mply:SetFrozen(frozen,twalkSpeed,tRunSpeed)
 
 end
 
---Moved everything into ONE function so i don't have to keep editing BOTH code
+//will end up making this function more advance but this should work for now - tides
+function mply:GetIsFrozen()
 
+	if(self:GetWalkSpeed() == -1 && self:GetRunSpeed() == -1)then
+		return true;
+	else
+		return false;
+	end
+
+end
+
+--Moved everything into ONE function so i don't have to keep editing BOTH code
 function Link2006_RespawnPlayer(ply,num,target)  --Calling Player (admins), Selected Team (example: Class D), Target Player (Who is getting respawned)
 	--Just to be REALLY safe :)
 	if !target:IsValid() then return end --Is it a valid target? If not, Abort spawn

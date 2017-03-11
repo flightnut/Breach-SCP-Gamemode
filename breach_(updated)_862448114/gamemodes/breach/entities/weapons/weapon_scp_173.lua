@@ -102,6 +102,7 @@ end
 function SWEP:PrimaryAttack()
 	if preparing or postround then return end
 	if not IsFirstTimePredicted() then return end
+	if(self.Owner:GetIsFrozen()) then return end -- check if the owner is frozen.
 	//if ( !self:CanPrimaryAttack() ) then return end
 	if self.NextAttackW > CurTime() then return end
 	self.NextAttackW = CurTime() + self.AttackDelay
