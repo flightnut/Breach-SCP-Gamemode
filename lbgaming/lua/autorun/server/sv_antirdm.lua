@@ -1,13 +1,15 @@
 --Anti RDM using AWarn
 --  Original by DMX
 --  Modified by Link2006
---Version 1.3
+--Version 1.4
 
 print("[AntiRDM] Loading AntiRDM...")
-local AntiRDMVersion = "1.3" --I should have an habit of updating this :|
+local AntiRDMVersion = "1.4" --I should have an habit of updating this :|
 antirdm_enabled = true --Global so we can have it everywhere, also put it here so it's easy to find
 local rdmTable = {}
 local AntiRDM
+local AntiRDM_Respawns = 2 --How many respawns do players get?
+
 function rdmTableInit()
     if TEAM_CLASSD == nil then
         timer.Simple(1,rdmTableInit)
@@ -150,13 +152,24 @@ local function antirdm(victim, inflictor, attacker)
                     end
                     local rl = victim:GetNClass()
                     local vicTeam = victim:Team()
-                    if postround ~= true then
-                        ULib.tsayColor(victim,true,Color(0,255,0),"[AntiRDM] You will be respawned in a few moments")
-                    end
                     if br_roundnospec:GetBool() ~= true then
+                        if victim.Respawns == nil then --if not set, set them.
+                            victim.Respawns = AntiRDM_Respawns
+                        end
+                        if postround ~= true then
+                            if victim.Respawns > 0 then
+                                ULib.tsayColor(victim,true,Color(0,255,0),"[AntiRDM]",Color(255,255,255)," You will be respawned in a few moments...")
+                            else
+                                ULib.tsayColor(victim,true,Color(255,0,0),"[AntiRDM]",Color(255,255,255)," You will not be respawned as you have died too many times.")
+                            end
+                        end
                         timer.Simple(7,function() --7 seconds JUST To be sure...
-                            if (postround ~= true) and victim:Team() == TEAM_SPEC then --Respawn if the round didn't end yet AND the victim is _still_ dead (Fixes respawning when they're alive)
-                                antirdm_respawn(victim,rl,vicTeam)
+                            if victim.Respawns then
+                                if (postround ~= true) and (victim:Team() == TEAM_SPEC) and victim.Respawns > 0 then --Respawn if the round didn't end yet AND the victim is _still_ dead (Fixes respawning when they're alive)
+                                    antirdm_respawn(victim,rl,vicTeam)
+                                    victim.Respawns = victim.Respawns - 1
+                                    ULib.tsayColor(victim,true,Color(0,255,0),"[AntiRDM]",Color(255,255,255)," Respawns left: "..victim.Respawns)
+                                end
                             end
                         end)
                     end
@@ -167,7 +180,15 @@ local function antirdm(victim, inflictor, attacker)
 end
 
 hook.Remove("PlayerDeath","AntiRDM_lbgaming") --Remove the hook (I moved it to here so hooks are all grouped in 1 place.)
-hook.Add("PlayerDeath","AntiRDM_lbgaming",antirdm) --Remake it
+hook.Remove("PostCleanupMap","AntiRDM_CleanRespawns") --This makes sure we dont have dupes
+hook.Add("PlayerDeath","AntiRDM_lbgaming",antirdm)  --AntiRDM Function here, manages kills/RDMs
+hook.Add("PostCleanupMap","AntiRDM_CleanRespawns",function() --Resets respawns here
+    print("[AntiRDM] Cleaning Respawns for every players...")
+    for k,v in pairs(player.GetAll()) do
+        v.Respawns = nil --Make it invalid.
+    end
+    print("[AntiRDM] Done.")
+end)
 
 --TODO: Track people who made most damage until the victim dies.
 --      Then, Sort the table to have the MOST damage be first

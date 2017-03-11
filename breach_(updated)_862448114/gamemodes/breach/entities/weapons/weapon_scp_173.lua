@@ -82,15 +82,17 @@ function SWEP:Think()
 					watching = watching + 1
 					//if self:GetPos():Distance(v:GetPos()) > 100 then
 						//self.Owner:PrintMessage(HUD_PRINTTALK, v:Nick() .. " is looking at you")
-					//end 
+					//end
 				end
 			end
 		end
 	end
-	if watching > 0 then
-		self.Owner:SetFrozen(true) --simple
-	else
-		self.Owner:SetFrozen(false,500,500,175)--ez
+	if SERVER then
+		if watching > 0 then
+			self.Owner:SetFrozen(true) --simple
+		else
+			self.Owner:SetFrozen(false,500,500,175)--ez
+		end
 	end
 end
 
@@ -157,7 +159,7 @@ function SWEP:SecondaryAttack()
 		local numi = 0
 		for k,v in pairs(foundplayers) do
 			numi = numi + 1
-			
+
 			if numi == 1 then
 				fixednicks = fixednicks .. v:Nick()
 			elseif numi == #foundplayers then
@@ -192,7 +194,7 @@ function SWEP:DrawHUD()
 	if disablehud == true then return end
 	local specialstatus = ""
 	local showtext = ""
-	local showtextlook = "Noone is looking"
+	local showtextlook = "No one is looking"
 	local lookcolor = Color(0,255,0)
 	local showcolor = Color(17, 145, 66)
 	if self.NextSpecial > CurTime() then
@@ -202,14 +204,15 @@ function SWEP:DrawHUD()
 		specialstatus = "ready to use"
 	end
 	showtext = "Special " .. specialstatus
-	if self.DrawRed < CurTime() then
+	--if self.DrawRed < CurTime() then
+	if self.Owner:GetIsFrozen() then
 		self.CColor = Color(255,0,0)
-		showtextlook = "someone is looking"
+		showtextlook = "Someone is looking"
 		lookcolor = Color(145, 17, 62)
 	else
 		self.CColor = Color(0,255,0)
 	end
-	
+
 	draw.Text( {
 		text = showtext,
 		pos = { ScrW() / 2, ScrH() - 50 },
@@ -218,8 +221,8 @@ function SWEP:DrawHUD()
 		xalign = TEXT_ALIGN_CENTER,
 		yalign = TEXT_ALIGN_CENTER,
 	})
-	
-	draw.Text( { 
+
+	draw.Text( {
 		text = showtextlook,
 		pos = { ScrW() / 2, ScrH() - 25 },
 		font = "173font",
@@ -227,13 +230,13 @@ function SWEP:DrawHUD()
 		xalign = TEXT_ALIGN_CENTER,
 		yalign = TEXT_ALIGN_CENTER,
 	})
-	
+
 	local x = ScrW() / 2.0
 	local y = ScrH() / 2.0
 
 	local scale = 0.3
 	surface.SetDrawColor( self.CColor.r, self.CColor.g, self.CColor.b, 255 )
-	
+
 	local gap = 5
 	local length = gap + 20 * scale
 	surface.DrawLine( x - length, y, x - gap, y )
@@ -241,5 +244,3 @@ function SWEP:DrawHUD()
 	surface.DrawLine( x, y - length, x, y - gap )
 	surface.DrawLine( x, y + length, x, y + gap )
 end
-
-

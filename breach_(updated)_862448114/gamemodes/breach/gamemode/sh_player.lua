@@ -13,7 +13,7 @@ function mply:CLevelGlobal()
 		end
 	end
 	return biggest
-end 
+end
 
 function mply:CLevel()
 	local wep = self:GetActiveWeapon()
@@ -23,7 +23,7 @@ function mply:CLevel()
 		end
 	end
 	return 1
-end 
+end
 
 function mply:GetKarma()
 	if not self.GetNKarma then
@@ -35,3 +35,18 @@ function mply:GetKarma()
 		return self:GetNKarma()
 	end
 end
+
+
+--will end up making this function more advance but this should work for now - tides
+
+function mply:GetIsFrozen() return self:GetNWBool( "CustomFrozen" ) end --:)
+
+--[[
+function mply:GetIsFrozen()
+	if(self:GetWalkSpeed() == -1 && self:GetRunSpeed() == -1)then
+		return true;
+	else
+		return false;
+	end
+end
+]]--

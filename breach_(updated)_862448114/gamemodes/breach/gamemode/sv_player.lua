@@ -864,28 +864,18 @@ end
 
 --simple and it works (for link)
 function mply:SetFrozen(frozen,twalkSpeed,tRunSpeed,tjumpPwr)
-
 	if(frozen)then
-		self:SetWalkSpeed(-1)
-		self:SetRunSpeed(-1)
-		self:SetJumpPower(-1)
+		self:SetNWBool( "CustomFrozen", true ) --Added by Link2006 Because fuckoff Variables that don't get set for no fucking reason god fucking damn it
+		-- 0.00001 is required because -1 is abused lmao
+		self:SetWalkSpeed(0.00001)
+		self:SetRunSpeed(0.00001)
+		self:SetJumpPower(0.00001)
 	else
+		self:SetNWBool( "CustomFrozen", false ) --same here btw
 		self:SetWalkSpeed(twalkSpeed)
 		self:SetRunSpeed(tRunSpeed)
 		self:SetJumpPower(tjumpPwr)
 	end
-
-end
-
-//will end up making this function more advance but this should work for now - tides
-function mply:GetIsFrozen()
-
-	if(self:GetWalkSpeed() == -1 && self:GetRunSpeed() == -1)then
-		return true;
-	else
-		return false;
-	end
-
 end
 
 --Moved everything into ONE function so i don't have to keep editing BOTH code
