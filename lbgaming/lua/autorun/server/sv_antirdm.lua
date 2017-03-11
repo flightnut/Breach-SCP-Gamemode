@@ -141,7 +141,8 @@ local function antirdm(victim, inflictor, attacker)
         if attacker:IsPlayer() then --If it's an entity, ignore, it's probably the tesla.
             if rdmTable[ attacker:Team() ] then --I FORGOT TO CHECK IF THE ATTACKER'S TABLE EXISTED
                 if (table.HasValue( rdmTable[ attacker:Team() ], victim:Team() ) and (attacker ~= victim)) --If Attacker and Victim were allies
-                or (attacker:GetNClass() == ROLE_SCP035 and victim:Team() == TEAM_CLASSD) then --OR SCP-035 killed a Class D
+                or (attacker:GetNClass() == ROLE_SCP035 and victim:Team() == TEAM_CLASSD) --OR SCP-035 killed a Class D
+                or (victim:GetNClass() == ROLE_SCP035 and attacker:Team() == TEAM_CLASSD) then --OR Class D killed SCP-035 
                     --AWARN ATTACKER
                     print("[AntiRDM] Warning \""..attacker:Nick().."\" for RDM")
                     if antirdm_enabled and (tostring(roundtype.name) ~= "Trouble in SCP Town") then --As long it's not TTT lol ...
