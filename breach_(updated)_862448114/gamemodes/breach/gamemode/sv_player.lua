@@ -863,14 +863,16 @@ function mply:ChangeSpecMode()
 end
 
 --simple and it works (for link)
-function mply:SetFrozen(frozen,twalkSpeed,tRunSpeed)
+function mply:SetFrozen(frozen,twalkSpeed,tRunSpeed,tjumpPwr)
 
 	if(frozen)then
 		self:SetWalkSpeed(-1)
 		self:SetRunSpeed(-1)
+		self:SetJumpPower(-1)
 	else
 		self:SetWalkSpeed(twalkSpeed)
 		self:SetRunSpeed(tRunSpeed)
+		self:SetJumpPower(tjumpPwr)
 	end
 
 end
