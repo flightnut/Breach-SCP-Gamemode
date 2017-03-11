@@ -556,9 +556,10 @@ function mply:SetSCP173()
 	self:SetHealth(1700)
 	self:SetMaxHealth(1700)
 	self:SetArmor(0)
-	self:SetWalkSpeed(350)
-	self:SetRunSpeed(350)
-	self:SetMaxSpeed(350)
+	self:SetJumpPower(175)
+	self:SetWalkSpeed(500)
+	self:SetRunSpeed(500)
+	self:SetMaxSpeed(500)
 	self:SetJumpPower(200)
 	self:SetNoDraw(false)
 	self:SetNoCollideWithTeammates(false)
@@ -857,6 +858,21 @@ function mply:ChangeSpecMode()
 		self:SpectatePlayerLeft()
 	else
 		self:Spectate(OBS_MODE_ROAMING)
+	end
+
+end
+
+
+--simple and it works (for link)
+function mply:SetFrozen(frozen,twalkSpeed,tRunSpeed)
+
+	if(frozen)then
+		self:SetWalkSpeed(twalkSpeed)
+		self:SetRunSpeed(tRunSpeed)
+	else
+		self:SetWalkSpeed(twalkSpeed)
+		self:SetRunSpeed(tRunSpeed)
+		
 	end
 
 end

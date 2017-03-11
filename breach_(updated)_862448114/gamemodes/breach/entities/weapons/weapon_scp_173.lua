@@ -40,13 +40,9 @@ SWEP.Secondary.ClipSize		= -1
 SWEP.Secondary.DefaultClip	= 0
 SWEP.Secondary.Automatic	= false
 SWEP.NextAttackW			= 0
- 
+
 function SWEP:Deploy()
 	self.Owner:DrawViewModel( false )
-	self.Owner:SetJumpPower(175)
-	self.Owner:SetWalkSpeed(500)
-	self.Owner:SetRunSpeed(500)
-	self.Owner:SetMaxSpeed(500)
 end
 function SWEP:DrawWorldModel()
 end
@@ -92,9 +88,9 @@ function SWEP:Think()
 		end
 	end
 	if watching > 0 then
-		self.Owner:Freeze(true)
+		self.Owner:SetFrozen(true,-1,-1) --simple
 	else
-		self.Owner:Freeze(false)
+		self.Owner:SetFrozen(false,500,500)--ez
 	end
 end
 
@@ -106,6 +102,7 @@ end
 function SWEP:PrimaryAttack()
 	if preparing or postround then return end
 	if not IsFirstTimePredicted() then return end
+	//if ( !self:CanPrimaryAttack() ) then return end
 	if self.NextAttackW > CurTime() then return end
 	self.NextAttackW = CurTime() + self.AttackDelay
 	if SERVER then
@@ -137,6 +134,7 @@ SWEP.NextSpecial = 0
 function SWEP:SecondaryAttack()
 	local time = 5
 	if self.NextSpecial > CurTime() then return end
+	//if ( !self:CanSecondaryAttack() ) then return end
 	self.NextSpecial = CurTime() + self.SpecialDelay
 	if CLIENT then
 		surface.PlaySound("Horror2.ogg")
