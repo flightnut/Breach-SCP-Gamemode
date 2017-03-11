@@ -867,12 +867,11 @@ end
 function mply:SetFrozen(frozen,twalkSpeed,tRunSpeed)
 
 	if(frozen)then
-		self:SetWalkSpeed(twalkSpeed)
-		self:SetRunSpeed(tRunSpeed)
+		self:SetWalkSpeed(-1)
+		self:SetRunSpeed(-1)
 	else
 		self:SetWalkSpeed(twalkSpeed)
 		self:SetRunSpeed(tRunSpeed)
-		
 	end
 
 end

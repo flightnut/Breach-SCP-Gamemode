@@ -88,7 +88,7 @@ function SWEP:Think()
 		end
 	end
 	if watching > 0 then
-		self.Owner:SetFrozen(true,-1,-1) --simple
+		self.Owner:SetFrozen(true) --simple
 	else
 		self.Owner:SetFrozen(false,500,500)--ez
 	end
