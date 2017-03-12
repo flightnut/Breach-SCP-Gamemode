@@ -5,7 +5,7 @@ if CLIENT then
 	SWEP.BounceWeaponIcon = false
 end
 
-SWEP.Author			= ""
+SWEP.Author			= "Kanade"
 SWEP.Contact		= "Look at this gamemode in workshop and search for creators"
 SWEP.Purpose		= "Find a way to go and scan for enemies"
 SWEP.Instructions	= "If you hold it, click RMB to change the view"
@@ -80,25 +80,25 @@ function SWEP:Think()
 		for k,v in pairs(ents.FindInSphere( lp:GetPos(), 1000 )) do
 			if v:IsPlayer() then
 				if v == lp then continue end
-				if v:Team() != TEAM_SPEC then
-					if v:Team() == TEAM_GUARD then
+				if v:GTeam() != TEAM_SPEC then
+					if v:GTeam() == TEAM_GUARD then
 						table.ForceInsert(self.warnings, "MTF Guard detected")
 						continue
-					elseif v:Team() == TEAM_CHAOS then
-						if lp:Team() == TEAM_CHAOS then
+					elseif v:GTeam() == TEAM_CHAOS then
+						if lp:GTeam() == TEAM_CHAOS then
 							table.ForceInsert(self.warnings, "Chaos Insurgency Member detected")
 							continue
 						else
 							table.ForceInsert(self.warnings, "MTF Guard detected")
 							continue
 						end
-					elseif v:Team() == TEAM_SCI then
+					elseif v:GTeam() == TEAM_SCI then
 						table.ForceInsert(self.warnings, "Researcher detected")
 						continue
-					elseif v:Team() == TEAM_CLASSD then
+					elseif v:GTeam() == TEAM_CLASSD then
 						table.ForceInsert(self.warnings, "Class D detected")
 						continue
-					elseif v:Team() == TEAM_SCP then
+					elseif v:GTeam() == TEAM_SCP then
 						if not v.GetNClass then
 							player_manager.RunClass( v, "SetupDataTables" )
 						end

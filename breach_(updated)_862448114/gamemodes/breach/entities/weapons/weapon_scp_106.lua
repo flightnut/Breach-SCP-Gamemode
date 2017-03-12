@@ -5,7 +5,7 @@ if CLIENT then
 	SWEP.BounceWeaponIcon = false
 end
 
-SWEP.Author			= ""
+SWEP.Author			= "Kanade"
 SWEP.Contact		= "Look at this gamemode in workshop and search for creators"
 SWEP.Purpose		= "Destroy"
 SWEP.Instructions	= "LMB to hit something"
@@ -74,14 +74,15 @@ function SWEP:PrimaryAttack()
 		ent = tr.Entity
 		if IsValid(ent) then
 			if ent:IsPlayer() then
-				if ent:Team() == TEAM_SCP then return end
-				if ent:Team() == TEAM_SPEC then return end
+				if ent:GTeam() == TEAM_SCP then return end
+				if ent:GTeam() == TEAM_SPEC then return end
 				local pos = GetPocketPos()
 				if pos then
 					roundstats.teleported = roundstats.teleported + 1
 					self.Owner:SetHealth(self.Owner:Health() + 100)
 					ent:TakeDamage( 30, self.Owner, self.Owner )
 					ent:SetPos(pos)
+					self.Owner:AddExp(15, true)
 				end
 			else
 				if ent:GetClass() == "func_breakable" then

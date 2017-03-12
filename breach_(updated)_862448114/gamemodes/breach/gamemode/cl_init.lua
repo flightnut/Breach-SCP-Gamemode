@@ -1,6 +1,9 @@
 include("shared.lua")
+include("gteams.lua")
 include("fonts.lua")
-include("class_default.lua")
+include("class_breach.lua")
+include("classes.lua")
+include("cl_classmenu.lua")
 include("sh_player.lua")
 include("cl_mtfmenu.lua")
 include("cl_scoreboard.lua")
@@ -39,11 +42,6 @@ for k,v in pairs(files) do
 end
 
 langtouse = CreateClientConVar( "br_language", "english", true, false ):GetString()
-//defaultlang = GetConVar("br_defaultlanguage"):GetString()
-
-//if ALLLANGUAGES[defaultlang] then
-//	langtouse =  defaultlang
-//end
 
 cvars.AddChangeCallback( "br_language", function( convar_name, value_old, value_new )
 	langtouse = value_new
@@ -86,7 +84,7 @@ disablehud = false
 livecolors = false
 
 function DropCurrentVest()
-	if LocalPlayer():Alive() and LocalPlayer():Team() != TEAM_SPEC then
+	if LocalPlayer():Alive() and LocalPlayer():GTeam() != TEAM_SPEC then
 		net.Start("DropCurrentVest")
 		net.SendToServer()
 	end
@@ -131,61 +129,12 @@ timefromround = 0
 
 timer.Create("HeartbeatSound", 2, 0, function()
 	if not LocalPlayer().Alive then return end
-	if LocalPlayer():Alive() and LocalPlayer():Team() != TEAM_SPEC then
+	if LocalPlayer():Alive() and LocalPlayer():GTeam() != TEAM_SPEC then
 		if LocalPlayer():Health() < 30 then
 			LocalPlayer():EmitSound("heartbeat.ogg")
 		end
 	end
 end)
-
-/*
-viewpositions = {
-	{Vector(-402.106079, 4011.909424, 70.592346),
-	Vector(-585.309265, 4389.821289, 80.523294)}
-}
-
-usingview = 0
-viewstatus = 0
-function CalcViewTest( ply, pos, angles, fov )
-	local view = {}
-	if #player.GetAll() > 2 then
-		view.origin = pos
-		view.angles = angles
-		view.fov = fov
-		view.drawviewer = false
-		return view
-	end
-	
-	view.origin = pos
-	view.angles = angles
-	if usingview == 0 then
-		if #viewpositions > 0 then
-			usingview = 1
-		end
-	end
-	if usingview > 0 then
-		if viewstatus == 0 then
-			view.origin = viewpositions[usingview][1]
-			viewstatus = 1
-		elseif viewstatus == 1 then
-			//view.origin = viewpositions[usingview][1]
-			view.angles = (viewpositions[usingview][2] - EyePos()):Angle()
-			//view.origin = viewpositions[usingview][2] - viewpositions[usingview][1]
-			local tr = util.TraceLine( {
-				start = viewpositions[usingview][1],
-				endpos = EyePos() + EyeAngles():Forward()
-			} )
-			view.origin = tr.HitPos
-			view.origin = viewpositions[usingview][2] - viewpositions[usingview][1]
-			//print( tr.HitPos, tr.Entity )
-		end
-	end
-	view.fov = fov
-	view.drawviewer = false
-	return view
-end
-hook.Add( "CalcView", "CalcViewTest", CalcViewTest )
-*/
 
 function OnUseEyedrops(ply) end
 
@@ -307,8 +256,8 @@ local f_fadeout = 0.000075
 local f_end = 0
 local f_started = false
 function tick_flash()
-	if LocalPlayer().Team == nil then return end
-	if LocalPlayer():Team() != TEAM_SPEC then
+	if LocalPlayer().GTeam == nil then return end
+	if LocalPlayer():GTeam() != TEAM_SPEC then
 		for k,v in pairs(ents.FindInSphere(OUTSIDESOUNDS, 300)) do
 			if v == LocalPlayer() then
 				StartOutisdeSounds()
@@ -404,54 +353,56 @@ function GM:PlayerBindPress( ply, bind, pressed )
 			LocalPlayer().channel = nil
 		end
 		return true
+	elseif bind == "gm_showteam" then
+		OpenClassMenu()
 	elseif bind == "+menu_context" then
 		thirdpersonenabled = !thirdpersonenabled
 	end
 end
 
 concommand.Add("br_requestescort", function()
-	if !((LocalPlayer():Team() == TEAM_GUARD or LocalPlayer():Team() == TEAM_CHAOS) or LocalPlayer():Team() == TEAM_CHAOS) then return end
+	if !((LocalPlayer():GTeam() == TEAM_GUARD or LocalPlayer():GTeam() == TEAM_CHAOS) or LocalPlayer():GTeam() == TEAM_CHAOS) then return end
 	net.Start("RequestEscorting")
 	net.SendToServer()
 end)
 
 concommand.Add("br_requestgatea", function()
-	if !((LocalPlayer():Team() == TEAM_GUARD or LocalPlayer():Team() == TEAM_CHAOS) or LocalPlayer():Team() == TEAM_CHAOS) then return end
+	if !((LocalPlayer():GTeam() == TEAM_GUARD or LocalPlayer():GTeam() == TEAM_CHAOS) or LocalPlayer():GTeam() == TEAM_CHAOS) then return end
 	if LocalPlayer():CLevelGlobal() < 4 then return end
 	net.Start("RequestGateA")
 	net.SendToServer()
 end)
 
 concommand.Add("br_sound_random", function()
-	if (LocalPlayer():Team() == TEAM_GUARD or LocalPlayer():Team() == TEAM_CHAOS) and LocalPlayer():Alive() then
+	if (LocalPlayer():GTeam() == TEAM_GUARD or LocalPlayer():GTeam() == TEAM_CHAOS) and LocalPlayer():Alive() then
 		net.Start("Sound_Random")
 		net.SendToServer()
 	end
 end)
 
 concommand.Add("br_sound_searching", function()
-	if (LocalPlayer():Team() == TEAM_GUARD or LocalPlayer():Team() == TEAM_CHAOS) and LocalPlayer():Alive() then
+	if (LocalPlayer():GTeam() == TEAM_GUARD or LocalPlayer():GTeam() == TEAM_CHAOS) and LocalPlayer():Alive() then
 		net.Start("Sound_Searching")
 		net.SendToServer()
 	end
 end)
 
 concommand.Add("br_sound_classd", function()
-	if (LocalPlayer():Team() == TEAM_GUARD or LocalPlayer():Team() == TEAM_CHAOS) and LocalPlayer():Alive() then
+	if (LocalPlayer():GTeam() == TEAM_GUARD or LocalPlayer():GTeam() == TEAM_CHAOS) and LocalPlayer():Alive() then
 		net.Start("Sound_Classd")
 		net.SendToServer()
 	end
 end)
 
 concommand.Add("br_sound_stop", function()
-	if (LocalPlayer():Team() == TEAM_GUARD or LocalPlayer():Team() == TEAM_CHAOS) and LocalPlayer():Alive() then
+	if (LocalPlayer():GTeam() == TEAM_GUARD or LocalPlayer():GTeam() == TEAM_CHAOS) and LocalPlayer():Alive() then
 		net.Start("Sound_Stop")
 		net.SendToServer()
 	end
 end)
 
 concommand.Add("br_sound_lost", function()
-	if (LocalPlayer():Team() == TEAM_GUARD or LocalPlayer():Team() == TEAM_CHAOS) and LocalPlayer():Alive() then
+	if (LocalPlayer():GTeam() == TEAM_GUARD or LocalPlayer():GTeam() == TEAM_CHAOS) and LocalPlayer():Alive() then
 		net.Start("Sound_Lost")
 		net.SendToServer()
 	end

@@ -26,16 +26,14 @@ function GM:PlayerInitialSpawn( ply )
 			net.WriteString(tostring(timer.TimeLeft( "RoundTime" )))
 		net.Send(ply)
 	end
-	player_manager.SetPlayerClass( ply, "class_default" )
+	player_manager.SetPlayerClass( ply, "class_breach" )
+	player_manager.RunClass( ply, "SetupDataTables" )
 	CheckStart()
 	if gamestarted then
 		ply:SendLua( 'gamestarted = true' )
 	end
-	if not ply.GetNClass then
-		player_manager.RunClass( ply, "SetupDataTables" )
-	end
 end
-
+/*
 function GM:PlayerAuthed( ply, steamid, uniqueid )
 	ply.Active = false
 	ply.Leaver = "none"
@@ -45,26 +43,17 @@ function GM:PlayerAuthed( ply, steamid, uniqueid )
 		ply:SetSpectator()
 	end
 end
-
+*/
 function GM:PlayerSpawn( ply )
-	ply.Leaver = "none"
-	ply:SetupHands()
+	//ply:SetupHands()
+	ply:SetTeam(1)
 	ply:SetNoCollideWithTeammates(true)
-	if prepring == false then
-		ply:SetSpectator()
-	end
+	//ply:SetCustomCollisionCheck( true )
 	if ply.freshspawn then
 		ply:SetSpectator()
 		ply.freshspawn = false
 	end
-	ply:SetupHands()
-	if not ply.GetNClass then
-		player_manager.SetPlayerClass( ply, "class_default" )
-		player_manager.RunClass( ply, "SetupDataTables" )
-	end
-	if not ply.GetNClass then
-		player_manager.RunClass( ply, "SetupDataTables" )
-	end
+	//ply:SetupHands()
 end
 
 function GM:PlayerSetHandsModel( ply, ent )
@@ -80,15 +69,12 @@ function GM:PlayerSetHandsModel( ply, ent )
 	end
 end
 
+// From Gmod base
 function GM:PlayerDeathThink( ply )
-	if ply.nextspawn == nil then
-		ply.nextspawn = CurTime() + 5
-	end
-	if (CurTime() >= ply.nextspawn) then
-		ply:Freeze(false)
+	//if ( ply.NextSpawnTime && ply.NextSpawnTime > CurTime() ) then return end
+	if ( ply:IsBot() || ply:KeyPressed( IN_ATTACK ) || ply:KeyPressed( IN_ATTACK2 ) || ply:KeyPressed( IN_JUMP ) ) then
 		ply:Spawn()
 		ply:SetSpectator()
-		ply.nextspawn = CurTime() + 1
 	end
 end
 
@@ -97,64 +83,64 @@ function GM:PlayerDeath( victim, inflictor, attacker )
 	if attacker:IsPlayer() then
 		print("[KILL] " .. attacker:Nick() .. " [" .. attacker:GetNClass() .. "] killed " .. victim:Nick() .. " [" .. victim:GetNClass() .. "]")
 	end
-	victim:SetNClass(ROLE_SPEC)
+	victim:SetNClass(ROLES.ROLE_SPEC)
 	if attacker != victim and postround == false and attacker:IsPlayer() then
 		if attacker:IsPlayer() then
-			if attacker:Team() == TEAM_GUARD then
+			if attacker:GTeam() == TEAM_GUARD then
 				victim:PrintMessage(HUD_PRINTTALK, "You were killed by an MTF Guard: " .. attacker:Nick())
-				if victim:Team() == TEAM_SCP then
+				if victim:GTeam() == TEAM_SCP then
 					attacker:PrintMessage(HUD_PRINTTALK, "You've been awarded with 10 points for killng an SCP!")
 					attacker:AddFrags(10)
-				elseif victim:Team() == TEAM_CHAOS then
+				elseif victim:GTeam() == TEAM_CHAOS then
 					attacker:PrintMessage(HUD_PRINTTALK, "You've been awarded with 5 points for killng a Chaos Insurgency member!")
 					attacker:AddFrags(5)
-				elseif victim:Team() == TEAM_CLASSD then
+				elseif victim:GTeam() == TEAM_CLASSD then
 					attacker:PrintMessage(HUD_PRINTTALK, "You've been awarded with 2 points for killng a Class D Personell!")
 					attacker:AddFrags(2)
 				end
-			elseif attacker:Team() == TEAM_CHAOS then
+			elseif attacker:GTeam() == TEAM_CHAOS then
 				victim:PrintMessage(HUD_PRINTTALK, "You were killed by a Chaos Insurgency Soldier: " .. attacker:Nick())
-				if victim:Team() == TEAM_GUARD then 
+				if victim:GTeam() == TEAM_GUARD then 
 					attacker:PrintMessage(HUD_PRINTTALK, "You've been awarded with 2 points for killng an MTF Guard!")
 					attacker:AddFrags(2)
-				elseif victim:Team() == TEAM_SCI then
+				elseif victim:GTeam() == TEAM_SCI then
 					attacker:PrintMessage(HUD_PRINTTALK, "You've been awarded with 2 points for killng a Researcher!")
 					attacker:AddFrags(2)
-				elseif victim:Team() == TEAM_SCP then
+				elseif victim:GTeam() == TEAM_SCP then
 					attacker:PrintMessage(HUD_PRINTTALK, "You've been awarded with 10 points for killng an SCP!")
 					attacker:AddFrags(10)
-				elseif victim:Team() == TEAM_CLASSD then
+				elseif victim:GTeam() == TEAM_CLASSD then
 					attacker:PrintMessage(HUD_PRINTTALK, "Don't kill Class D Personell, you can capture them to get bonus points!")
 					attacker:AddFrags(1)
 				end
-			elseif attacker:Team() == TEAM_SCP then
+			elseif attacker:GTeam() == TEAM_SCP then
 				victim:PrintMessage(HUD_PRINTTALK, "You were killed by an SCP: " .. attacker:Nick())
 				attacker:PrintMessage(HUD_PRINTTALK, "You've been awarded with 2 points for killng " .. victim:Nick())
 				attacker:AddFrags(2)
-			elseif attacker:Team() == TEAM_CLASSD then
+			elseif attacker:GTeam() == TEAM_CLASSD then
 				victim:PrintMessage(HUD_PRINTTALK, "You were killed by a Class D: " .. attacker:Nick())
-				if victim:Team() == TEAM_GUARD then 
+				if victim:GTeam() == TEAM_GUARD then 
 					attacker:PrintMessage(HUD_PRINTTALK, "You've been awarded with 4 points for killng an MTF Guard!")
 					attacker:AddFrags(4)
-				elseif victim:Team() == TEAM_SCI then
+				elseif victim:GTeam() == TEAM_SCI then
 					attacker:PrintMessage(HUD_PRINTTALK, "You've been awarded with 2 points for killng a Researcher!")
 					attacker:AddFrags(2)
-				elseif victim:Team() == TEAM_SCP then
+				elseif victim:GTeam() == TEAM_SCP then
 					attacker:PrintMessage(HUD_PRINTTALK, "You've been awarded with 10 points for killng an SCP!")
 					attacker:AddFrags(10)
-				elseif victim:Team() == TEAM_CHAOS then
+				elseif victim:GTeam() == TEAM_CHAOS then
 					attacker:PrintMessage(HUD_PRINTTALK, "You've been awarded with 2 points for killng a Chaos Insurgency member!")
 					attacker:AddFrags(2)
 				end
-			elseif attacker:Team() == TEAM_SCI then
+			elseif attacker:GTeam() == TEAM_SCI then
 				victim:PrintMessage(HUD_PRINTTALK, "You were killed by a Researcher: " .. attacker:Nick())
-				if victim:Team() == TEAM_SCP then
+				if victim:GTeam() == TEAM_SCP then
 					attacker:PrintMessage(HUD_PRINTTALK, "You've been awarded with 10 points for killng an SCP!")
 					attacker:AddFrags(10)
-				elseif victim:Team() == TEAM_CHAOS then
+				elseif victim:GTeam() == TEAM_CHAOS then
 					attacker:PrintMessage(HUD_PRINTTALK, "You've been awarded with 5 points for killng a Chaos Insurgency member!")
 					attacker:AddFrags(5)
-				elseif victim:Team() == TEAM_CLASSD then
+				elseif victim:GTeam() == TEAM_CLASSD then
 					attacker:PrintMessage(HUD_PRINTTALK, "You've been awarded with 2 points for killing a Class D Personell!")
 					attacker:AddFrags(2)
 				end
@@ -178,7 +164,10 @@ function GM:PlayerDeath( victim, inflictor, attacker )
 				if IsValid( wep ) then
 					wep:SetPos( pos )
 					wep:Spawn()
-					wep:SetClip1(v:Clip1())
+					local atype = v:GetPrimaryAmmoType()
+					if atype > 0 then
+						wep.SavedAmmo = v:Clip1()
+					end
 				end
 			end
 		end
@@ -224,13 +213,13 @@ function HaveRadio(pl1, pl2)
 end
 
 function GM:PlayerCanHearPlayersVoice( listener, talker )
-	if talker:Team() == TEAM_SCP then
-		if listener:Team() != TEAM_SCP then
+	if talker:GTeam() == TEAM_SCP then
+		if listener:GTeam() != TEAM_SCP then
 			return false
 		end
 	end
-	if talker:Team() == TEAM_SPEC then
-		if listener:Team() == TEAM_SPEC then
+	if talker:GTeam() == TEAM_SPEC then
+		if listener:GTeam() == TEAM_SPEC then
 			return true
 		else
 			return false
@@ -249,13 +238,13 @@ end
 function GM:PlayerCanSeePlayersChat( text, teamOnly, listener, talker )
 	if teamOnly then
 		if talker:GetPos():Distance(listener:GetPos()) < 750 then
-			return (listener:Team() == talker:Team())
+			return (listener:GTeam() == talker:GTeam())
 		else
 			return false
 		end
 	end
-	if talker:Team() == TEAM_SPEC then
-		if listener:Team() == TEAM_SPEC then
+	if talker:GTeam() == TEAM_SPEC then
+		if listener:GTeam() == TEAM_SPEC then
 			return true
 		else
 			return false
@@ -286,57 +275,48 @@ function GM:PlayerCanPickupWeapon( ply, wep )
 			if v.clevel then return false end
 		end
 	end
-	if ply:Team() == TEAM_SCP then
-		if ply:GetNClass() == ROLE_SCP173 then
+	if ply:GTeam() == TEAM_SCP then
+		if ply:GetNClass() == ROLES.ROLE_SCP173 then
 			return wep:GetClass() == "weapon_scp_173"
-		elseif ply:GetNClass() == ROLE_SCP106 then
+		elseif ply:GetNClass() == ROLES.ROLE_SCP106 then
 			return wep:GetClass() == "weapon_scp_106"
-		elseif ply:GetNClass() == ROLE_SCP049 then
+		elseif ply:GetNClass() == ROLES.ROLE_SCP049 then
 			return wep:GetClass() == "weapon_scp_049"
-		elseif ply:GetNClass() == ROLE_SCP0492 then
+		elseif ply:GetNClass() == ROLES.ROLE_SCP0492 then
 			return wep:GetClass() == "weapon_br_zombie"
-		elseif ply:GetNClass() == ROLE_SCP457 then
+		elseif ply:GetNClass() == ROLES.ROLE_SCP457 then
 			return wep:GetClass() == "weapon_scp_457"
-		elseif ply:GetNClass() == ROLE_SCP0082 then
+		elseif ply:GetNClass() == ROLES.ROLE_SCP0082 then
 			return wep:GetClass() == "weapon_br_zombie_infect"
-		elseif ply:GetNClass() == ROLE_SCP035 then
-			return !(wep:GetClass() == "item_medkit")
-		elseif ply:GetNClass() == ROLE_SCP1048A then
-			return wep:GetClass() == "weapon_scp_1048a"
 		else
 			return false
 		end
 	end
-	if ply:GetNClass() != ROLE_SCP173 then
+	if ply:GetNClass() != ROLES.ROLE_SCP173 then
 		if wep:GetClass() == "weapon_scp_173" then
 			return false
 		end
 	end
-	if ply:GetNClass() != ROLE_SCP106 then
+	if ply:GetNClass() != ROLES.ROLE_SCP106 then
 		if wep:GetClass() == "weapon_scp_106" then
 			return false
 		end
 	end
-	if ply:GetNClass() != ROLE_SCP049 then
+	if ply:GetNClass() != ROLES.ROLE_SCP049 then
 		if wep:GetClass() == "weapon_scp_049" then
 			return false
 		end
 	end
-	if ply:GetNClass() != ROLE_SCP0492 then
+	if ply:GetNClass() != ROLES.ROLE_SCP0492 then
 		if wep:GetClass() == "weapon_br_zombie" then
 			return false
 		end
 	end
-	if ply:GetNClass() != ROLE_SCP1048A then
-		if wep:GetClass() == "weapon_scp_1048a" then
-			return false
-		end
-	end
-	if ply:Team() != TEAM_SPEC then
+	if ply:GTeam() != TEAM_SPEC then
 		if wep.teams then
 			local canuse = false
 			for k,v in pairs(wep.teams) do
-				if v == ply:Team() then
+				if v == ply:GTeam() then
 					canuse = true
 				end
 			end
@@ -357,15 +337,15 @@ function GM:PlayerCanPickupWeapon( ply, wep )
 end
 
 function GM:PlayerCanPickupItem( ply, item )
-	return !(ply:Team() == TEAM_SPEC)
+	return !(ply:GTeam() == TEAM_SPEC)
 end
 
 function GM:AllowPlayerPickup( ply, ent )
-	return !(ply:Team() == TEAM_SPEC)
+	return !(ply:GTeam() == TEAM_SPEC)
 end
 // usesounds = true,
 function GM:PlayerUse( ply, ent )
-	if ply:Team() == TEAM_SPEC then return false end
+	if ply:GTeam() == TEAM_SPEC then return false end
 	if ply.lastuse == nil then ply.lastuse = 0 end
 	if ply.lastuse > CurTime() then return end
 	for k,v in pairs(MAPBUTTONS) do

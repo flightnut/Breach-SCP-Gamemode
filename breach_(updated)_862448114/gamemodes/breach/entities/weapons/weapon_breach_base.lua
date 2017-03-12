@@ -1,6 +1,6 @@
 AddCSLuaFile()
 
-SWEP.Author			= ""
+SWEP.Author			= "Kanade"
 SWEP.Contact		= "Steam"
 SWEP.Purpose		= ""
 SWEP.Instructions	= ""

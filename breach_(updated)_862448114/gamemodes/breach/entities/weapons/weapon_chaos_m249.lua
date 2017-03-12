@@ -5,7 +5,7 @@ if CLIENT then
 	SWEP.BounceWeaponIcon = false
 end
 
-SWEP.Author			= ""
+SWEP.Author			= "Kanade"
 SWEP.Contact		= "Steam"
 SWEP.Purpose		= ""
 SWEP.Instructions	= ""
@@ -33,7 +33,7 @@ SWEP.Primary.Delay			= 0.08
 
 SWEP.Secondary.Ammo			= "none"
 SWEP.DeploySpeed			= 1
-SWEP.Damage					= 10
+SWEP.Damage					= 12
 SWEP.HeadshotMultiplier		= 1.6
 SWEP.UseHands				= true
 

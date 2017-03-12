@@ -26,7 +26,7 @@ function RoundRestart()
 	print("round: mapcleaned")
 	MAPBUTTONS = table.Copy(BUTTONS)
 	for k,v in pairs(player.GetAll()) do
-		player_manager.SetPlayerClass( v, "class_default" )
+		player_manager.SetPlayerClass( v, "class_breach" )
 		player_manager.RunClass( v, "SetupDataTables" )
 		v:Freeze(false)
 		v.MaxUses = nil
@@ -40,7 +40,7 @@ function RoundRestart()
 	//PrintMessage(HUD_PRINTTALK, "Prepare, round will start in ".. GetPrepTime() .." seconds")
 	preparing = true
 	postround = false
-	--Link2006 SPECIAL ROUNDS START
+	/*
 	nextspecialround = nil
 	//CloseSCPDoors()
 	// lua_run nextspecialround = spies
@@ -79,20 +79,17 @@ function RoundRestart()
 	if roundtype == nil then
 		roundtype = normalround
 	end
-	--Link2006 SPECIAL ROUNDS ENDS
-	--	Comment this block if you dont want special rounds.
-
-	--Link2006 USE ROUNDTYPE'S PLAYER SETUP
-	roundtype.playersetup()
-	--SetupPlayers( GetRoleTable(#GetActivePlayers()) )
-
+	*/
+	//roundtype.playersetup()
+	SetupPlayers( GetRoleTable(#GetActivePlayers()) )
+	
 	net.Start("UpdateRoundType")
-		net.WriteString(roundtype.name)
-		--net.WriteString("Containment Breach")
+		//net.WriteString(roundtype.name)
+		net.WriteString("Containment Breach")
 	net.Broadcast()
 	print("round: roundtypeworking good")
 	gamestarted = true
-
+	
 	BroadcastLua('gamestarted = true')
 	print("round: gamestarted")
 	if GetConVar("br_spawnzombies"):GetBool() == true then
@@ -105,16 +102,14 @@ function RoundRestart()
 			end
 		end
 	end
-
+	
 	SpawnAllItems()
 	timer.Create("NTFEnterTime", GetNTFEnterTime(), 0, function()
 		SpawnNTFS()
 	end)
-
-	--Link2006 Special Rounds MTF/SCP Delay
-	if roundtype.mtfandscpdelay == false then
-		OpenSCPDoors()
-	end
+	//if roundtype.mtfandscpdelay == false then
+		//OpenSCPDoors()
+	//end
 	net.Start("PrepStart")
 		net.WriteInt(GetPrepTime(), 8)
 	net.Broadcast()
@@ -126,14 +121,13 @@ function RoundRestart()
 		end
 		preparing = false
 		postround = false
-		--Link2006 SPECIAL ROUND OnRoundStart
-		if roundtype != nil then
-			if isfunction(roundtype.onroundstart) then -- why was this doing == true? Just do the call.
-				roundtype.onroundstart()
-			end
-		end
+		//if roundtype != nil then
+		//	if isfunction(roundtype.onroundstart) == true then
+		//		roundtype.onroundstart()
+		//	end
+		//end
 		//PrintMessage(HUD_PRINTTALK, "Game is live, good luck!")
-		/* --Idunno whats this so im not gonna touch it.
+		/*
 		if GetConVar("br_opengatea_enabled"):GetBool() == true then
 			PrintMessage(HUD_PRINTTALK, "Game is live, Gate A will be opened in ".. math.Round(GetGateOpenTime() / 60, 1) .." minutes")
 			timer.Create("GateOpen", GetGateOpenTime(), 1, function()
@@ -144,10 +138,9 @@ function RoundRestart()
 			PrintMessage(HUD_PRINTTALK, "Game is live, good luck!")
 		end
 		*/
-		--Link2006 SPECIAL ROUNDS mtfAndScpDelay == enabled
-		if roundtype.mtfandscpdelay == true then
+		//if roundtype.mtfandscpdelay == true then
 			OpenSCPDoors()
-		end
+		//end
 		net.Start("RoundStart")
 			net.WriteInt(GetRoundTime(), 12)
 		net.Broadcast()
@@ -160,7 +153,7 @@ function RoundRestart()
 			net.Start("SendRoundInfo")
 				net.WriteTable(roundstats)
 			net.Broadcast()
-
+			
 			net.Start("PostStart")
 				net.WriteInt(GetPostTime(), 6)
 				net.WriteInt(1, 4)
@@ -178,13 +171,21 @@ function CheckEscape()
 	for k,v in pairs(ents.FindInSphere(POS_GATEA, 250)) do
 		if v:IsPlayer() == true then
 			if v.isescaping == true then return end
-			if v:Team() == TEAM_CLASSD or v:Team() == TEAM_SCI or v:Team() == TEAM_SCP then
-				if v:Team() == TEAM_SCI then
+			if v:GTeam() == TEAM_CLASSD or v:GTeam() == TEAM_SCI or v:GTeam() == TEAM_SCP then
+				if v:GTeam() == TEAM_SCI then
 					roundstats.rescaped = roundstats.rescaped + 1
+					local rtime = timer.TimeLeft("RoundTime")
+					local exptoget = 300
+					if rtime != nil then
+						exptoget = GetConVar("br_time_round"):GetInt() - (CurTime() - rtime)
+						exptoget = exptoget * 1.8
+						exptoget = math.Round(math.Clamp(exptoget, 300, 10000))
+					end
 					net.Start("OnEscaped")
 						net.WriteInt(1,4)
 					net.Send(v)
 					v:AddFrags(5)
+					v:AddExp(exptoget, true)
 					v:GodEnable()
 					v:Freeze(true)
 					v.canblink = false
@@ -197,12 +198,20 @@ function CheckEscape()
 						v.isescaping = false
 					end)
 					//v:PrintMessage(HUD_PRINTTALK, "You escaped! Try to get escorted by MTF next time to get bonus points.")
-				elseif v:Team() == TEAM_CLASSD then
+				elseif v:GTeam() == TEAM_CLASSD then
 					roundstats.descaped = roundstats.descaped + 1
+					local rtime = timer.TimeLeft("RoundTime")
+					local exptoget = 500
+					if rtime != nil then
+						exptoget = GetConVar("br_time_round"):GetInt() - (CurTime() - rtime)
+						exptoget = exptoget * 2
+						exptoget = math.Round(math.Clamp(exptoget, 500, 10000))
+					end
 					net.Start("OnEscaped")
 						net.WriteInt(2,4)
 					net.Send(v)
 					v:AddFrags(5)
+					v:AddExp(exptoget, true)
 					v:GodEnable()
 					v:Freeze(true)
 					v.canblink = false
@@ -215,12 +224,20 @@ function CheckEscape()
 						v.isescaping = false
 					end)
 					//v:PrintMessage(HUD_PRINTTALK, "You escaped! Try to get escorted by Chaos Insurgency Soldiers next time to get bonus points.")
-				elseif v:Team() == TEAM_SCP then
+				elseif v:GTeam() == TEAM_SCP then
 					roundstats.sescaped = roundstats.sescaped + 1
+					local rtime = timer.TimeLeft("RoundTime")
+					local exptoget = 425
+					if rtime != nil then
+						exptoget = GetConVar("br_time_round"):GetInt() - (CurTime() - rtime)
+						exptoget = exptoget * 1.9
+						exptoget = math.Round(math.Clamp(exptoget, 425, 10000))
+					end
 					net.Start("OnEscaped")
 						net.WriteInt(4,4)
 					net.Send(v)
 					v:AddFrags(5)
+					v:AddExp(exptoget, true)
 					v:GodEnable()
 					v:Freeze(true)
 					v.canblink = false
@@ -240,18 +257,26 @@ end
 timer.Create("CheckEscape", 1, 0, CheckEscape)
 
 function CheckEscortMTF(pl)
-	if pl:Team() != TEAM_GUARD then return end
+	if pl.nextescheck != nil then
+		if pl.nextescheck > CurTime() then
+			pl:PrintMessage(HUD_PRINTTALK, "Wait " .. math.Round(pl.nextescheck - CurTime()) .. " seconds.")
+			return
+		end
+	end
+	pl.nextescheck = CurTime() + 3
+	if pl:GTeam() != TEAM_GUARD then return end
 	local foundpl = nil
 	local foundrs = {}
 	for k,v in pairs(ents.FindInSphere(POS_ESCORT, 350)) do
 		if v:IsPlayer() then
 			if pl == v then
 				foundpl = v
-			elseif v:Team() == TEAM_SCI then
+			elseif v:GTeam() == TEAM_SCI then
 				table.ForceInsert(foundrs, v)
 			end
 		end
 	end
+	if not IsValid(foundpl) then return end
 	rsstr = ""
 	for i,v in ipairs(foundrs) do
 		if i == 1 then
@@ -264,10 +289,19 @@ function CheckEscortMTF(pl)
 	end
 	if #foundrs == 0 then return end
 	pl:AddFrags(#foundrs * 3)
+	pl:AddExp((#foundrs * 425), true)
+	local rtime = timer.TimeLeft("RoundTime")
+	local exptoget = 700
+	if rtime != nil then
+		exptoget = GetConVar("br_time_round"):GetInt() - (CurTime() - rtime)
+		exptoget = exptoget * 2.25
+		exptoget = math.Round(math.Clamp(exptoget, 700, 10000))
+	end
 	for k,v in ipairs(foundrs) do
 		roundstats.rescaped = roundstats.rescaped + 1
 		v:SetSpectator()
 		v:AddFrags(10)
+		v:AddExp(exptoget, true)
 		v:PrintMessage(HUD_PRINTTALK, "You've been escorted by " .. pl:Nick())
 		net.Start("OnEscaped")
 			net.WriteInt(3,4)
@@ -278,14 +312,21 @@ function CheckEscortMTF(pl)
 end
 
 function CheckEscortChaos(pl)
-	if pl:Team() != TEAM_CHAOS then return end
+	if pl.nextescheck != nil then
+		if pl.nextescheck > CurTime() then
+			pl:PrintMessage(HUD_PRINTTALK, "Wait " .. math.Round(pl.nextescheck - CurTime()) .. " seconds.")
+			return
+		end
+	end
+	pl.nextescheck = CurTime() + 3
+	if pl:GTeam() != TEAM_CHAOS then return end
 	local foundpl = nil
 	local foundds = {}
 	for k,v in pairs(ents.FindInSphere(POS_ESCORT, 350)) do
 		if v:IsPlayer() then
 			if pl == v then
 				foundpl = v
-			elseif v:Team() == TEAM_CLASSD then
+			elseif v:GTeam() == TEAM_CLASSD then
 				table.ForceInsert(foundds, v)
 			end
 		end
@@ -302,10 +343,19 @@ function CheckEscortChaos(pl)
 	end
 	if #foundds == 0 then return end
 	pl:AddFrags(#foundds * 3)
+	pl:AddExp((#foundds * 500), true)
+	local rtime = timer.TimeLeft("RoundTime")
+	local exptoget = 800
+	if rtime != nil then
+		exptoget = GetConVar("br_time_round"):GetInt() - (CurTime() - rtime)
+		exptoget = exptoget * 2.5
+		exptoget = math.Round(math.Clamp(exptoget, 800, 10000))
+	end
 	for k,v in ipairs(foundds) do
 		roundstats.dcaptured = roundstats.dcaptured + 1
 		v:SetSpectator()
 		v:AddFrags(10)
+		v:AddExp(exptoget, true)
 		v:PrintMessage(HUD_PRINTTALK, "You've been captured by " .. pl:Nick())
 		net.Start("OnEscaped")
 			net.WriteInt(3,4)
@@ -318,17 +368,17 @@ end
 function WinCheck()
 	if #player.GetAll() < 2 then return end
 	if postround then return end
-
+	
 	local endround = false
-	local ds = team.NumPlayers(TEAM_CLASSD)
-	local mtfs = team.NumPlayers(TEAM_GUARD)
-	local res = team.NumPlayers(TEAM_SCI)
-	local scps = team.NumPlayers(TEAM_SCP)
-	local chaos = team.NumPlayers(TEAM_CHAOS)
+	local ds = gteams.NumPlayers(TEAM_CLASSD)
+	local mtfs = gteams.NumPlayers(TEAM_GUARD)
+	local res = gteams.NumPlayers(TEAM_SCI)
+	local scps = gteams.NumPlayers(TEAM_SCP)
+	local chaos = gteams.NumPlayers(TEAM_CHAOS)
 	local all = #GetAlivePlayers()
-
+	
 	local why = "idk man"
-
+	
 	if scps == all then
 		endround = true
 		why = "there are only scps"
@@ -361,7 +411,7 @@ function WinCheck()
 		net.Start("SendRoundInfo")
 			net.WriteTable(roundstats)
 		net.Broadcast()
-
+		
 		net.Start("PostStart")
 			net.WriteInt(GetPostTime(), 6)
 			net.WriteInt(2, 4)
@@ -379,3 +429,17 @@ function StopRound()
 	timer.Stop("GateOpen")
 	timer.Stop("PlayerInfo")
 end
+
+timer.Create("WinCheckTimer", 25, 0, function()
+	if postround == false and preparing == false then
+		WinCheck()
+	end
+end)
+
+timer.Create("EXPTimer", 120, 0, function()
+	for k,v in pairs(player.GetAll()) do
+		if IsValid(v) and v.AddExp != nil then
+			v:AddExp(100, true)
+		end
+	end
+end)

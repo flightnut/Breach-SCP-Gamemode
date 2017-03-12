@@ -1,6 +1,6 @@
 AddCSLuaFile()
 
-SWEP.Author			= ""
+SWEP.Author			= "Kanade"
 SWEP.Contact		= "Steam"
 SWEP.Purpose		= ""
 SWEP.Instructions	= ""
@@ -133,7 +133,7 @@ function SWEP:Stab(atype, range)
 		local cattack = true
 		if ent:IsNPC() or ent:IsPlayer() then
 			if ent:IsPlayer() then
-				if table.HasValue(self.AttackTeams, ent:Team()) then
+				if table.HasValue(self.AttackTeams, ent:GTeam()) then
 					cattack = true
 					self:OnAttackedPlayer(atype, ent)
 				else

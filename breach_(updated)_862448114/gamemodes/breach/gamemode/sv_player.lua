@@ -81,60 +81,40 @@ function mply:DeleteItems()
 	end
 end
 
-function mply:MTFArmor()
+function mply:ApplyArmor(name)
 	self.BaseStats = {
 		wspeed = self:GetWalkSpeed(),
 		rspeed = self:GetRunSpeed(),
 		jpower = self:GetJumpPower(),
-		 model = "models/player/kerry/class_scientist_"..math.random(1,7)..".mdl"
+		 model = self:GetModel()
 	}
-	self:SetWalkSpeed(self.BaseStats.wspeed * 0.85)
-	self:SetRunSpeed(self.BaseStats.rspeed * 0.85)
-	self:SetJumpPower(self.BaseStats.jpower * 0.85)
-	self:SetModel("models/player/kerry/class_securety.mdl")
-	self.UsingArmor = "armor_mtfguard"
-end
-
-function mply:MTFComArmor()
-	self.BaseStats = {
-		wspeed = self:GetWalkSpeed(),
-		rspeed = self:GetRunSpeed(),
-		jpower = self:GetJumpPower(),
-		 model = "models/player/kerry/class_scientist_"..math.random(1,7)..".mdl"
-	}
-	self:SetWalkSpeed(self.BaseStats.wspeed * 0.90)
-	self:SetRunSpeed(self.BaseStats.rspeed * 0.90)
-	self:SetJumpPower(self.BaseStats.jpower * 0.90)
-	self:SetModel("models/player/riot.mdl")
-	self.UsingArmor = "armor_mtfcom"
-end
-
-function mply:NTFArmor()
-	self.BaseStats = {
-		wspeed = self:GetWalkSpeed(),
-		rspeed = self:GetRunSpeed(),
-		jpower = self:GetJumpPower(),
-		 model = "models/player/kerry/class_scientist_"..math.random(1,7)..".mdl"
-	}
-	self:SetWalkSpeed(self.BaseStats.wspeed * 0.85)
-	self:SetRunSpeed(self.BaseStats.rspeed * 0.85)
-	self:SetJumpPower(self.BaseStats.jpower * 0.85)
-	self:SetModel("models/player/urban.mdl")
-	self.UsingArmor = "armor_ntf"
-end
-
-function mply:ChaosInsArmor()
-	self.BaseStats = {
-		wspeed = self:GetWalkSpeed(),
-		rspeed = self:GetRunSpeed(),
-		jpower = self:GetJumpPower(),
-		 model = "models/player/kerry/class_scientist_"..math.random(1,7)..".mdl"
-	}
-	self:SetWalkSpeed(self.BaseStats.wspeed * 0.86)
-	self:SetRunSpeed(self.BaseStats.rspeed * 0.86)
-	self:SetJumpPower(self.BaseStats.jpower * 0.86)
-	self:SetModel("models/mw2/skin_04/mw2_soldier_04.mdl")
-	self.UsingArmor = "armor_chaosins"
+	local stats = 0.9
+	if name == "armor_ntf" then
+		self:SetModel("models/player/pmc_4/pmc__06.mdl")
+		stats = 0.8
+	elseif name == "armor_mtfguard" then
+		self:SetModel("models/mtf/mtf remasteredhd.mdl")
+		stats = 0.85
+	elseif name == "armor_mtfcom" then
+		self:SetModel("models/mtf/mtf remasteredhd.mdl")
+		stats = 0.9
+	elseif name == "armor_mtfl" then
+		self:SetModel("models/mw2/skin_04/mw2_soldier_04.mdl")
+		stats = 0.85
+	elseif name == "armor_security" then
+		self:SetModel(table.Random(SECURITYMODELS))
+		stats = 0.92
+	elseif name == "armor_fireproof" then
+		self:SetModel("models/player/kerry/class_securety.mdl")
+		stats = 0.9
+	elseif name == "armor_chaosins" then
+		self:SetModel("models/friskiukas/bf4/us_01.mdl")
+		stats = 0.85
+	end
+	self:SetWalkSpeed(self.BaseStats.wspeed * stats)
+	self:SetRunSpeed(self.BaseStats.rspeed * stats)
+	self:SetJumpPower(self.BaseStats.jpower * stats)
+	self.UsingArmor = name
 end
 
 function mply:UnUseArmor()
@@ -153,396 +133,28 @@ function mply:UnUseArmor()
 end
 
 function mply:SetSpectator()
+	self:Flashlight( false )
+	self:AllowFlashlight( false )
 	self.handsmodel = nil
 	self:Spectate(6)
 	self:StripWeapons()
 	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_SPEC)
+	self:SetGTeam(TEAM_SPEC)
 	self:SetNoDraw(true)
-	self:SetNoCollideWithTeammates(true)
 	if self.SetNClass then
-		self:SetNClass(ROLE_SPEC)
+		self:SetNClass(ROLES.ROLE_SPEC)
 	end
 	self.Active = true
 	print("adding " .. self:Nick() .. " to spectators")
 	self.canblink = false
-	self:AllowFlashlight( false )
 	self:SetNoTarget( true )
 	self.BaseStats = nil
 	self.UsingArmor = nil
 	//self:Spectate(OBS_MODE_IN_EYE)
 end
 
-function mply:SetSCP1048a()
-	self.handsmodel = nil
-	self:UnSpectate()
-	self:GodDisable()
-	self:Spawn()
-	self:SetPos(SPAWN_173 + Vector(0, 30, 0))
-	self:StripWeapons()
-	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_SCP)
-	self:SetNClass(ROLE_SCP1048A)
-	self:SetModel("models/player/mrsilver/SCP-1048-A.mdl")
-	self:SetHealth(500)
-	self:SetMaxHealth(500)
-	self:SetArmor(0)
-	self:SetWalkSpeed(100)
-	self:SetRunSpeed(180)
-	self:SetMaxSpeed(180)
-	self:SetJumpPower(250)
-	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
-	self.Active = true
-	self:SetupHands()
-	self.canblink = false
-	self:AllowFlashlight( false )
-	self.WasTeam = TEAM_SCP
-	self:SetNoTarget( true )
-	self:Give("weapon_scp_1048a")
-	self:SelectWeapon("weapon_scp_1048a")
-	self.BaseStats = nil
-	self.UsingArmor = nil
-end
-
-function mply:SetSCP035()
-	self.handsmodel = nil
-	self:UnSpectate()
-	self:GodDisable()
-	self:Spawn()
-	self:SetPos(SPAWN_035)
-	self:StripWeapons()
-	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_SCP)
-	self:SetNClass(ROLE_SCP035)
-	self:SetModel("models/vinrax/player/035_player.mdl")
-	self:SetHealth(350)
-	self:SetMaxHealth(350)
-	self:SetArmor(0)
-	self:SetWalkSpeed(140)
-	self:SetRunSpeed(235)
-	self:SetMaxSpeed(235)
-	self:SetJumpPower(200)
-	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
-	self.Active = true
-	self.canblink = false
-	self:AllowFlashlight( true )
-	self.WasTeam = TEAM_SCP
-	self:SetNoTarget( true )
-	timer.Create( "035weps", 5, 1, function()
-	if self:GetNClass() == ROLE_SCP035 then
-	--self:GiveNTFwep()
-	self:Give("weapon_mtf_deagle") --YOU GET A DEAGLE INSTEAD. >:(
-	--self:GiveAmmo(450, "SMG1", true) --No.
-	--self:GiveAmmo(450, "AR2", true) -- Nope.
-	self:GiveAmmo(1000, "Pistol") --Yes.
-	self:Give("weapon_crowbar")
-	self:Give("keycard_level3")
-	self:Give("item_radio")
-	self:SelectWeapon("weapon_mtf_deagle")
-	end
-	end)
-	self:SetupHands()
-	self.BaseStats = nil
-	self.UsingArmor = nil
-end
-
-function mply:SetClassD()
-	self.handsmodel = nil
-	self:UnSpectate()
-	self:GodDisable()
-	self:Spawn()
-	self:StripWeapons()
-	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_CLASSD)
-	self:SetModel("models/player/kerry/class_d_"..math.random(1,7)..".mdl")
-	self:SetHealth(100)
-	self:SetMaxHealth(100)
-	self:SetArmor(0)
-	self:SetWalkSpeed(120)
-	self:SetRunSpeed(240)
-	self:SetMaxSpeed(240)
-	self:SetJumpPower(200)
-	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
-	self:SetNClass(ROLE_CLASSD)
-	self.Active = true
-	self:SetupHands()
-	self.canblink = true
-	self:AllowFlashlight( false )
-	self.WasTeam = TEAM_CLASSD
-	self:SetNoTarget( false )
-	self.BaseStats = nil
-	self.UsingArmor = nil
-end
-
-function mply:SetScientist()
-	self.handsmodel = nil
-	self:UnSpectate()
-	self:GodDisable()
-	self:Spawn()
-	self:StripWeapons()
-	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_SCI)
-	self:SetModel("models/player/kerry/class_scientist_"..math.random(1,7)..".mdl")
-	self:SetHealth(100)
-	self:SetMaxHealth(100)
-	self:SetArmor(0)
-	self:SetWalkSpeed(120)
-	self:SetRunSpeed(240)
-	self:SetMaxSpeed(240)
-	self:SetJumpPower(200)
-	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
-	self:SetNClass(ROLE_RES)
-	self.Active = true
-	self:SetupHands()
-	self.canblink = true
-	self:AllowFlashlight( true )
-	self.WasTeam = TEAM_SCI
-	self:SetNoTarget( false )
-	self:Give("keycard_level2")
-	self.BaseStats = nil
-	self.UsingArmor = nil
-end
-
-function mply:SetCommander()
-	self.handsmodel = nil
-	self:UnSpectate()
-	self:GodDisable()
-	self:Spawn()
-	self:StripWeapons()
-	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_GUARD)
-	//self:SetModel("models/player/riot.mdl")
-	self:SetHealth(100)
-	self:SetMaxHealth(100)
-	self:SetWalkSpeed(120)
-	self:SetRunSpeed(240)
-	self:SetMaxSpeed(240)
-	self:SetJumpPower(200)
-	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
-	self:SetNClass(ROLE_MTFCOM)
-	self.Active = true
-	self:Give("keycard_level4")
-	self:Give("item_medkit")
-	self:Give("weapon_stunstick")
-	self:Give("weapon_mtf_mp5")
-	self:Give("item_radio")
-	self:GetWeapon("weapon_mtf_mp5"):SetClip1(30)
-	self:SelectWeapon("weapon_mtf_mp5")
-	self:GiveAmmo(150, "SMG1", false)
-	self:SetupHands()
-	self.canblink = true
-	self:AllowFlashlight( true )
-	self.WasTeam = TEAM_GUARD
-	self:SetNoTarget( false )
-	self:MTFComArmor()
-end
-
-function mply:SetGuard()
-	self.handsmodel = nil
-	self:UnSpectate()
-	self:GodDisable()
-	self:Spawn()
-	self:StripWeapons()
-	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_GUARD)
-	//self:SetModel("models/player/swat.mdl")
-	self:SetHealth(100)
-	self:SetMaxHealth(100)
-	self:SetWalkSpeed(120)
-	self:SetRunSpeed(240)
-	self:SetMaxSpeed(240)
-	self:SetJumpPower(200)
-	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
-	self:SetNClass(ROLE_MTFGUARD)
-	self.Active = true
-	self:Give("keycard_level3")
-	self:Give("weapon_stunstick")
-	self:Give("item_radio")
-	self:GiveMTFwep()
-	self:SetupHands()
-	//PrintTable(debug.getinfo( self.SetupHands ))
-	self.canblink = true
-	self:AllowFlashlight( true )
-	self.WasTeam = TEAM_GUARD
-	self:SetNoTarget( false )
-	self:MTFArmor()
-end
-
-function mply:SetChaosInsurgency(stealth)
-	self.handsmodel = {
-		model = "models/weapons/c_arms_cstrike.mdl",
-		body = 10000000,
-		skin = 0
-	}
-	self:UnSpectate()
-	self:GodDisable()
-	self:Spawn()
-	self:StripWeapons()
-	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_CHAOS)
-	self:SetHealth(100)
-	self:SetMaxHealth(100)
-	self:SetArmor(25)
-	self:SetWalkSpeed(120)
-	self:SetRunSpeed(240)
-	self:SetMaxSpeed(240)
-	self:SetJumpPower(200)
-	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
-	self.Active = true
-	self:Give("weapon_slam")
-	self:Give("weapon_stunstick")
-	self:Give("item_radio")
-	if stealth == 1 then
-		//self:SetModel("models/player/swat.mdl")
-		self:MTFArmor()
-		self:Give("keycard_level3")
-		self:GiveMTFwep()
-		self:SetNClass(ROLE_MTFGUARD)
-	elseif stealth == 2 then
-		//self:SetModel("models/player/urban.mdl")
-		self:NTFArmor()
-		self:Give("keycard_level4")
-		self:GiveNTFwep()
-		self:SetNClass(ROLE_MTFNTF)
-	else
-		self:GiveCIwep()
-		self:Give("keycard_omni")
-		//self:SetModel("models/mw2/skin_04/mw2_soldier_04.mdl")
-		self:ChaosInsArmor()
-		if stealth == 3 then
-			self:SetNClass(ROLE_MTFNTF)
-		else
-			self:SetNClass(ROLE_CHAOS)
-		end
-	end
-	self:SetupHands()
-	self.canblink = true
-	self:AllowFlashlight( true )
-	self.WasTeam = TEAM_CHAOS
-	self:SetNoTarget( false )
-end
-
-function mply:SetChaosInsCom(spawn)
-	self.handsmodel = {
-		model = "models/weapons/c_arms_cstrike.mdl",
-		body = 10000000,
-		skin = 0
-	}
-	self:UnSpectate()
-	self:GodDisable()
-	local lpos = self:GetPos()
-	if spawn == true then
-		self:Spawn()
-		self:SetPos(lpos)
-	else
-		self:Spawn()
-	end
-	self:StripWeapons()
-	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_CHAOS)
-	self:SetHealth(100)
-	self:SetMaxHealth(100)
-	self:SetArmor(25)
-	self:SetWalkSpeed(135)
-	self:SetRunSpeed(255)
-	self:SetMaxSpeed(255)
-	self:SetJumpPower(200)
-	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
-	self.Active = true
-	self:Give("weapon_slam")
-	self:Give("weapon_stunstick")
-	self:Give("item_radio")
-	self:Give("keycard_omni")
-	self:GiveCIwep()
-	self:SetModel("models/mw2/skin_05/mw2_soldier_04.mdl")
-	self:SetBodyGroups( "1411" )
-	self:SetupHands()
-	self.canblink = true
-	self:AllowFlashlight( true )
-	self.WasTeam = TEAM_CHAOS
-	self:SetNClass(ROLE_CHAOSCOM)
-	self:SetNoTarget( false )
-end
-
-function mply:SetSiteDirector(spawn)
-	self:UnSpectate()
-	self:GodDisable()
-	local lpos = self:GetPos()
-	if spawn == true then
-		self:Spawn()
-		self:SetPos(lpos)
-	else
-		self:Spawn()
-	end
-	self:StripWeapons()
-	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_GUARD)
-	self:SetHealth(100)
-	self:SetMaxHealth(100)
-	self:SetWalkSpeed(135)
-	self:SetRunSpeed(255)
-	self:SetMaxSpeed(255)
-	self:SetJumpPower(200)
-	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
-	self.Active = true
-	self:Give("item_radio")
-	self:Give("keycard_level5")
-	self:Give("weapon_mtf_deagle")
-	self:GiveAmmo(35, "Pistol", false)
-	self:SetModel("models/player/breen.mdl")
-	self:SetPlayerColor( Vector(0,0,0) )
-	self:SetupHands()
-	self.canblink = true
-	self:AllowFlashlight( true )
-	self.WasTeam = TEAM_GUARD
-	self:SetNClass(ROLE_SITEDIRECTOR)
-	self:SetNoTarget( false )
-end
-
-function mply:SetNTF()
-	self.handsmodel = nil
-	self:UnSpectate()
-	self:GodDisable()
-	self:Spawn()
-	self:StripWeapons()
-	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_GUARD)
-	self:SetModel("models/player/urban.mdl")
-	self:SetHealth(100)
-	self:SetMaxHealth(100)
-	self:SetArmor(25)
-	self:SetWalkSpeed(120)
-	self:SetRunSpeed(240)
-	self:SetMaxSpeed(240)
-	self:SetJumpPower(200)
-	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
-	self:SetNClass(ROLE_MTFNTF)
-	self.Active = true
-	self:Give("keycard_level4")
-	self:Give("weapon_stunstick")
-	self:Give("item_radio")
-	self:GiveNTFwep()
-	self:SetupHands()
-	self.canblink = true
-	self:AllowFlashlight( true )
-	self.WasTeam = TEAM_GUARD
-	self:SetNoTarget( false )
-	net.Start("RolesSelected")
-	net.Send(self)
-	self:NTFArmor()
-end
-
 function mply:SetSCP173()
+	self:Flashlight( false )
 	self.handsmodel = nil
 	self:UnSpectate()
 	self:GodDisable()
@@ -550,19 +162,17 @@ function mply:SetSCP173()
 	self:SetPos(SPAWN_173)
 	self:StripWeapons()
 	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_SCP)
-	self:SetNClass(ROLE_SCP173)
+	self:SetGTeam(TEAM_SCP)
+	self:SetNClass(ROLES.ROLE_SCP173)
 	self:SetModel("models/breach173.mdl")
-	self:SetHealth(1700)
-	self:SetMaxHealth(1700)
+	self:SetHealth(2000)
+	self:SetMaxHealth(2000)
 	self:SetArmor(0)
-	self:SetJumpPower(175)
-	self:SetWalkSpeed(500)
-	self:SetRunSpeed(500)
-	self:SetMaxSpeed(500)
+	self:SetWalkSpeed(350)
+	self:SetRunSpeed(350)
+	self:SetMaxSpeed(350)
 	self:SetJumpPower(200)
 	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
 	self.Active = true
 	self:SetupHands()
 	self.canblink = false
@@ -576,6 +186,7 @@ function mply:SetSCP173()
 end
 
 function mply:SetSCP106()
+	self:Flashlight( false )
 	self.handsmodel = nil
 	self:UnSpectate()
 	self:GodDisable()
@@ -583,18 +194,17 @@ function mply:SetSCP106()
 	self:SetPos(SPAWN_106)
 	self:StripWeapons()
 	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_SCP)
-	self:SetNClass(ROLE_SCP106)
+	self:SetGTeam(TEAM_SCP)
+	self:SetNClass(ROLES.ROLE_SCP106)
 	self:SetModel("models/vinrax/player/scp106_player.mdl")
-	self:SetHealth(1700)
-	self:SetMaxHealth(1700)
+	self:SetHealth(2000)
+	self:SetMaxHealth(2000)
 	self:SetArmor(0)
 	self:SetWalkSpeed(165)
 	self:SetRunSpeed(165)
 	self:SetMaxSpeed(165)
 	self:SetJumpPower(200)
 	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
 	self.Active = true
 	self:SetupHands()
 	self.canblink = false
@@ -608,6 +218,7 @@ function mply:SetSCP106()
 end
 
 function mply:SetSCP049()
+	self:Flashlight( false )
 	self.handsmodel = nil
 	self:UnSpectate()
 	self:GodDisable()
@@ -615,18 +226,17 @@ function mply:SetSCP049()
 	self:SetPos(SPAWN_049)
 	self:StripWeapons()
 	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_SCP)
-	self:SetNClass(ROLE_SCP049)
+	self:SetGTeam(TEAM_SCP)
+	self:SetNClass(ROLES.ROLE_SCP049)
 	self:SetModel("models/vinrax/player/scp049_player.mdl")
-	self:SetHealth(1400)
-	self:SetMaxHealth(1400)
+	self:SetHealth(1750)
+	self:SetMaxHealth(1750)
 	self:SetArmor(0)
 	self:SetWalkSpeed(140)
 	self:SetRunSpeed(140)
 	self:SetMaxSpeed(140)
 	self:SetJumpPower(200)
 	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
 	self.Active = true
 	self:SetupHands()
 	self.canblink = false
@@ -640,6 +250,7 @@ function mply:SetSCP049()
 end
 
 function mply:SetSCP457()
+	self:Flashlight( false )
 	self.handsmodel = nil
 	self:UnSpectate()
 	self:GodDisable()
@@ -647,19 +258,18 @@ function mply:SetSCP457()
 	self:SetPos(SPAWN_457)
 	self:StripWeapons()
 	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_SCP)
-	self:SetNClass(ROLE_SCP457)
+	self:SetGTeam(TEAM_SCP)
+	self:SetNClass(ROLES.ROLE_SCP457)
 	self:SetModel("models/player/corpse1.mdl")
 	//self:SetMaterial( "models/flesh", false )
 	self:SetHealth(2000)
 	self:SetMaxHealth(2000)
 	self:SetArmor(0)
-	self:SetWalkSpeed(175)
-	self:SetRunSpeed(200)
-	self:SetMaxSpeed(200)
-	self:SetJumpPower(215)
+	self:SetWalkSpeed(135)
+	self:SetRunSpeed(135)
+	self:SetMaxSpeed(135)
+	self:SetJumpPower(190)
 	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
 	self.Active = true
 	self:SetupHands()
 	self.canblink = false
@@ -684,10 +294,11 @@ function mply:DropWep(class, clip)
 end
 
 function mply:SetSCP0082()
+	self:Flashlight( false )
 	self.handsmodel = nil
 	self:UnSpectate()
 	self:GodDisable()
-	self:SetTeam(TEAM_SCP)
+	self:SetGTeam(TEAM_SCP)
 	self:SetModel("models/player/zombie_classic.mdl")
 	self:SetHealth(850)
 	self:SetMaxHealth(850)
@@ -697,8 +308,7 @@ function mply:SetSCP0082()
 	self:SetMaxSpeed(160)
 	self:SetJumpPower(200)
 	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
-	self:SetNClass(ROLE_SCP0082)
+	self:SetNClass(ROLES.ROLE_SCP0082)
 	self.Active = true
 	print("adding " .. self:Nick() .. " to zombies")
 	self:SetupHands()
@@ -728,21 +338,22 @@ function mply:SetSCP0082()
 end
 
 function mply:SetSCP0492()
+	self:Flashlight( false )
 	self.handsmodel = nil
 	self:UnSpectate()
 	self:GodDisable()
-	self:SetTeam(TEAM_SCP)
+	self:SetGTeam(TEAM_SCP)
 	self:SetModel("models/player/zombie_classic.mdl")
-	self:SetHealth(750)
-	self:SetMaxHealth(750)
+	local hzom = math.Clamp(1000 - (#player.GetAll() * 16), 300, 1000)
+	self:SetHealth(hzom)
+	self:SetMaxHealth(hzom)
 	self:SetArmor(0)
 	self:SetWalkSpeed(160)
 	self:SetRunSpeed(160)
 	self:SetMaxSpeed(160)
 	self:SetJumpPower(200)
 	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
-	self:SetNClass(ROLE_SCP0492)
+	self:SetNClass(ROLES.ROLE_SCP0492)
 	self.Active = true
 	print("adding " .. self:Nick() .. " to zombies")
 	self:SetupHands()
@@ -771,12 +382,146 @@ function mply:SetSCP0492()
 	self.UsingArmor = nil
 end
 
+function mply:SetupNormal()
+	self.BaseStats = nil
+	self.UsingArmor = nil
+	self:UnSpectate()
+	self:Spawn()
+	self:GodDisable()
+	self:SetNoDraw(false)
+	self:SetNoTarget(false)
+	self:SetupHands()
+	self:RemoveAllAmmo()
+	self:StripWeapons()
+	self.canblink = true
+end
+
+function mply:ApplyRoleStats(role)
+	self:SetNClass(role.name)
+	self:SetGTeam(role.team)
+	for k,v in pairs(role.weapons) do
+		self:Give(v)
+	end
+	for k,v in pairs(role.ammo) do
+		self:GiveAmmo(v[2],v[1], false)
+	end
+	self:SetHealth(role.health)
+	self:SetWalkSpeed(120 * role.walkspeed)
+	self:SetRunSpeed(240 * role.runspeed)
+	self:SetJumpPower(200 * role.jumppower)
+	self:SetModel( table.Random(role.models) )
+	self:Flashlight( false )
+	self:AllowFlashlight( role.flashlight )
+	if role.vest != nil then
+		self:ApplyArmor(role.vest)
+	end
+	if role.pmcolor != nil then
+		self:SetPlayerColor(Vector(role.pmcolor.r / 255, role.pmcolor.g / 255, role.pmcolor.b / 255))
+	end
+	net.Start("RolesSelected")
+	net.Send(self)
+end
+
+function mply:SetSecurityI1()
+	local thebestone = nil
+	local usechaos = false
+	if math.random(1,6) == 6 then usechaos = true end
+	for k,v in pairs(ALLCLASSES["security"]["roles"]) do
+		if v.importancelevel == 1 then
+			local skip = false
+			if usechaos == true then
+				if v.team == TEAM_GUARD then
+					skip = true
+				end
+			else
+				if v.team == TEAM_CHAOS then
+					skip = true
+				end
+			end
+			if skip == false then
+				local can = true
+				if v.customcheck != nil then
+					if v.customcheck(self) == false then
+						can = false
+					end
+				end
+				local using = 0
+				for _,pl in pairs(player.GetAll()) do
+					if pl:GetNClass() == v.name then
+						using = using + 1
+					end
+				end
+				if using >= v.max then can = false end
+				if can == true then
+					if self:GetLevel() >= v.level then
+						if thebestone != nil then
+							if thebestone.sorting < v.sorting then
+								thebestone = v
+							end
+						else
+							thebestone = v
+						end
+					end
+				end
+			end
+		end
+	end
+	if thebestone == nil then
+		thebestone = ALLCLASSES["security"]["roles"][1]
+	end
+	self:SetupNormal()
+	self:ApplyRoleStats(thebestone)
+end
+
+function mply:SetClassD()
+	self:SetRoleBestFrom("classds")
+end
+
+function mply:SetResearcher()
+	self:SetRoleBestFrom("researchers")
+end
+
+function mply:SetRoleBestFrom(role)
+	local thebestone = nil
+	for k,v in pairs(ALLCLASSES[role]["roles"]) do
+		local can = true
+		if v.customcheck != nil then
+			if v.customcheck(self) == false then
+				can = false
+			end
+		end
+		local using = 0
+		for _,pl in pairs(player.GetAll()) do
+			if pl:GetNClass() == v.name then
+				using = using + 1
+			end
+		end
+		if using >= v.max then can = false end
+		if can == true then
+			if self:GetLevel() >= v.level then
+				if thebestone != nil then
+					if thebestone.level < v.level then
+						thebestone = v
+					end
+				else
+					thebestone = v
+				end
+			end
+		end
+	end
+	if thebestone == nil then
+		thebestone = ALLCLASSES[role]["roles"][1]
+	end
+	self:SetupNormal()
+	self:ApplyRoleStats(thebestone)
+end
+
 function mply:IsActivePlayer()
 	return self.Active
 end
 
 hook.Add( "KeyPress", "keypress_spectating", function( ply, key )
-	if ply:Team() != TEAM_SPEC then return end
+	if ply:GTeam() != TEAM_SPEC then return end
 	if ( key == IN_ATTACK ) then
 		ply:SpectatePlayerLeft()
 	elseif ( key == IN_ATTACK2 ) then
@@ -789,7 +534,7 @@ end )
 function mply:SpectatePlayerRight()
 	if !self:Alive() then return end
 	if self:GetObserverMode() != OBS_MODE_IN_EYE and
-	   self:GetObserverMode() != OBS_MODE_CHASE
+	   self:GetObserverMode() != OBS_MODE_CHASE 
 	then return end
 	self:SetNoDraw(true)
 	local allply = GetAlivePlayers()
@@ -799,7 +544,7 @@ function mply:SpectatePlayerRight()
 	end
 	self.SpecPly = self.SpecPly - 1
 	if self.SpecPly < 1 then
-		self.SpecPly = #allply
+		self.SpecPly = #allply 
 	end
 	for k,v in pairs(allply) do
 		if k == self.SpecPly then
@@ -811,7 +556,7 @@ end
 function mply:SpectatePlayerLeft()
 	if !self:Alive() then return end
 	if self:GetObserverMode() != OBS_MODE_IN_EYE and
-	   self:GetObserverMode() != OBS_MODE_CHASE
+	   self:GetObserverMode() != OBS_MODE_CHASE 
 	then return end
 	self:SetNoDraw(true)
 	local allply = GetAlivePlayers()
@@ -832,7 +577,7 @@ end
 
 function mply:ChangeSpecMode()
 	if !self:Alive() then return end
-	if !(self:Team() == TEAM_SPEC) then return end
+	if !(self:GTeam() == TEAM_SPEC) then return end
 	self:SetNoDraw(true)
 	local m = self:GetObserverMode()
 	local allply = #GetAlivePlayers()
@@ -847,7 +592,7 @@ function mply:ChangeSpecMode()
 		self:Spectate(OBS_MODE_CHASE)
 	end
 	*/
-
+	
 	if m == OBS_MODE_IN_EYE then
 		self:Spectate(OBS_MODE_CHASE)
 		self:SpectatePlayerLeft()
@@ -859,86 +604,103 @@ function mply:ChangeSpecMode()
 	else
 		self:Spectate(OBS_MODE_ROAMING)
 	end
-
+	
 end
 
---simple and it works (for link)
-function mply:SetFrozen(frozen,twalkSpeed,tRunSpeed,tjumpPwr)
-	if(frozen)then
-		self:SetNWBool( "CustomFrozen", true ) --Added by Link2006 Because fuckoff Variables that don't get set for no fucking reason god fucking damn it
-		-- 0.00001 is required because -1 is abused lmao
-		self:SetWalkSpeed(0.00001)
-		self:SetRunSpeed(0.00001)
-		self:SetJumpPower(0.00001)
-	else
-		self:SetNWBool( "CustomFrozen", false ) --same here btw
-		self:SetWalkSpeed(twalkSpeed)
-		self:SetRunSpeed(tRunSpeed)
-		self:SetJumpPower(tjumpPwr)
+function mply:SaveExp()
+	self:SetPData( "breach_exp", self:GetExp() )
+end
+
+function mply:SaveLevel()
+	self:SetPData( "breach_level", self:GetLevel() )
+end
+
+function mply:AddExp(amount, msg)
+	amount = amount * GetConVar("br_expscale"):GetInt()
+	if not self.GetNEXP then
+		player_manager.RunClass( self, "SetupDataTables" )
 	end
-end
-
---Moved everything into ONE function so i don't have to keep editing BOTH code
-function Link2006_RespawnPlayer(ply,num,target)  --Calling Player (admins), Selected Team (example: Class D), Target Player (Who is getting respawned)
-	--Just to be REALLY safe :)
-	if !target:IsValid() then return end --Is it a valid target? If not, Abort spawn
-	if !target:IsPlayer() then return end  --Is the target a player? If not, Abort spawn
-
-	--if ( table.HasValue( { "Developer", "superadmin", "developer", "admin"}, ply:GetUserGroup() ) ) then
-	if ply:IsAdmin() or ply:IsSuperAdmin() then --If admin called the respawn, Respawn target.
-		if num == 1 then
-			target:SetSpectator() --cool.
-		elseif num == 2 then
-			target:SetClassD()
-			target:SetPos(table.Random(SPAWN_CLASSD))
-		elseif num == 3 then
-			target:SetScientist()
-			target:SetPos(table.Random(SPAWN_SCIENT))
-		elseif num == 4 then
-			target:SetCommander()
-			target:SetPos(table.Random(SPAWN_GUARD))
-		elseif num == 5 then
-			target:SetGuard()
-			target:SetPos(table.Random(SPAWN_GUARD))
-		elseif num == 6 then
-			target:SetChaosInsurgency(3)
-			target:SetPos(table.Random(SPAWN_OUTSIDE))
-		elseif num == 7 then
-			target:SetSiteDirector(true) --Uh
-			target:SetPos(table.Random(SPAWN_SCIENT)) --idk where else to put him.
-		elseif num == 8 then
-			target:SetNTF()
-			target:SetPos(table.Random(SPAWN_OUTSIDE))
-		elseif num == 9 then --SCPs are automaticly spwaned in their room. No need to move.
-			target:SetSCP173()
-		elseif num == 10 then
-			target:SetSCP1048a()
-		elseif num == 11 then
-			target:SetSCP106()
-		elseif num == 12 then
-			target:SetSCP049()
-		elseif num == 13 then
-			target:SetSCP457()
-		elseif num == 14 then
-			target:SetSCP0082() --Plague Zombie (Infects players)
-			target:SetPos(table.Random(SPAWN_ZOMBIES))
-		elseif num == 15 then
-			target:SetSCP0492() --SCP049 Zombie (Kills players)
-			target:SetPos(table.Random(SPAWN_ZOMBIES))
-		elseif num == 16 then
-			target:SetSCP035()
+	if self.GetNEXP and self.SetNEXP then
+		self:SetNEXP( self:GetNEXP() + amount )
+		if msg != nil then
+			self:PrintMessage(HUD_PRINTTALK, "LevelS: Earned " .. amount .. " Experience, your EXP now: " .. self:GetNEXP())
+		else
+			self:PrintMessage(HUD_PRINTCONSOLE, "LevelS: Earned " .. amount .. " Experience, your EXP now: " .. self:GetNEXP())
+		end
+		local xp = self:GetNEXP()
+		local lvl = self:GetNLevel()
+		if lvl == 0 then
+			if xp >= 3000 then
+				self:AddLevel(1)
+				self:SetNEXP(xp - 7000)
+				self:SaveLevel()
+				PrintMessage(HUD_PRINTTALK, self:Nick() .. " reached level 1! Congratulations!")
+			end
+		elseif lvl == 1 then
+			if xp >= 5000 then
+				self:AddLevel(1)
+				self:SetNEXP(xp - 10000)
+				self:SaveLevel()
+				PrintMessage(HUD_PRINTTALK, self:Nick() .. " reached level 2! Congratulations!")
+			end
+		elseif lvl == 2 then
+			if xp >= 7500 then
+				self:AddLevel(1)
+				self:SetNEXP(xp - 12500)
+				self:SaveLevel()
+				PrintMessage(HUD_PRINTTALK, self:Nick() .. " reached level 3! Congratulations!")
+			end
+		elseif lvl == 3 then
+			if xp >= 11000 then
+				self:AddLevel(1)
+				self:SetNEXP(xp - 15000)
+				self:SaveLevel()
+				PrintMessage(HUD_PRINTTALK, self:Nick() .. " reached level 4! Congratulations!")
+			end
+		elseif lvl == 4 then
+			if xp >= 14000 then
+				self:AddLevel(1)
+				self:SetNEXP(xp - 17000)
+				self:SaveLevel()
+				PrintMessage(HUD_PRINTTALK, self:Nick() .. " reached level 5! Congratulations!")
+			end
+		elseif lvl == 5 then
+			if xp >= 25000 then
+				self:AddLevel(1)
+				self:SetNEXP(xp - 20000)
+				self:SaveLevel()
+				PrintMessage(HUD_PRINTTALK, self:Nick() .. " reached level OMNI! Congratulations!")
+			end
+		elseif lvl == 6 then
+			if xp >= 100000 then
+				self:AddLevel(1)
+				self:SetNEXP(xp - 100000)
+				self:SaveLevel()
+				PrintMessage(HUD_PRINTTALK, self:Nick() .. " is a now a Veteran! Congratulations!")
+			end
+		end
+		self:SetPData( "breach_exp", self:GetExp() )
+	else
+		if self.SetNEXP then
+			self:SetNEXP( 0 )
+		else
+			ErrorNoHalt( "Cannot set the exp, SetNEXP invalid" )
 		end
 	end
 end
 
-net.Receive( "spawnas", function( len, ply )
-	local num = net.ReadInt( 32 )
-	Link2006_RespawnPlayer(ply,num,ply) --Admin respawns themselves
-
-end)
-
-net.Receive( "spawnthemas", function( len, ply )
-	local num = net.ReadInt( 32 )
-	local trg = net.ReadEntity()
-	Link2006_RespawnPlayer(ply,num,trg) --Admin respawns a player
-end)
+function mply:AddLevel(amount)
+	if not self.GetNLevel then
+		player_manager.RunClass( self, "SetupDataTables" )
+	end
+	if self.GetNLevel and self.SetNLevel then
+		self:SetNLevel( self:GetNLevel() + amount )
+		self:SetPData( "breach_level", self:GetNLevel() )
+	else
+		if self.SetNLevel then
+			self:SetNLevel( 0 )
+		else
+			ErrorNoHalt( "Cannot set the exp, SetNLevel invalid" )
+		end
+	end
+end

@@ -1,7 +1,6 @@
 // Shared file
-
 GM.Name 	= "Breach"
-GM.Author 	= ""
+GM.Author 	= "Kanade"
 GM.Email 	= ""
 GM.Website 	= ""
 
@@ -19,50 +18,66 @@ TEAM_CHAOS = 6
 MINPLAYERS = 2
 
 // Team setup
+team.SetUp( 1, "Default", Color(255, 255, 0) )
+/* Replaced with GTeams
 team.SetUp( TEAM_SCP, "SCPs", Color(237, 28, 63) )
 team.SetUp( TEAM_GUARD, "MTF Guards", Color(0, 100, 255) )
 team.SetUp( TEAM_CLASSD, "Class Ds", Color(255, 130, 0) )
 team.SetUp( TEAM_SPEC, "Spectators", Color(141, 186, 160) )
 team.SetUp( TEAM_SCI, "Scientists", Color(66, 188, 244) )
 team.SetUp( TEAM_CHAOS, "Chaos Insurgency", Color(0, 100, 255) )
+*/
 
 function GetLangRole(rl)
 	if clang == nil then return rl end
-	if rl == ROLE_SCP035 then return clang.ROLE_SCP035 end
-	if rl == ROLE_SCP1048A then return clang.ROLE_SCP1048A end
-	if rl == ROLE_SCP173 then return clang.ROLE_SCP173 end
-	if rl == ROLE_SCP106 then return clang.ROLE_SCP106 end
-	if rl == ROLE_SCP049 then return clang.ROLE_SCP049 end
-	if rl == ROLE_SCP457 then return clang.ROLE_SCP457 end
-	if rl == ROLE_SCP0492 then return clang.ROLE_SCP0492 end
-	if rl == ROLE_MTFGUARD then return clang.ROLE_MTFGUARD end
-	if rl == ROLE_MTFCOM then return clang.ROLE_MTFCOM end
-	if rl == ROLE_MTFNTF then return clang.ROLE_MTFNTF end
-	if rl == ROLE_CHAOS then return clang.ROLE_CHAOS end
-	if rl == ROLE_CLASSD then return clang.ROLE_CLASSD end
-	if rl == ROLE_RES then return clang.ROLE_RES end
-	if rl == ROLE_SPEC then return clang.ROLE_SPEC end
-	return rl
+	local rolef = nil
+	for k,v in pairs(ROLES) do
+		if rl == v then
+			rolef = k
+		end
+	end
+	if rolef != nil then
+		return clang.ROLES[rolef]
+	else
+		return rl
+	end
 end
---Link2006 fix Start (originally was just SCP173 three times)
-ROLE_SCP035 = "SCP-035"
-ROLE_SCP1048A = "SCP-1048A"
---link2006 fix end
-ROLE_SCP173 = "SCP-173"
-ROLE_SCP106 = "SCP-106"
-ROLE_SCP049 = "SCP-049"
-ROLE_SCP457 = "SCP-457"
-ROLE_SCP0492 = "SCP-049-2"
-ROLE_SCP0082 = "SCP-008-2"
-ROLE_MTFGUARD = "MTF Guard"
-ROLE_MTFCOM = "MTF Commander"
-ROLE_MTFNTF = "MTF Nine Tailed Fox"
-ROLE_CHAOS = "Chaos Insurgency"
-ROLE_CHAOSCOM = "CI Commander"
-ROLE_SITEDIRECTOR = "Site Director"
-ROLE_CLASSD = "Class D Personell"
-ROLE_RES = "Researcher"
-ROLE_SPEC = "Spectator"
+
+ROLES = {}
+
+// SCPS
+ROLES.ROLE_SCP173 = "SCP-173"
+ROLES.ROLE_SCP106 = "SCP-106"
+ROLES.ROLE_SCP049 = "SCP-049"
+ROLES.ROLE_SCP457 = "SCP-457"
+ROLES.ROLE_SCP0492 = "SCP-049-2"
+ROLES.ROLE_SCP0082 = "SCP-008-2"
+
+// Researchers
+ROLES.ROLE_RES = "Researcher"
+ROLES.ROLE_MEDIC = "Medic"
+
+// Class D Personell
+ROLES.ROLE_CLASSD = "Class D Personell"
+ROLES.ROLE_VETERAN = "Veteran"
+
+// Security
+ROLES.ROLE_SECURITY = "Security Officer"
+ROLES.ROLE_MTFGUARD = "MTF Guard"
+ROLES.ROLE_MTFMEDIC = "MTF Medic"
+ROLES.ROLE_MTFL = "MTF Lieutenant"
+ROLES.ROLE_MTFNTF = "MTF Nine Tailed Fox"
+ROLES.ROLE_CSECURITY = "Security Chief"
+ROLES.ROLE_MTFCOM = "MTF Commander"
+ROLES.ROLE_SD = "Site Director"
+
+// Chaos Insurgency
+ROLES.ROLE_CHAOSSPY = "Chaos Insurgency Spy"
+ROLES.ROLE_CHAOS = "Chaos Insurgency"
+ROLES.ROLE_CHAOSCOM = "CI Commander"
+
+// Other
+ROLES.ROLE_SPEC = "Spectator"
 
 if !ConVarExists("br_roundrestart") then CreateConVar( "br_roundrestart", "0", {FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY}, "Restart the round" ) end
 if !ConVarExists("br_time_preparing") then CreateConVar( "br_time_preparing", "60", {FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY}, "Set preparing time" ) end
@@ -85,6 +100,7 @@ if !ConVarExists("br_karma_round") then CreateConVar( "br_karma_round", "120", {
 if !ConVarExists("br_karma_reduce") then CreateConVar( "br_karma_reduce", "30", {FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY}, "How much karma to reduce after damaging someone" ) end
 if !ConVarExists("br_scoreboardranks") then CreateConVar( "br_scoreboardranks", "0", {FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY}, "" ) end
 if !ConVarExists("br_defaultlanguage") then CreateConVar( "br_defaultlanguage", "english", {FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY}, "" ) end
+if !ConVarExists("br_expscale") then CreateConVar( "br_expscale", "1", {FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY}, "" ) end
 
 function KarmaReduce()
 	return GetConVar("br_karma_reduce"):GetInt()
@@ -149,6 +165,13 @@ function GM:PlayerFootstep( ply, pos, foot, sound, volume, rf )
 	return false
 end
 
+/*
+function GM:ShouldCollide( ent1, ent2 )
+	if ( IsValid( ent1 ) and IsValid( ent2 ) and ent1:IsPlayer() and ent2:IsPlayer() ) then return false end
+	return true
+end
+*/
+
 function GM:EntityTakeDamage( target, dmginfo )
 
 	local at = dmginfo:GetAttacker()
@@ -160,7 +183,7 @@ function GM:EntityTakeDamage( target, dmginfo )
 		if target:Alive() then
 			local dmgtype = dmginfo:GetDamageType()
 			if dmgtype == 268435464 or dmgtype == 8 then
-				if target:Team() == TEAM_SCP then
+				if target:GTeam() == TEAM_SCP then
 					dmginfo:SetDamage( 0 )
 					return true
 				elseif target.UsingArmor == "armor_fireproof" then
@@ -175,12 +198,11 @@ function GM:ScalePlayerDamage( ply, hitgroup, dmginfo )
 	/*
 	if SERVER then
 		local at = dmginfo:Getat()
-		if ply:Team() == at:Team() then
+		if ply:GTeam() == at:GTeam() then
 			at:TakeDamage( 25, at, at )
 		end
 	end
 	*/
-	print("a")
 	local at = dmginfo:GetAttacker()
 	local mul = 1
 	local armormul = 1
@@ -196,44 +218,41 @@ function GM:ScalePlayerDamage( ply, hitgroup, dmginfo )
 					end
 				end
 				if postround == false then
-					if at:Team() == TEAM_GUARD then
-						if ply:Team() == TEAM_GUARD then
+					if at:GTeam() == TEAM_GUARD then
+						if ply:GTeam() == TEAM_GUARD then 
 							rdm = true
-						elseif ply:Team() == TEAM_SCI then
-							rdm = true
-						end
-					elseif at:Team() == TEAM_CHAOS then
-						if ply:Team() == TEAM_CHAOS then
+						elseif ply:GTeam() == TEAM_SCI then
 							rdm = true
 						end
-					elseif at:Team() == TEAM_SCP then
-						if ply:Team() == TEAM_SCP then
+					elseif at:GTeam() == TEAM_CHAOS then
+						if ply:GTeam() == TEAM_CHAOS then
+							rdm = trueGTeam
+						end
+					elseif at:GTeam() == TEAM_SCP then
+						if ply:GTeam() == TEAM_SCP then
 							rdm = true
 						end
-					elseif at:Team() == TEAM_CLASSD then
-						if ply:Team() == TEAM_CLASSD then
+					elseif at:GTeam() == TEAM_CLASSD then
+						if ply:GTeam() == TEAM_CLASSD then
 							rdm = true
 						end
-					elseif at:Team() == TEAM_SCI then
-						if ply:Team() == TEAM_GUARD or ply:Team() == TEAM_SCI then
+					elseif at:GTeam() == TEAM_SCI then
+						if ply:GTeam() == TEAM_GUARD or ply:GTeam() == TEAM_SCI then 
 							rdm = true
 						end
 					end
 				end
 				if postround == false then
-					print(rdm)
 					if rdm then
 						at:ReduceKarma(KarmaReduce())
 					else
-						--mply:AddExp( math.Round(dmginfo:GetDamage() / 3) )
-						at:AddKarma( math.Round(dmginfo:GetDamage() / 3) )
-						--print("AddKarma: "..math.Round(dmginfo:GetDamage() / 3)) --I believe this is AddKarma and not AddExp? Idunno ill do some tests.
+						at:AddExp( math.Round(dmginfo:GetDamage() / 4) )
 					end
 				end
 			end
 		end
 	end
-
+	
 	if (hitgroup == HITGROUP_HEAD) then
 		mul = 1.5
 	end
@@ -261,3 +280,5 @@ function GM:ScalePlayerDamage( ply, hitgroup, dmginfo )
 		dmginfo:ScaleDamage(mul)
 	end
 end
+
+

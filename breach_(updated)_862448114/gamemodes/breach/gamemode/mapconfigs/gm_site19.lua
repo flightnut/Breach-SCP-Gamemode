@@ -1,37 +1,9 @@
---Version 2.1 of gm_site19 config by Link2006
-
-------------------------------------------------------------------------------
---Changlog:																	--
---	2.1																		--
---	*Moved SCP-035's Spawn 													--
---	*Changed how some doors works, unlocking them in the process			--
---	2.0																		--
---	*Forked current version of mapconfig from workshop as of 27th february	--
---	*Puts back MTF in medbay BECAUSE LOL NO >_>...							--
---	*Fixes Gate A															--
-------------------------------------------------------------------------------
-function Link2006_DoorCheck(ply,ent)
-	if preparing then
-		--ent:Fire("lock")
-		return false
-	else
-		if ent:GetSaveTable( ).m_bLocked then --The door is locked! Unlock it!
-			print("Forcing door unlock!")
-			ent:Fire("unlock")
-			ent:Fire("use") --Open it now so the user doesnt have to press it again :)
-		end
-		return true
-	end
-
-end
--- Serverside map config file, if you want to use a diffrent map change these variables
+// Serverside map config file, if you want to use a diffrent map change these variables
 
 SPAWN_173 = Vector(1073.8309326172, 1666.5076904297, 229.00595092773)
 SPAWN_106 = Vector(2615.4692382813, 4062.5620117188, -372.16552734375)
 SPAWN_049 = Vector(4664.01171875, -574.69091796875, -443.28875732422)
 SPAWN_457 = Vector(2094.861816, 1733.473389, 0.031250)
---SPAWN_035 = Vector(4137.497070, -176.827774, -443.28875732422)
-SPAWN_035 = Vector(5362.450684,-823.380737,0.031250)
 ENTER914 = Vector(1648.743164, -601.740234, 59.760605)
 EXIR914 = Vector(1651.584229, -1052.149902, 7.470211)
 OUTSIDESOUNDS = Vector(-94.663620, 5188.103027, 860.134155)
@@ -88,7 +60,6 @@ SPAWN_CLASSD = {
 	Vector(-1098.1022949219, 168.22138977051, 249.03125),
 	Vector(-746.90692138672, 172.3929901123, 249.03125)
 }
---[[
 SPAWN_GUARD = {
 	Vector(-2637.5424804688, 2981.3862304688, 25.031242370605),
 	Vector(-2622.9819335938, 3047.337890625, 25.03125),
@@ -134,41 +105,6 @@ SPAWN_GUARD = {
 	Vector(-2397.6740722656, 2500.4743652344, 25.03125),
 	Vector(-2331.3569335938, 2567.0270996094, 25.03125),
 	Vector(-2381.5053710938, 2589.2827148438, 25.03125),
-}
---]]
-SPAWN_GUARD = {
-	--FIXED BY LINK2006 OK THX HAVE FUN NOW PLEASE DONT BOTHER ME ANYMORE :(
-	--I generated these, not manually picked, SHOULD STILL WORK
-	--If it doesnt then uh ill fix it again ok thx
-	Vector(-1451,3436,10),
-	Vector(-1451,3372,10),
-	Vector(-1451,3308,10),
-	Vector(-1515,3500,10),
-	Vector(-1515,3436,10),
-	Vector(-1515,3372,10),
-	Vector(-1515,3308,10),
-	Vector(-1579,3500,10),
-	Vector(-1579,3436,10),
-	Vector(-1579,3372,10),
-	Vector(-1579,3308,10),
-	Vector(-1643,3500,10),
-	Vector(-1643,3436,10),
-	Vector(-1643,3372,10),
-	Vector(-1643,3308,10),
-	Vector(-1707,3500,10),
-	Vector(-1707,3436,10),
-	Vector(-1707,3372,10),
-	Vector(-1707,3308,10),
-	Vector(-1771,3500,10),
-	Vector(-1771,3436,10),
-	Vector(-1771,3372,10),
-	Vector(-1771,3308,10),
-	Vector(-1835,3500,10),
-	Vector(-1835,3436,10),
-	Vector(-1835,3372,10),
-	Vector(-1835,3308,10),
-	Vector(-1961,3302,10),
-	Vector(-1960,3383,10)
 }
 SPAWN_OUTSIDE = {
 	Vector(-291.78182983398, 10060.791015625, 660.23193359375),
@@ -268,7 +204,7 @@ SPAWN_KEYCARD3 = {
 		Vector(644.41900634766, -1186.9499511719, 61.03125),
 		Vector(555.92492675781, -1381.3018798828, 25.03125),
 		Vector(683.50408935547, -1688.6999511719, 25.03125),
-		Vector(1269.9512939453, 1787.2283935547, 153.03125), -- in 173
+		Vector(1269.9512939453, 1787.2283935547, 153.03125), // in 173
 	},
 	scp372 = {
 		Vector(-1098.166015625, -590.10766601563, 25.03125),
@@ -279,6 +215,15 @@ SPAWN_KEYCARD3 = {
 		Vector(-1459.9968261719, -968.22058105469, 26.031242370605),
 		Vector(-1460.0568847656, -770.02301025391, 26.03125),
 		Vector(-1265.7955322266, -768.79840087891, 229.03123474121),
+	},
+	controlroom = {
+		Vector(-2474.9226074219, 1557.4172363281, 189.03125),
+		Vector(-2504.2248535156, 1687.3321533203, 153.03125),
+		Vector(-2353.544921875, 2130.2907714844, 153.03125),
+		Vector(-2434.0520019531, 2044.1354980469, 189.03125),
+		Vector(-2362.9807128906, 1923.3223876953, 153.03125),
+		Vector(-2375.9113769531, 1926.1774902344, 168.96273803711),
+		Vector(-2356.4309082031, 1631.1171875, 153.03125),
 	}
 }
 SPAWN_KEYCARD4 = {
@@ -338,15 +283,6 @@ SPAWN_KEYCARD4 = {
 		Vector(5458.2006835938, 4175.46484375, 26.715118408203),
 		Vector(5574.83984375, 3921.0988769531, 54.240364074707),
 	},
-	controlroom = {
-		Vector(-2474.9226074219, 1557.4172363281, 189.03125),
-		Vector(-2504.2248535156, 1687.3321533203, 153.03125),
-		Vector(-2353.544921875, 2130.2907714844, 153.03125),
-		Vector(-2434.0520019531, 2044.1354980469, 189.03125),
-		Vector(-2362.9807128906, 1923.3223876953, 153.03125),
-		Vector(-2375.9113769531, 1926.1774902344, 168.96273803711),
-		Vector(-2356.4309082031, 1631.1171875, 153.03125),
-	}
 }
 SPAWN_MEDKITS = {
 	Vector(-1515.3021240234, 3470.7368164063, 25.03125),
@@ -494,36 +430,10 @@ BUTTONS = {
 		usesounds = true,
 		clevel = 3
 	},
-	{	--Fixed by Link2006
-		name = "Control room",
-		pos = Vector(-2328, 3775, 53),
-		clevel = 4
-	},
-	{	--Fixed by Link2006
-		name = "Remote Door Control",
-		pos = Vector(-2452, 3876, 309.85998535156),
-		clevel = 3,
-		enabled = true
-	},
 	{
-		--New Spawn is at MedBay
-		--FIXED BY LINK2006
-		name = "MTF Spawn Doors",
-		pos = Vector(-1928.000000, 3551.000000, 53.000000),
-		customdenymsg = "Wait for the round to start",
-		canactivate = function(pl, ent)
-			if roundtype then
-				if roundtype.mtfandscpdelay == false then
-					return true
-				end
-			end
-			if preparing then
-				//pl:PrintMessage(HUD_PRINTCENTER, "Wait for the round to start")
-				return false
-			else
-				return true
-			end
-		end
+		name = "Control room",
+		pos = Vector(-2328.000000, 3775.000000, 53.000000),
+		clevel = 4
 	},
 	{
 		name = "Gate A",
@@ -541,10 +451,10 @@ BUTTONS = {
 		usesounds = true,
 		clevel = 4
 	},
-	{	--Fixed by Link2006
+	{
 		name = "Cells Control Room",
 		pos = Vector(-2239.000000, 1832.000000, 181.000000),
-		clevel = 4
+		clevel = 2
 	},
 	{
 		name = "SCP 372",
@@ -613,25 +523,13 @@ BUTTONS = {
 		pos = Vector(3664.000000, 2156.000000, 59.000000),
 		usesounds = true,
 		clevel = 5
-	},
-	{
-		name = "SCP 035",
-		pos = Vector(5480.000000,-521.000000,53.000000),
-		canactivate = function(pl, ent) return Link2006_DoorCheck(pl,ent) end --You can't open the door yet.
-	},
-	{
-		name = "HCZ Elevators", --What can i do to force this entity to always open :c?
-		pos = Vector(4809.000000,-152.000000,53.000000),
-		canactivate = function(pl, ent) return Link2006_DoorCheck(pl,ent) end
 	}
 
 }
 
 POS_GATEA = Vector(-3520.6567382813, 8503.6875, 730.47564697266)
 POS_ESCORT = Vector(-1792.183350, 8190.317383, 965.235657)
---POS_GATEABUTTON = Vector(-1316.000000, 3564.000000, 309.859985)
---Fixed by Link2006
-POS_GATEABUTTON = Vector(-2452, 3876, 309.85998535156)
+POS_GATEABUTTON = Vector(-1316.000000, 3564.000000, 309.859985)
 POS_173DOORS = Vector(362.000000, 1592.000000, 294.000000)
 POS_106DOORS = Vector(1728.000000, 4103.000000, 46.000000)
 POS_049BUTTON = Vector(5040.000000, -952.000000, -474.000000)
@@ -651,3 +549,4 @@ POS_POCKETD = {
 	Vector(2246.9846191406, 4668.0068359375, 537.03125),
 	Vector(2232.6259765625, 4620.3232421875, 537.03125)
 }
+

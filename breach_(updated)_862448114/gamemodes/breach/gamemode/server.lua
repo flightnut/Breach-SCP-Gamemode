@@ -20,8 +20,6 @@ util.AddNetworkString("DropCurrentVest")
 util.AddNetworkString("RoundRestart")
 util.AddNetworkString("SpectateMode")
 util.AddNetworkString("UpdateTime")
-util.AddNetworkString("spawnas")
-util.AddNetworkString("spawnthemas")
 
 net.Receive( "SpectateMode", function( len, ply )
 	if ply.ActivePlayer == true then
@@ -64,22 +62,20 @@ net.Receive( "Sound_Lost", function( len, ply )
 end)
 
 net.Receive( "DropCurrentVest", function( len, ply )
-	if ply:Team() != TEAM_SPEC and ply:Team() != TEAM_SCP and ply:Alive() then
+	if ply:GTeam() != TEAM_SPEC and ply:GTeam() != TEAM_SCP and ply:Alive() then
 		if ply.UsingArmor != nil then
-			print(ply)
 			ply:UnUseArmor()
 		end
 	end
 end)
 
 net.Receive( "RequestEscorting", function( len, ply )
-	if ply:Team() == TEAM_GUARD then
+	if ply:GTeam() == TEAM_GUARD then
 		CheckEscortMTF(ply)
-	elseif ply:Team() == TEAM_CHAOS then
+	elseif ply:GTeam() == TEAM_CHAOS then
 		CheckEscortChaos(ply)
 	end
 end)
-
 
 net.Receive( "RequestGateA", function( len, ply )
 	RequestOpenGateA(ply)
@@ -87,12 +83,11 @@ end)
 
 net.Receive( "DropWeapon", function( len, ply )
 	local wep = ply:GetActiveWeapon()
-	if ply:Team() == TEAM_SPEC then return end
+	if ply:GTeam() == TEAM_SPEC then return end
 	if IsValid(wep) and wep != nil and IsValid(ply) then
-		if wep.Primary then
-			if wep.Primary.Ammo != "none" then
-				wep.SavedAmmo = wep:Clip1()
-			end
+		local atype = wep:GetPrimaryAmmoType()
+		if atype > 0 then
+			wep.SavedAmmo = wep:Clip1()
 		end
 		
 		if wep:GetClass() == nil then return end
@@ -116,7 +111,6 @@ function GetRoleTable(all)
 	local mtfs = 0
 	local researchers = 0
 	local scps = 0
-	local chaosinsurgency = 0
 	if all < 8 then
 		scps = 1
 		all = all - 1
@@ -136,12 +130,6 @@ function GetRoleTable(all)
 	end
 	mtfs = math.Round(all * mtfmul)
 	all = all - mtfs
-	if mtfs > 6 then
-		if math.random(1,3) == 1 then
-			chaosinsurgency = 1
-		end
-		mtfs = mtfs - chaosinsurgency
-	end
 	researchers = math.floor(all * 0.42)
 	all = all - researchers
 	classds = all
@@ -153,25 +141,20 @@ function GetRoleTable(all)
 	print("researchers: " .. researchers)
 	print("chaosinsurgency: " .. chaosinsurgency)
 	*/
-	return {scps, mtfs, classds, researchers, chaosinsurgency}
+	return {scps, mtfs, classds, researchers}
 end
 
-function GetRoleTableCustom(all, scps, p_mtf, p_res, p_chi, chaos)
+function GetRoleTableCustom(all, scps, p_mtf, p_res)
 	local classds = 0
 	local mtfs = 0
 	local researchers = 0
-	local chaosinsurgency = 0
 	all = all - scps
 	mtfs = math.Round(all * p_mtf)
 	all = all - mtfs
-	if chaos then
-		chaosinsurgency = math.floor(mtfs * p_chi)
-		mtfs = mtfs - chaosinsurgency
-	end
 	researchers = math.floor(all * p_res)
 	all = all - researchers
 	classds = all
-	return {scps, mtfs, classds, researchers, chaosinsurgency}
+	return {scps, mtfs, classds, researchers}
 end
 
 cvars.AddChangeCallback( "br_roundrestart", function( convar_name, value_old, value_new )
@@ -180,12 +163,9 @@ cvars.AddChangeCallback( "br_roundrestart", function( convar_name, value_old, va
 end )
 
 function SetupPlayers(pltab)
-	//local pltab = PLAYER_SETUP[#player.GetAll() - 2]
-	//local pltab = GetRoleTable(#player.GetAll())
 	local allply = GetActivePlayers()
-	-- SCP, MTF, Class D, Researchers, Chaos Insurgency --
 	
-	// SCP
+	// SCPS
 	local spctab = table.Copy(SPCS)
 	for i=1, pltab[1] do
 		if #spctab < 1 then
@@ -193,54 +173,22 @@ function SetupPlayers(pltab)
 			//print("not enough scps, copying another table")
 		end
 		local pl = table.Random(allply)
+		if IsValid(pl) == false then return end
 		local scp = table.Random(spctab)
 		scp["func"](pl)
 		print("assigning " .. pl:Nick() .. " to scps")
 		table.RemoveByValue(spctab, scp)
 		table.RemoveByValue(allply, pl)
 	end
-	// MTF Commander
-	local mtfspawns = table.Copy(SPAWN_GUARD)
-	if pltab[2] > 0 then
-		local pl = table.Random(allply)
-		local spawn = table.Random(mtfspawns)
-		pl:SetCommander()
-		pl:SetPos(spawn)
-		print("assigning " .. pl:Nick() .. " as an mtf commander")
-		table.RemoveByValue(mtfspawns, spawn)
-		table.RemoveByValue(allply, pl)
-	end
 	
-	// MTF
-	for i=1, (pltab[2] - 1) do
-		if #mtfspawns > 0 then
-			local pl = table.Random(allply)
-			local spawn = table.Random(mtfspawns)
-			pl:SetGuard()
-			pl:SetPos(spawn)
-			print("assigning " .. pl:Nick() .. " to mtfs")
-			table.RemoveByValue(mtfspawns, spawn)
-			table.RemoveByValue(allply, pl)
-		end
-	end
-	// Chaos Insurgency
-	for i=1, (pltab[5]) do
-		if #mtfspawns > 0 then
-			local pl = table.Random(allply)
-			local spawn = table.Random(mtfspawns)
-			pl:SetChaosInsurgency(1)
-			pl:SetPos(spawn)
-			print("assigning " .. pl:Nick() .. " to chaos insurgency spies")
-			table.RemoveByValue(mtfspawns, spawn)
-			table.RemoveByValue(allply, pl)
-		end
-	end
-	// Class D
+	// Class D Personell
 	local dspawns = table.Copy(SPAWN_CLASSD)
 	for i=1, pltab[3] do
 		if #dspawns > 0 then
 			local pl = table.Random(allply)
+			if IsValid(pl) == false then return end
 			local spawn = table.Random(dspawns)
+			pl:SetupNormal()
 			pl:SetClassD()
 			pl:SetPos(spawn)
 			print("assigning " .. pl:Nick() .. " to classds")
@@ -248,21 +196,125 @@ function SetupPlayers(pltab)
 			table.RemoveByValue(allply, pl)
 		end
 	end
-	// Scientists
-	local scispawns = table.Copy(SPAWN_SCIENT)
+	
+	// Researchers
+	local resspawns = table.Copy(SPAWN_SCIENT)
 	for i=1, pltab[4] do
-		if #scispawns > 0 then
+		if #resspawns > 0 then
 			local pl = table.Random(allply)
-			print("assigning " .. pl:Nick() .. " to scientists")
-			local spawn = table.Random(scispawns)
-			pl:SetScientist()
+			if IsValid(pl) == false then return end
+			local spawn = table.Random(resspawns)
+			pl:SetupNormal()
+			pl:SetResearcher()
 			pl:SetPos(spawn)
-			table.RemoveByValue(scispawns, spawn)
+			print("assigning " .. pl:Nick() .. " to researchers")
+			table.RemoveByValue(resspawns, spawn)
 			table.RemoveByValue(allply, pl)
 		end
 	end
-	timer.Simple(0.1, function()
-		net.Start("RolesSelected")
-		net.Broadcast()
-	end)
+	
+	// Security
+	local security = ALLCLASSES["security"]["roles"]
+	local snum = pltab[2]
+	local securityspawns = table.Copy(SPAWN_GUARD)
+	
+	local i4 = math.floor(snum / 8)
+	
+	local i4roles = {}
+	local i4players = {}
+	local i3roles = {}
+	local i3players = {}
+	local i2roles = {}
+	local i2players = {}
+	for k,v in pairs(security) do
+		if v.importancelevel == 4 then
+			table.ForceInsert(i4roles, v)
+		elseif v.importancelevel == 3 then
+			table.ForceInsert(i3roles, v)
+		elseif v.importancelevel == 2 then
+			table.ForceInsert(i2roles, v)
+		end
+	end
+	
+	for _,pl in pairs(allply) do
+		for k,v in pairs(security) do
+			if v.importancelevel > 1 then
+				local can = true
+				if v.customcheck != nil then
+					if v.customcheck(pl) == false then
+						can = false
+					end
+				end
+				if can == true then
+					if pl:GetLevel() >= v.level then
+						if v.importancelevel == 2 then
+							table.ForceInsert(i2players, pl)
+						elseif v.importancelevel == 3 then
+							table.ForceInsert(i3players, pl)
+						else
+							table.ForceInsert(i4players, pl)
+						end
+					end
+				end
+			end
+		end
+	end
+	
+	if i4 >= 1 then
+		if #i4roles > 0 and #i4players > 0 then
+			local pl = table.Random(i4players)
+			local spawn = table.Random(securityspawns)
+			pl:SetupNormal()
+			pl:ApplyRoleStats(table.Random(i4roles))
+			table.RemoveByValue(i4players, pl)
+			table.RemoveByValue(i3players, pl)
+			table.RemoveByValue(i2players, pl)
+			pl:SetPos(spawn)
+			print("assigning " .. pl:Nick() .. " to security i4")
+			table.RemoveByValue(securityspawns, spawn)
+			table.RemoveByValue(allply, pl)
+		end
+	end
+
+	if #i3roles > 0 and #i3players > 0 then
+		local pl = table.Random(i3players)
+		local spawn = table.Random(securityspawns)
+		pl:SetupNormal()
+		pl:ApplyRoleStats(table.Random(i3roles))
+		table.RemoveByValue(i4players, pl)
+		table.RemoveByValue(i3players, pl)
+		table.RemoveByValue(i2players, pl)
+		pl:SetPos(spawn)
+		print("assigning " .. pl:Nick() .. " to security i3")
+		table.RemoveByValue(securityspawns, spawn)
+		table.RemoveByValue(allply, pl)
+	end
+	
+	if #i2roles > 0 and #i2players > 0 then
+		local pl = table.Random(i2players)
+		local spawn = table.Random(securityspawns)
+		pl:SetupNormal()
+		pl:ApplyRoleStats(table.Random(i2roles))
+		pl:SetPos(spawn)
+		table.RemoveByValue(i4players, pl)
+		table.RemoveByValue(i3players, pl)
+		table.RemoveByValue(i2players, pl)
+		print("assigning " .. pl:Nick() .. " to security i2")
+		table.RemoveByValue(securityspawns, spawn)
+		table.RemoveByValue(allply, pl)
+	end
+	
+	for k,v in pairs(allply) do
+		local spawn = table.Random(securityspawns)
+		v:SetupNormal()
+		v:SetSecurityI1()
+		v:SetPos(spawn)
+		print("assigning " .. v:Nick() .. " to security i1")
+		table.RemoveByValue(securityspawns, spawn)
+	end
+	
+
+	net.Start("RolesSelected")
+	net.Broadcast()
 end
+

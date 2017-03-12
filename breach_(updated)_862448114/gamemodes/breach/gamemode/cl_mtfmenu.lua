@@ -1,7 +1,4 @@
 
-surface.CreateFont("MTF_Main",   {font = "Trebuchet24",
-                                    size = 21,
-                                    weight = 750})
 
 if not MTFMenuFrame then
 	MTFMenuFrame = nil
@@ -33,7 +30,7 @@ end
 function OpenMenu()
 	if IsValid(MTFMenuFrame) then return end
 	local ply = LocalPlayer()
-	if !(ply:Team() == TEAM_GUARD or ply:Team() == TEAM_CHAOS) then return end
+	if !(ply:GTeam() == TEAM_GUARD or ply:GTeam() == TEAM_CHAOS) then return end
 	local clevel = LocalPlayer():CLevelGlobal()
 	
 	MTFMenuFrame = vgui.Create( "DFrame" )
@@ -53,9 +50,9 @@ function OpenMenu()
 	local maininfo = vgui.Create( "DLabel", MTFMenuFrame )
 	maininfo:SetText( "Mobile Task Force Manager" )
 	maininfo:Dock( TOP )
-	maininfo:SetFont("MTF_Main")
+	maininfo:SetFont("MTF_2Main")
 	maininfo:SetContentAlignment( 5 )
-	//maininfo:DockMargin( 245, 8, 8, 175	)
+	//maininfo:DockMargin( 245, 8, 8, 175 )
 	maininfo:SetSize(0,24)
 	maininfo.Paint = function( self, w, h )
 		draw.RoundedBox( 2, 0, 0, w, h, Color(0, 0, 0) )

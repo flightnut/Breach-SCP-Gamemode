@@ -13,7 +13,7 @@ function mply:CLevelGlobal()
 		end
 	end
 	return biggest
-end
+end 
 
 function mply:CLevel()
 	local wep = self:GetActiveWeapon()
@@ -23,7 +23,7 @@ function mply:CLevel()
 		end
 	end
 	return 1
-end
+end 
 
 function mply:GetKarma()
 	if not self.GetNKarma then
@@ -36,17 +36,27 @@ function mply:GetKarma()
 	end
 end
 
-
---will end up making this function more advance but this should work for now - tides
-
-function mply:GetIsFrozen() return self:GetNWBool( "CustomFrozen" ) end --:)
-
---[[
-function mply:GetIsFrozen()
-	if(self:GetWalkSpeed() == -1 && self:GetRunSpeed() == -1)then
-		return true;
+function mply:GetExp()
+	if not self.GetNEXP then
+		player_manager.RunClass( self, "SetupDataTables" )
+	end
+	if self.GetNEXP and self.SetNEXP then
+		return self:GetNEXP()
 	else
-		return false;
+		ErrorNoHalt( "Cannot get the exp, GetNEXP invalid" )
+		return 0
 	end
 end
-]]--
+
+function mply:GetLevel()
+	if not self.GetNLevel then
+		player_manager.RunClass( self, "SetupDataTables" )
+	end
+	if self.GetNLevel and self.SetNLevel then
+		return self:GetNLevel()
+	else
+		ErrorNoHalt( "Cannot get the exp, GetNLevel invalid" )
+		return 0
+	end
+end
+
