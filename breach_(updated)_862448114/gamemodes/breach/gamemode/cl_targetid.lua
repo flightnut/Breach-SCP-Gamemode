@@ -3,47 +3,50 @@ function GM:HUDDrawTargetID()
 	local trace = LocalPlayer():GetEyeTrace()
 	if !trace.Hit then return end
 	if !trace.HitNonWorld then return end
-	
-	local text = "ERROR"
+
+	--local text = "ERROR"
 	local font = "TargetID"
 	local ply =  trace.Entity
-	
+
 	if ply:IsPlayer() then
 		if ply:Alive() == false then return end
 		if ply:Team() == TEAM_SPEC then return end
 		if ply:GetPos():Distance(LocalPlayer():GetPos()) > 700 then return end
-		text = ply:Nick()
+		--text = ply:Nick()
 	else
 		return
 	end
-	
+
 	local x = ScrW() / 2
 	local y = ScrH() / 2 + 30
-	
+
 	local clr = self:GetTeamColor( ply )
-	local clr2 = color_white
-	
+	local clr2 = team.GetColor(ply:Team())
+
+
 	if not ply.GetNClass then
 		player_manager.RunClass( ply, "SetupDataTables" )
-	else
-		text = ply:GetNClass()
+	--else
+		--text = ply:GetNClass()
 	end
+
 	if LocalPlayer():Team() == TEAM_CHAOS or LocalPlayer():Team() == TEAM_CLASSD then
 		if ply:Team() == TEAM_CHAOS then
-			text = "Chaos Insurgency"
-			clr = Color(29, 81, 56)
+			--text = "Chaos Insurgency"
+			clr2 = Color(29, 81, 56)
 		end
 	end
-	
+
 	draw.Text( {
-		text = ply:Nick() .. " (" .. ply:Health() .. "%)",
+		text = ply:Nick(), --.. " (" .. ply:Health() .. "%)",
 		pos = { x, y },
 		font = "TargetID",
 		color = clr2,
+		--color = team.GetColor(ply:Team())
 		xalign = TEXT_ALIGN_CENTER,
 		yalign = TEXT_ALIGN_CENTER,
-	})
-	
+	} )
+--[[--
 	draw.Text( {
 		text = text,
 		pos = { x, y + 16 },
@@ -52,4 +55,5 @@ function GM:HUDDrawTargetID()
 		xalign = TEXT_ALIGN_CENTER,
 		yalign = TEXT_ALIGN_CENTER,
 	})
+--]]--
 end
