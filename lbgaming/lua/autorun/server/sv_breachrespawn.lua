@@ -205,6 +205,7 @@ function Link2006_RespawnSpecs(pAdmin,sClass)
 	end
 	if (pAdmin ~= nil) and (ulx ~= nil) then --Just making sure we do have ulx installed and the admin do exist
 		--ulx.fancyLogAdmin( pAdmin, "#A respawned spectators as "..sClass) --Tell everyone which admin respawned spectators.
+		if sClass == "chaos" then sClass = "ntf" end --Fixed.
 		Link2006_tSayColor(pAdmin,"respawned spectators as "..sClass)
 	end
 	print("[BreachRespawn] Spectators have been respawned as "..sClass)
@@ -442,7 +443,7 @@ hook.Add("PlayerInitialSpawn","br_ForceRespawn_OnJoin",function(ply)
 				ply:SetGuard()
 				ply:SetPos(table.Random(Link2006_GetSpawns(SPAWN_GUARD)))
 			elseif (roundtype.name == normalround.name) or (roundtype.name == "Multiple breaches") then
-				if ply:IsUserGroup("VIP") then --This feels like Pay2Win but w/e 
+				if ply:IsUserGroup("VIP") then --This feels like Pay2Win but w/e
 					local plySpawnRNG = math.Round ( math.random ( 1,5 ) )  --1,2 = Researcher, 3,4=MTF, 5=Chaos
 					if plySpawnRNG == 1 or plySpawnRNG == 2 then
 				        ply:SetScientist()

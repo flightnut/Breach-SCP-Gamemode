@@ -198,7 +198,8 @@ hook.Add("PlayerShouldTakeDamage","AntiRDM_NoDamage",function(victim,attacker)
                 if rdmTable[ attacker:Team() ] then --I FORGOT TO CHECK IF THE ATTACKER'S TABLE EXISTED
                     if (table.HasValue( rdmTable[ attacker:Team() ], victim:Team() ) and (attacker ~= victim)) --If Attacker and Victim were allies
                     or (attacker:GetNClass() == ROLE_SCP035 and victim:Team() == TEAM_CLASSD) --OR SCP-035 attacked a Class D
-                    or (victim:GetNClass() == ROLE_SCP035 and attacker:Team() == TEAM_CLASSD) then --OR Class D attacked SCP-035
+                    or (victim:GetNClass() == ROLE_SCP035 and attacker:Team() == TEAM_CLASSD) --OR Class D attacked SCP-035
+                    or (attacker:Team() == TEAM_SPEC) then --Or attacker's a spectator
                         return false
                     end
                 end
