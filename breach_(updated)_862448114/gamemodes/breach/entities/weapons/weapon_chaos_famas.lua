@@ -5,7 +5,7 @@ if CLIENT then
 	SWEP.BounceWeaponIcon = false
 end
 
-SWEP.Author			= ""
+SWEP.Author			= "Kanade"
 SWEP.Contact		= "Steam"
 SWEP.Purpose		= ""
 SWEP.Instructions	= ""
@@ -27,14 +27,14 @@ SWEP.Primary.DefaultClip	= 0
 SWEP.Primary.Sound			= Sound("Weapon_FAMAS.Single")
 SWEP.Primary.Automatic		= true
 SWEP.Primary.Ammo			= "AR2"
-SWEP.Primary.NumShots		= 1 -- That's not how you set a burst shot (3), setting this to 1...
+SWEP.Primary.NumShots		= 3
 SWEP.Primary.Recoil			= 2.9
 SWEP.Primary.Cone			= 0.0035
-SWEP.Primary.Delay			= 0.1
+SWEP.Primary.Delay			= 0.2
 
 SWEP.Secondary.Ammo			= "none"
 SWEP.DeploySpeed			= 1
-SWEP.Damage					= 14
+SWEP.Damage					= 7
 SWEP.HeadshotMultiplier		= 1.6
 SWEP.UseHands				= true
 

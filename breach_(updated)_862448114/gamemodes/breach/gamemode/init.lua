@@ -1,10 +1,9 @@
 // Initialization file
-
-//AddCSLuaFile( "class_default.lua" )
 AddCSLuaFile( "fonts.lua" )
-AddCSLuaFile( "class_default.lua" )
+AddCSLuaFile( "class_breach.lua" )
 AddCSLuaFile( "cl_hud.lua" )
 AddCSLuaFile( "shared.lua" )
+AddCSLuaFile( "gteams.lua" )
 AddCSLuaFile( "cl_scoreboard.lua" )
 AddCSLuaFile( "cl_mtfmenu.lua" )
 AddCSLuaFile( "sh_player.lua" )
@@ -24,28 +23,21 @@ end
 AddCSLuaFile( "rounds.lua" )
 AddCSLuaFile( "cl_sounds.lua" )
 AddCSLuaFile( "cl_targetid.lua" )
+AddCSLuaFile( "classes.lua" )
+AddCSLuaFile( "cl_classmenu.lua" )
 AddCSLuaFile( "cl_init.lua" )
 include( "server.lua" )
 include( "rounds.lua" )
-include( "class_default.lua" )
+include( "class_breach.lua" )
 include( "shared.lua" )
+include( "classes.lua" )
 include( mapfile )
 include( "sh_player.lua" )
 include( "sv_player.lua" )
 include( "player.lua" )
 include( "sv_round.lua" )
-/*
-PrintTable(ALLLANGUAGES)
-local trytofind = ALLLANGUAGES[GetConVar("br_svlanguage"):GetString()]
-if trytofind != nil then
-	if istable(trytofind) then
-		clang = trytofind
-	end
-end
-if clang == nil then
-	clang = ALLLANGUAGES.english
-end
-*/
+include( "gteams.lua" )
+
 resource.AddFile( "sound/radio/chatter1.ogg" )
 resource.AddFile( "sound/radio/chatter2.ogg" )
 resource.AddFile( "sound/radio/chatter3.ogg" )
@@ -80,44 +72,11 @@ SPCS = {
 	func = function(pl)
 		pl:SetSCP106()
 	end},
-	{name = "SCP 035",
-	func = function(pl)
-		pl:SetSCP035()
-	end},
-	{name = "SCP 1048A",
-	func = function(pl)
-		pl:SetSCP1048a()
-	end},
 	{name = "SCP 457",
 	func = function(pl)
 		pl:SetSCP457()
-	end},
+	end}
 }
-
-/*
-Names = {
-	researchers = {
-		"Dr. Django Bridge",
-		"Dr. Jack Bright",
-		"Dr. Jeremiah Cimmerian",
-		"Dr. Alto Clef",
-		"Researcher Jacob Conwell",
-		"Dr. Kain Crow",
-		"Dr. Chelsea Elliott",
-		"Dr. Charles Gears",
-		"Dr. Simon Glass",
-		"Dr. Frederick Heiden",
-		"Dr. Everett King",
-		"Dr. Zyn Kiryu",
-		"Dr. Mark Kiryu",
-		"Dr. Adam Leeward",
-		"Dr. Everett Mann",
-		"Dr. Riven Mercer",
-		"Dr. Johannes Sorts",
-		"Dr. Thaddeus Xyank"
-	}
-}
-*/
 
 // Variables
 gamestarted = false
@@ -127,7 +86,7 @@ roundcount = 0
 MAPBUTTONS = table.Copy(BUTTONS)
 
 function GM:PlayerSpray( sprayer )
-	return !sprayer:Team() == TEAM_SPEC
+	return (sprayer:GTeam() == TEAM_SPEC)
 end
 
 function GetActivePlayers()
@@ -167,7 +126,7 @@ function WakeEntity(ent)
 end
 
 function PlayerNTFSound(sound, ply)
-	if (ply:Team() == TEAM_GUARD or ply:Team() == TEAM_CHAOS) and ply:Alive() then
+	if (ply:GTeam() == TEAM_GUARD or ply:GTeam() == TEAM_CHAOS) and ply:Alive() then
 		if ply.lastsound == nil then ply.lastsound = 0 end
 		if ply.lastsound > CurTime() then
 			ply:PrintMessage(HUD_PRINTTALK, "You must wait " .. math.Round(ply.lastsound - CurTime()) .. " seconds to do this.")
@@ -219,7 +178,7 @@ nextgateaopen = 0
 function RequestOpenGateA(ply)
 	if preparing or postround then return end
 	if ply:CLevelGlobal() < 4 then return end
-	if !(ply:Team() == TEAM_GUARD or ply:Team() == TEAM_CHAOS) then return end
+	if !(ply:GTeam() == TEAM_GUARD or ply:GTeam() == TEAM_CHAOS) then return end
 	if nextgateaopen > CurTime() then
 		ply:PrintMessage(HUD_PRINTTALK, "You cannot open Gate A now, you must wait " .. math.Round(nextgateaopen - CurTime()) .. " seconds")
 		return
@@ -246,7 +205,7 @@ function RequestOpenGateA(ply)
 		end
 	end
 	if IsValid(gatea) then
-		nextgateaopen = CurTime() + 60
+		nextgateaopen = CurTime() + 20
 		timer.Simple(2, function()
 			if IsValid(gatea) then
 				gatea:Use(ply, ply, USE_ON, 1)
@@ -337,7 +296,7 @@ function SpawnAllItems()
 			wep:SetPos( v + Vector(0,0,-25) )
 		end
 	end
-
+	
 	for k,v in pairs(SPAWN_KEYCARD2) do
 		local item = ents.Create( "keycard_level2" )
 		if IsValid( item ) then
@@ -345,7 +304,7 @@ function SpawnAllItems()
 			item:SetPos( table.Random(v) )
 		end
 	end
-
+	
 	for k,v in pairs(SPAWN_KEYCARD3) do
 		local item = ents.Create( "keycard_level3" )
 		if IsValid( item ) then
@@ -353,7 +312,7 @@ function SpawnAllItems()
 			item:SetPos( table.Random(v) )
 		end
 	end
-
+	
 	for k,v in pairs(SPAWN_KEYCARD4) do
 		local item = ents.Create( "keycard_level4" )
 		if IsValid( item ) then
@@ -361,11 +320,11 @@ function SpawnAllItems()
 			item:SetPos( table.Random(v) )
 		end
 	end
-
+	
 	local resps_items = table.Copy(SPAWN_MISCITEMS)
 	local resps_melee = table.Copy(SPAWN_MELEEWEPS)
 	local resps_medkits = table.Copy(SPAWN_MEDKITS)
-
+	
 	local item = ents.Create( "item_medkit" )
 	if IsValid( item ) then
 		local spawn4 = table.Random(resps_medkits)
@@ -373,7 +332,7 @@ function SpawnAllItems()
 		item:SetPos( spawn4 )
 		table.RemoveByValue(resps_medkits, spawn4)
 	end
-
+	
 	local item = ents.Create( "item_medkit" )
 	if IsValid( item ) then
 		local spawn4 = table.Random(resps_medkits)
@@ -381,7 +340,7 @@ function SpawnAllItems()
 		item:SetPos( spawn4 )
 		table.RemoveByValue(resps_medkits, spawn4)
 	end
-
+	
 	local item = ents.Create( "item_radio" )
 	if IsValid( item ) then
 		local spawn4 = table.Random(resps_items)
@@ -389,7 +348,7 @@ function SpawnAllItems()
 		item:SetPos( spawn4 )
 		table.RemoveByValue(resps_items, spawn4)
 	end
-
+	
 	local item = ents.Create( "item_eyedrops" )
 	if IsValid( item ) then
 		local spawn4 = table.Random(resps_items)
@@ -397,7 +356,7 @@ function SpawnAllItems()
 		item:SetPos( spawn4 )
 		table.RemoveByValue(resps_items, spawn4)
 	end
-
+	
 	local item = ents.Create( "item_snav_300" )
 	if IsValid( item ) then
 		local spawn4 = table.Random(resps_items)
@@ -405,7 +364,7 @@ function SpawnAllItems()
 		item:SetPos( spawn4 )
 		table.RemoveByValue(resps_items, spawn4)
 	end
-
+	
 	local item = ents.Create( "item_snav_ultimate" )
 	if IsValid( item ) then
 		local spawn4 = table.Random(resps_items)
@@ -413,7 +372,7 @@ function SpawnAllItems()
 		item:SetPos( spawn4 )
 		table.RemoveByValue(resps_items, spawn4)
 	end
-
+	
 	local item = ents.Create( "weapon_crowbar" )
 	if IsValid( item ) then
 		local spawn4 = table.Random(resps_melee)
@@ -421,7 +380,7 @@ function SpawnAllItems()
 		item:SetPos( spawn4 )
 		table.RemoveByValue(resps_melee, spawn4)
 	end
-
+	
 	local item = ents.Create( "weapon_crowbar" )
 	if IsValid( item ) then
 		local spawn4 = table.Random(resps_melee)
@@ -429,71 +388,80 @@ function SpawnAllItems()
 		item:SetPos( spawn4 )
 		table.RemoveByValue(resps_melee, spawn4)
 	end
-
+	
 end
 
-function GetSCPLeavers()
-	local tab = {}
-	for k,v in pairs(team.GetPlayers(TEAM_SPEC)) do
-		if v.Leaver == "scp" then
-			table.ForceInsert(tab, v)
-		end
-	end
-	print("giving scp leavers with count: " .. #tab)
-	return tab
-end
-
-function GetClassDLeavers()
-	local tab = {}
-	for k,v in pairs(team.GetPlayers(TEAM_SPEC)) do
-		if v.Leaver == "classd" then
-			table.ForceInsert(tab, v)
-		end
-	end
-	print("giving class d leavers with count: " .. #tab)
-	return tab
-end
-
-function GetSciLeavers()
-	local tab = {}
-	for k,v in pairs(team.GetPlayers(TEAM_SPEC)) do
-		if v.Leaver == "sci" then
-			table.ForceInsert(tab, v)
-		end
-	end
-	print("giving sci leavers with count: " .. #tab)
-	return tab
-end
-
-spawnedntfs = 0
 function SpawnNTFS()
-	--Link2006 SPECIAL ROUND FIXES
-	if roundtype.allowntfspawn == false then return end
-	if spawnedntfs > 6 then return end
-	local allspecs = {}
-	for k,v in pairs(team.GetPlayers(TEAM_SPEC)) do
+	local usablesupport = {}
+	local activeplayers = {}
+	for k,v in pairs(gteams.GetPlayers(TEAM_SPEC)) do
 		if v.ActivePlayer == true then
-			table.ForceInsert(allspecs, v)
+			table.ForceInsert(activeplayers, v)
 		end
 	end
-	local num = math.Clamp(#allspecs, 0, 3)
-	local spawnci = false
-	spawnedntfs = spawnedntfs + num
-	if math.random(1,5) == 1 then
-		spawnci = true
+	for k,v in pairs(ALLCLASSES["support"]["roles"]) do
+		table.ForceInsert(usablesupport, {
+			role = v,
+			list = {}
+		})
 	end
-	for i=1, num do
-		local pl = table.Random(allspecs)
-		if spawnci then
-			pl:SetChaosInsurgency(3)
-			pl:SetPos(SPAWN_OUTSIDE[i])
-		else
-			pl:SetNTF()
-			pl:SetPos(SPAWN_OUTSIDE[i])
+	for _,rl in pairs(usablesupport) do
+		for k,v in pairs(activeplayers) do
+			if rl.role.level <= v:GetLevel() then
+				local can = true
+				if rl.role.customcheck != nil then
+					if rl.role.customcheck(v) == false then
+						can = false
+					end
+				end
+				if can == true then
+					table.ForceInsert(rl.list, v)
+				end
+			end
 		end
-		table.RemoveByValue(allspecs, pl)
 	end
-	if num > 0 then
+	local usechaos = math.random(1,2)
+	if usechaos == 2 then
+		usechaos = true
+	else
+		usechaos = false
+	end
+	if usechaos == true then
+		local chaosnum = 0
+		for _,rl in pairs(usablesupport) do
+			if rl.role.team == TEAM_CHAOS then
+				chaosnum = chaosnum + #rl.list
+			end
+		end
+		print("cinum: " .. chaosnum)
+		if chaosnum > 1 then
+			local cinum = 0
+			for _,rl in pairs(usablesupport) do
+				if rl.role.team == TEAM_CHAOS then
+					for k,v in pairs(rl.list) do
+						cinum = cinum + 1
+						v:SetupNormal()
+						v:ApplyRoleStats(rl.role)
+						v:SetPos(SPAWN_OUTSIDE[cinum])
+					end
+				end
+			end
+			return
+		end
+	end
+	local used = 0
+	for _,rl in pairs(usablesupport) do
+		if used > 3 then return end
+		if rl.role.team == TEAM_GUARD then
+			for k,v in pairs(rl.list) do
+				used = used + 1
+				v:SetupNormal()
+				v:ApplyRoleStats(rl.role)
+				v:SetPos(SPAWN_OUTSIDE[used])
+			end
+		end
+	end
+	if used > 0 then
 		PrintMessage(HUD_PRINTTALK, "MTF Units NTF has entered the facility.")
 		BroadcastLua('surface.PlaySound("EneteredFacility.ogg")')
 	end
@@ -515,32 +483,6 @@ function OpenGateA()
 	end
 end
 
-/* pus
-AAXDX = nil
-xxmaxs = Vector(1618.056274, -669.712402, 4.825635)
-// lua_run checkxdxdx()
-function checkxdxdx()
-	local mins = Vector(1677.644653, -546.118469, 122.206375)
-	//local maxs = Vector(1618.056274, -669.712402, 4.825635)
-	//xxmaxs = Vector(1618.056274, -669.712402, 4.825635)
-	if IsValid(AAXDX) == false then
-		AAXDX = ents.Create( "prop_physics" )
-		if IsValid( AAXDX ) then
-			AAXDX:SetPos( xxmaxs )
-			AAXDX:SetModel("models/props_junk/popcan01a.mdl")
-			AAXDX:Spawn()
-		end
-	end
-	maxs = Vector(1625.541992, -663.348633, 4.904104)
-	PrintTable(ents.FindInBox( mins, xxmaxs ))
-end
-
-hook.Add("Tick", "debug3254t3t35", function()
-	if IsValid(AAXDX) then
-		AAXDX:SetPos(xxmaxs)
-	end
-end)
-*/
 
 buttonstatus = 0
 lasttime914b = 0
@@ -598,32 +540,6 @@ function Use914(ent)
 	//end
 end
 
-function CloseSCPDoors()
-	// hook needed
-	for k,v in pairs( ents.FindByClass( "func_door" ) ) do
-		// 173 doors
-		if v:GetPos() == POS_173DOORS then
-			ForceUse(v, 0, 1)
-		end
-		// 106 doors
-		if v:GetPos() == POS_106DOORS then
-			ForceUse(v, 0, 1)
-		end
-		// 049 doors
-		if v:GetPos() == POS_049BUTTON then
-			ForceUse(v, 0, 1)
-		end
-	end
-	for k,v in pairs( ents.FindByClass( "func_button" ) ) do
-		if v:GetPos() == POS_173BUTTON then
-			ForceUse(v, 1, 1)
-		end
-		if v:GetPos() == POS_049BUTTON then
-			ForceUse(v, 1, 1)
-		end
-	end
-end
-
 function OpenSCPDoors()
 	// hook needed
 	for k, v in pairs( ents.FindByClass( "func_door" ) ) do
@@ -650,7 +566,7 @@ end
 function GetAlivePlayers()
 	local plys = {}
 	for k,v in pairs(player.GetAll()) do
-		if v:Team() != TEAM_SPEC then
+		if v:GTeam() != TEAM_SPEC then
 			if v:Alive() then
 				table.ForceInsert(plys, v)
 			end
@@ -660,7 +576,7 @@ function GetAlivePlayers()
 end
 
 function GM:GetFallDamage( ply, speed )
-	return ( speed / 6 )
+	return ( speed / 5 )
 end
 
 function PlayerCount()
@@ -681,14 +597,7 @@ function CheckPLAYER_SETUP()
 	end
 end
 
-
-function CheckThings()
-	print("//// class d leavers: " .. #GetClassDLeavers() .. " with classdcount: " .. classdcount)
-	print("//// scp leavers: " .. #GetSCPLeavers() .. " with scpcount: " .. scpcount)
-	//GetClassDLeavers()
-	//GetSCPLeavers()
-end
-
 function GM:OnEntityCreated( ent )
 	ent:SetShouldPlayPickupSound( false )
 end
+

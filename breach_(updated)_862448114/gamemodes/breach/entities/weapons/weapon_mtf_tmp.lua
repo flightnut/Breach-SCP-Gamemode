@@ -5,7 +5,7 @@ if CLIENT then
 	SWEP.BounceWeaponIcon = false
 end
 
-SWEP.Author			= ""
+SWEP.Author			= "Kanade"
 SWEP.Contact		= "Steam"
 SWEP.Purpose		= ""
 SWEP.Instructions	= ""

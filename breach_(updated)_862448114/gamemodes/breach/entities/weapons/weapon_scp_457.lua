@@ -5,7 +5,7 @@ if CLIENT then
 	SWEP.BounceWeaponIcon = false
 end
 
-SWEP.Author			= ""
+SWEP.Author			= "Kanade"
 SWEP.Contact		= "Look at this gamemode in workshop and search for creators"
 SWEP.Purpose		= "Burn"
 SWEP.Instructions	= ""
@@ -36,28 +36,13 @@ SWEP.Secondary.ClipSize		= -1
 SWEP.Secondary.DefaultClip	= -1
 SWEP.Secondary.Automatic	= false
 
---------------------------------------------------------------------------
---	Configure Health and Wait time between heals here					--
--- Do note that the heal amount is per player burning					--
--- Example:  Amount is set to 1, cooldown to 0.3; There's 5 players		--
---				It will heal 457 by 5 hp every 0.3 seconds on average	--
---------------------------------------------------------------------------
-Link2006_457BurnHealAmount = 1 
-Link2006_457BurnHealCooldown = 0.2 
---Heal system by Link2006, Please optimize it 
-
-
 function SWEP:Deploy()
 	self.Owner:DrawViewModel( false )
 end
 function SWEP:DrawWorldModel()
 end
-function SWEP:Initialize() --Init the weapon
+function SWEP:Initialize()
 	self:SetHoldType("normal")
-	--Link2006's Heal System 
-	if self.Cooldown == nil then --Is there a table inside the weapon? 
-		self.Cooldown = {} --Init a table please, we need it later.
-	end 
 end
 
 function SWEP:Think()
@@ -65,24 +50,14 @@ function SWEP:Think()
 		self.Owner:Ignite(0.1,100)
 		for k,v in pairs(ents.FindInSphere( self.Owner:GetPos(), 125 )) do
 			if v:IsPlayer() then
-				if v:Team() != TEAM_SCP and v:Team() != TEAM_SPEC then
-					v:Ignite(0.3,100)
-					--Heal buff by Link2006, Please optimize it. I put it here just in case it's needed
-					if self.Cooldown == nil then --this is nil.
-						print("[SCP-457] CoolDown table for 457 is nil while we're in Think()? FIX ME")
-						self.Cooldown = {} --Init a table please
-					end 
-					
-					if self.Cooldown[v:UserID()] == nil and v:IsOnFire() then --If there is no value in that table for this UserID and that IS on fire.
-						--print("Burning "..v:UserID()) -- Debug 
-						self.Cooldown[v:UserID()] = true  --Set it to true 
-						self.Owner:SetHealth(self.Owner:Health()+Link2006_457BurnHealAmount) --Heal the owner 
-						timer.Simple(Link2006_457BurnHealCooldown, function() --wait 0.3 seconds
-							self.Cooldown[v:UserID()] = nil --make it nil 
-							--Then remove it maybe? 
-						end)
+				if v:GTeam() != TEAM_SCP and v:GTeam() != TEAM_SPEC then
+					v:Ignite(2,250)
+					if self.Owner.nextexp == nil then self.Owner.nextexp = 0 end
+					if self.Owner.nextexp < CurTime() then
+						self.Owner:SetHealth(self.Owner:Health() + 20)
+						self.Owner:AddExp(1)
+						self.Owner.nextexp = CurTime() + 1
 					end
-					--END--
 				end
 			end
 		end
@@ -100,8 +75,8 @@ function SWEP:PrimaryAttack()
 		local ent = self.Owner:GetEyeTrace().Entity
 		if(ent:GetPos():Distance(self.Owner:GetPos()) < 125) then
 			if ent:IsPlayer() then
-				if ent:Team() == TEAM_SCP then return end
-				if ent:Team() == TEAM_SPEC then return end
+				if ent:GTeam() == TEAM_SCP then return end
+				if ent:GTeam() == TEAM_SPEC then return end
 				//ent:SetSCP0492()
 				//roundstats.zombies = roundstats.zombies + 1
 			else

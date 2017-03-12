@@ -5,7 +5,7 @@ if CLIENT then
 	SWEP.BounceWeaponIcon = false
 end
 
-SWEP.Author			= ""
+SWEP.Author			= "Kanade"
 SWEP.Contact		= "Look at this gamemode in workshop and search for creators"
 SWEP.Purpose		= "Cure"
 SWEP.Instructions	= "LMB to cure someone"
@@ -73,9 +73,10 @@ function SWEP:PrimaryAttack()
 		ent = tr.Entity
 		if IsValid(ent) then
 			if ent:IsPlayer() then
-				if ent:Team() == TEAM_SCP then return end
-				if ent:Team() == TEAM_SPEC then return end
+				if ent:GTeam() == TEAM_SCP then return end
+				if ent:GTeam() == TEAM_SPEC then return end
 				ent:SetSCP0492()
+				self.Owner:AddExp(15, true)
 				roundstats.zombies = roundstats.zombies + 1
 			else
 				if ent:GetClass() == "func_breakable" then

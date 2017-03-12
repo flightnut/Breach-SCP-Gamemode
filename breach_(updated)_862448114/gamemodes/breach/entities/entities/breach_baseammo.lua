@@ -16,7 +16,7 @@ function ENT:Initialize()
 end
 
 function ENT:Use( activator, caller )
-	if activator:Team() != TEAM_SPEC and ((activator:Team() != TEAM_SCP) or (activator:GetNClass() == ROLE_SCP035))  then
+	if activator:GTeam() != TEAM_SPEC and activator:GTeam() != TEAM_SCP then
 		local gotawep = false
 		for k,v in pairs(activator:GetWeapons()) do
 			if v.Primary != nil then

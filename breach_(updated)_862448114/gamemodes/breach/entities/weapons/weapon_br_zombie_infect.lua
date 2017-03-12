@@ -5,7 +5,7 @@ if CLIENT then
 	SWEP.BounceWeaponIcon = false
 end
 
-SWEP.Author			= ""
+SWEP.Author			= "Kanade"
 SWEP.Contact		= "Look at this gamemode in workshop and search for creators"
 SWEP.Purpose		= "Kill humens"
 SWEP.Instructions	= "Click left to attack"
@@ -73,7 +73,7 @@ end
 function SWEP:OnAttackedPlayer(attacktype, ply)
 	if attacktype == 1 then
 		if SERVER then
-			if ply:Team() != TEAM_SCP then
+			if ply:GTeam() != TEAM_SCP then
 				ply:SetSCP0082()
 			end
 		end
@@ -81,7 +81,7 @@ function SWEP:OnAttackedPlayer(attacktype, ply)
 		self:EmitSound(self.SoundFleshSmall)
 	else
 		if SERVER then
-			if ply:Team() != TEAM_SCP then
+			if ply:GTeam() != TEAM_SCP then
 				ply:SetSCP0082()
 			end
 		end

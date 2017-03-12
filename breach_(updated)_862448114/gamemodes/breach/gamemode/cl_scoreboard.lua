@@ -38,53 +38,83 @@ function ShowScoreBoard()
 	table.Add(allplayers, player.GetAll())
 	
 	local mtfs = {}
-	table.Add(mtfs, role_GetPlayers(ROLE_MTFGUARD))
-	table.Add(mtfs, role_GetPlayers(ROLE_MTFCOM))
-	table.Add(mtfs, role_GetPlayers(ROLE_MTFNTF))
+	local classds = {}
+	local researchers = {}
+	local chaosins = {}
+	
+	for k,v in pairs(ALLCLASSES["security"]["roles"]) do
+		table.Add(mtfs, role_GetPlayers(v.name))
+	end
+	
+	for k,v in pairs(ALLCLASSES["support"]["roles"]) do
+		table.Add(mtfs, role_GetPlayers(v.name))
+	end
+	
+	/*
+	for k,v in pairs(ALLCLASSES["security"]["roles"]) do
+		if v.team == TEAM_GUARD then
+			table.Add(mtfs, role_GetPlayers(v.name))
+		end
+	end
+	*/
+	
+	//for k,v in pairs(ALLCLASSES["security"]["roles"]) do
+	//	if v.gteams == TEAM_CHAOS then
+	//		table.Add(chaosins, role_GetPlayers(v.name))
+	//	end
+	//end
+	
+	for k,v in pairs(ALLCLASSES["classds"]["roles"]) do
+		table.Add(classds, role_GetPlayers(v.name))
+	end
+	
+	for k,v in pairs(ALLCLASSES["researchers"]["roles"]) do
+		table.Add(researchers, role_GetPlayers(v.name))
+	end
 	
 	local playerlist = {}
 	
 	table.ForceInsert(playerlist, {
 		name = "SCPs",
-		list = team.GetPlayers( TEAM_SCP ),
-		color = team.GetColor( TEAM_SCP ),
+		list = gteams.GetPlayers( TEAM_SCP ),
+		color = gteams.GetColor( TEAM_SCP ),
 		color2 = color_white
 	})
 	table.ForceInsert(playerlist,{
-		name = "Mobile Task Force",
+		name = "Security",
 		list = mtfs,
-		color = team.GetColor( TEAM_GUARD ),
+		color = gteams.GetColor( TEAM_GUARD ),
 		color2 = color_white
 	})
 	table.ForceInsert(playerlist,{
 		name = "Chaos Insurgency",
-		list = role_GetPlayers(ROLE_CHAOS),
+		list = chaosins,
 		color = Color(29, 81, 56),
 		color2 = color_white
 	})
 	table.ForceInsert(playerlist,{
 		name = "Class D Personell",
-		list = role_GetPlayers(ROLE_CLASSD),
-		color = team.GetColor( TEAM_CLASSD ),
+		list = classds,
+		color = gteams.GetColor( TEAM_CLASSD ),
 		color2 = color_white
 	})
 	table.ForceInsert(playerlist,{
-		name = "Scientists",
-		list = role_GetPlayers(ROLE_RES),
-		color = team.GetColor( TEAM_SCI ),
+		name = "Researches",
+		list = researchers,
+		color = gteams.GetColor( TEAM_SCI ),
 		color2 = color_white
 	})
 	table.ForceInsert(playerlist,{
 		name = "Spectators",
-		list = team.GetPlayers( TEAM_SPEC ),
+		list = gteams.GetPlayers( TEAM_SPEC ),
 		color = color_white,
 		color2 = color_black
 	})
 	
 	// Sort all
-	table.sort( playerlist[1].list, function( a, b ) return a:Frags() > b:Frags() end )
-	table.sort( playerlist[3].list, function( a, b ) return a:Frags() > b:Frags() end )
-	table.sort( playerlist[4].list, function( a, b ) return a:Frags() > b:Frags() end )
+	for k,v in pairs(playerlist) do
+		table.sort( v.list, function( a, b ) return a:Frags() > b:Frags() end )
+	end
 	
 	local color_main = 45
 	
@@ -147,7 +177,11 @@ function ShowScoreBoard()
 			size = panelwidth
 		},
 		{
-			name = "Score",
+			name = "EXP",
+			size = panelwidth
+		},
+		{
+			name = "Level",
 			size = panelwidth
 		}
 	}
@@ -207,8 +241,14 @@ function ShowScoreBoard()
 						size = panelwidth
 					},
 					{
-						name = "Frags",
-						text = v:Frags(),
+						name = "EXP",
+						text = v:GetNEXP(),
+						color = color_white,
+						size = panelwidth
+					},
+					{
+						name = "Level",
+						text = v:GetNLevel(),
 						color = color_white,
 						size = panelwidth
 					},
@@ -237,7 +277,7 @@ function ShowScoreBoard()
 				scroll_panel:Dock( TOP )
 				scroll_panel:DockMargin( 0,5,0,0 )
 				scroll_panel:SetSize(0,width)
-				//scroll_panel.clr = team.GetColor(v:Team())
+				//scroll_panel.clr = gteams.GetColor(v:GTeam())
 				scroll_panel.clr = tab.color
 				if not v.GetNClass then
 					player_manager.RunClass( v, "SetupDataTables" )
@@ -247,20 +287,29 @@ function ShowScoreBoard()
 						Frame:Close()
 						return
 					end
+					local vclass = "ERROR"
 					local txt = "ERROR"
 					if not v.GetNClass then
 						player_manager.RunClass( v, "SetupDataTables" )
 					else
-						txt = GetLangRole(v:GetNClass())
+						vclass = v:GetNClass()
+						txt = GetLangRole(vclass)
 					end
 					local tcolor = scroll_panel.clr
-					if LocalPlayer():Team() == TEAM_CHAOS or LocalPlayer():Team() == TEAM_CLASSD then
-						if v:Team() == TEAM_CHAOS then
-							txt = GetLangRole(ROLE_CHAOS)
+					if v:GTeam() == TEAM_CHAOS then
+						if LocalPlayer():GTeam() == TEAM_CHAOS or LocalPlayer():GTeam() == TEAM_CLASSD then
 							tcolor = Color(29, 81, 56)
+						else
+							if vclass == ROLES.ROLE_CHAOSSPY then
+								txt = GetLangRole(ROLES.ROLE_MTFGUARD)
+							elseif vclass == ROLES.ROLE_CHAOS then
+								txt = GetLangRole(ROLES.ROLE_MTFNTF)
+							elseif vclass == ROLES.ROLE_CHAOSCOM then
+								txt = GetLangRole(ROLES.ROLE_MTFNTF)
+							end
 						end
 					end
-					if v:Team() == TEAM_SCP then
+					if v:GTeam() == TEAM_SCP then
 						txt = "SCP Object"
 					end
 					draw.RoundedBox( 0, 0, 0, w, h, tcolor )

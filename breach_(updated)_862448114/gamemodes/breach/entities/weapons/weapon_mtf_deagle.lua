@@ -5,7 +5,7 @@ if CLIENT then
 	SWEP.BounceWeaponIcon = false
 end
 
-SWEP.Author			= ""
+SWEP.Author			= "Kanade"
 SWEP.Contact		= "Steam"
 SWEP.Purpose		= ""
 SWEP.Instructions	= ""
@@ -24,7 +24,7 @@ SWEP.Spawnable		= true
 SWEP.Primary.ClipSize		= 7
 SWEP.Primary.DefaultClip	= 0
 SWEP.Primary.Sound			= Sound("Weapon_DEagle.Single")
-SWEP.Primary.Automatic		= false --WHY WAS THIS TRUE WTF
+SWEP.Primary.Automatic		= true
 SWEP.Primary.Ammo			= "Pistol"
 SWEP.Primary.NumShots		= 1
 SWEP.Primary.Recoil			= 3
@@ -33,7 +33,7 @@ SWEP.Primary.Delay			= 0.225
 
 SWEP.Secondary.Ammo			= "none"
 SWEP.DeploySpeed			= 1
-SWEP.Damage					= 28
+SWEP.Damage					= 42
 SWEP.HeadshotMultiplier		= 1.6
 SWEP.UseHands				= true
 

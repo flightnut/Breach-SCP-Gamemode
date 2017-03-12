@@ -16,7 +16,6 @@ function ENT:Initialize()
 	//self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
 	self.Entity:SetMoveType(MOVETYPE_NONE)
 	self.Entity:SetSolid(SOLID_BBOX)
-	self.Entity:SetCollisionGroup(COLLISION_GROUP_WEAPON) --Lol :)
 	if SERVER then
 		self:SetUseType(SIMPLE_USE)
 	end
@@ -28,8 +27,7 @@ function ENT:Initialize()
 end
 
 function ENT:Use(ply)
-	--print("a")
-	if ply:Team() == TEAM_SPEC or ply:Team() == TEAM_SCP or ply:Alive() == false then return end
+	if ply:GTeam() == TEAM_SPEC or ply:GTeam() == TEAM_SCP or ply:Alive() == false then return end
 	if ply.UsingArmor != nil then
 		ply:PrintMessage(HUD_PRINTTALK, 'You already have a vest, type "dropvest" in the chat to drop it')
 		return
@@ -46,7 +44,11 @@ function ENT:Use(ply)
 		ply:SetWalkSpeed(ply.BaseStats.wspeed * self.Stats)
 		ply:SetRunSpeed(ply.BaseStats.rspeed * self.Stats)
 		ply:SetJumpPower(ply.BaseStats.jpower * self.Stats)
-		ply:SetModel(self.model)
+		if istable(self.model) then
+			ply:SetModel(table.Random(self.model))
+		else
+			ply:SetModel(self.model)
+		end
 		self:EmitSound( Sound("npc/combine_soldier/zipline_clothing".. math.random(1, 2).. ".wav") )
 		self:Remove()
 	end

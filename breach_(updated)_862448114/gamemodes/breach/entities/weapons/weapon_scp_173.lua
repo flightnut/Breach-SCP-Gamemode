@@ -5,7 +5,7 @@ if CLIENT then
 	SWEP.BounceWeaponIcon = false
 end
 
-SWEP.Author			= ""
+SWEP.Author			= "Kanade"
 SWEP.Contact		= "Look at this gamemode in workshop and search for creators"
 SWEP.Purpose		= "Kill people"
 SWEP.Instructions	= "LMB to kill someone"
@@ -40,9 +40,13 @@ SWEP.Secondary.ClipSize		= -1
 SWEP.Secondary.DefaultClip	= 0
 SWEP.Secondary.Automatic	= false
 SWEP.NextAttackW			= 0
-
+ 
 function SWEP:Deploy()
 	self.Owner:DrawViewModel( false )
+	self.Owner:SetJumpPower(175)
+	self.Owner:SetWalkSpeed(500)
+	self.Owner:SetRunSpeed(500)
+	self.Owner:SetMaxSpeed(500)
 end
 function SWEP:DrawWorldModel()
 end
@@ -54,7 +58,7 @@ function SWEP:IsLookingAt( ply )
 	local yes = ply:GetAimVector():Dot( ( self.Owner:GetPos() - ply:GetPos() + Vector( 70 ) ):GetNormalized() )
 	return (yes > 0.39)
 end
-
+ 
 SWEP.DrawRed = 0
 function SWEP:Think()
 	if CLIENT then
@@ -63,7 +67,7 @@ function SWEP:Think()
 	if postround then return end
 	local watching = 0
 	for k,v in pairs(player.GetAll()) do
-		if IsValid(v) and v:Team() != TEAM_SPEC and v:Alive() and v != self.Owner and v.canblink then
+		if IsValid(v) and v:GTeam() != TEAM_SPEC and v:Alive() and v != self.Owner and v.canblink then
 			local tr_eyes = util.TraceLine( {
 				start = v:EyePos() + v:EyeAngles():Forward() * 15,
 				//start = v:LocalToWorld( v:OBBCenter() ),
@@ -82,17 +86,15 @@ function SWEP:Think()
 					watching = watching + 1
 					//if self:GetPos():Distance(v:GetPos()) > 100 then
 						//self.Owner:PrintMessage(HUD_PRINTTALK, v:Nick() .. " is looking at you")
-					//end
+					//end 
 				end
 			end
 		end
 	end
-	if SERVER then
-		if watching > 0 then
-			self.Owner:SetFrozen(true) --simple
-		else
-			self.Owner:SetFrozen(false,500,500,175)--ez
-		end
+	if watching > 0 then
+		self.Owner:Freeze(true)
+	else
+		self.Owner:Freeze(false)
 	end
 end
 
@@ -104,17 +106,25 @@ end
 function SWEP:PrimaryAttack()
 	if preparing or postround then return end
 	if not IsFirstTimePredicted() then return end
-	if(self.Owner:GetIsFrozen()) then return end -- check if the owner is frozen.
-	//if ( !self:CanPrimaryAttack() ) then return end
 	if self.NextAttackW > CurTime() then return end
 	self.NextAttackW = CurTime() + self.AttackDelay
 	if SERVER then
-		local ent = self.Owner:GetEyeTrace().Entity
-		if (ent:GetPos():Distance(self.Owner:GetPos()) < 150) then
+		local ent = nil
+		local tr = util.TraceHull( {
+			start = self.Owner:GetShootPos(),
+			endpos = self.Owner:GetShootPos() + ( self.Owner:GetAimVector() * 100 ),
+			filter = self.Owner,
+			mins = Vector( -10, -10, -10 ),
+			maxs = Vector( 10, 10, 10 ),
+			mask = MASK_SHOT_HULL
+		} )
+		ent = tr.Entity
+		if IsValid(ent) then
 			if ent:IsPlayer() then
-				if ent:Team() == TEAM_SCP then return end
-				if ent:Team() == TEAM_SPEC then return end
+				if ent:GTeam() == TEAM_SCP then return end
+				if ent:GTeam() == TEAM_SPEC then return end
 				ent:Kill()
+				self.Owner:AddExp(15, true)
 				roundstats.snapped = roundstats.snapped + 1
 				ent:EmitSound( self.SnapSound, 500, 100 )
 			else
@@ -137,7 +147,6 @@ SWEP.NextSpecial = 0
 function SWEP:SecondaryAttack()
 	local time = 5
 	if self.NextSpecial > CurTime() then return end
-	//if ( !self:CanSecondaryAttack() ) then return end
 	self.NextSpecial = CurTime() + self.SpecialDelay
 	if CLIENT then
 		surface.PlaySound("Horror2.ogg")
@@ -146,7 +155,7 @@ function SWEP:SecondaryAttack()
 	local foundplayers = {}
 	for k,v in pairs(findents) do
 		if v:IsPlayer() then
-			if !(v:Team() == TEAM_SCP or v:Team() == TEAM_SPEC) then
+			if !(v:GTeam() == TEAM_SCP or v:GTeam() == TEAM_SPEC) then
 				if v.usedeyedrops == false then
 					table.ForceInsert(foundplayers, v)
 				end
@@ -159,7 +168,7 @@ function SWEP:SecondaryAttack()
 		local numi = 0
 		for k,v in pairs(foundplayers) do
 			numi = numi + 1
-
+			
 			if numi == 1 then
 				fixednicks = fixednicks .. v:Nick()
 			elseif numi == #foundplayers then
@@ -194,7 +203,7 @@ function SWEP:DrawHUD()
 	if disablehud == true then return end
 	local specialstatus = ""
 	local showtext = ""
-	local showtextlook = "No one is looking"
+	local showtextlook = "Noone is looking"
 	local lookcolor = Color(0,255,0)
 	local showcolor = Color(17, 145, 66)
 	if self.NextSpecial > CurTime() then
@@ -204,15 +213,14 @@ function SWEP:DrawHUD()
 		specialstatus = "ready to use"
 	end
 	showtext = "Special " .. specialstatus
-	--if self.DrawRed < CurTime() then
-	if self.Owner:GetIsFrozen() then
+	if self.DrawRed < CurTime() then
 		self.CColor = Color(255,0,0)
-		showtextlook = "Someone is looking"
+		showtextlook = "someone is looking"
 		lookcolor = Color(145, 17, 62)
 	else
 		self.CColor = Color(0,255,0)
 	end
-
+	
 	draw.Text( {
 		text = showtext,
 		pos = { ScrW() / 2, ScrH() - 50 },
@@ -221,8 +229,8 @@ function SWEP:DrawHUD()
 		xalign = TEXT_ALIGN_CENTER,
 		yalign = TEXT_ALIGN_CENTER,
 	})
-
-	draw.Text( {
+	
+	draw.Text( { 
 		text = showtextlook,
 		pos = { ScrW() / 2, ScrH() - 25 },
 		font = "173font",
@@ -230,13 +238,13 @@ function SWEP:DrawHUD()
 		xalign = TEXT_ALIGN_CENTER,
 		yalign = TEXT_ALIGN_CENTER,
 	})
-
+	
 	local x = ScrW() / 2.0
 	local y = ScrH() / 2.0
 
 	local scale = 0.3
 	surface.SetDrawColor( self.CColor.r, self.CColor.g, self.CColor.b, 255 )
-
+	
 	local gap = 5
 	local length = gap + 20 * scale
 	surface.DrawLine( x - length, y, x - gap, y )
@@ -244,3 +252,5 @@ function SWEP:DrawHUD()
 	surface.DrawLine( x, y - length, x, y - gap )
 	surface.DrawLine( x, y + length, x, y + gap )
 end
+
+

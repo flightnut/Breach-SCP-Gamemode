@@ -15,7 +15,7 @@ SWEP.ViewModelFOV	= 62
 SWEP.ViewModelFlip	= false
 SWEP.ViewModel		= "models/vinrax/props/firstaidkit.mdl"
 SWEP.WorldModel		= "models/vinrax/props/firstaidkit.mdl"
-SWEP.PrintName		= "First Aid kit"
+SWEP.PrintName		= "Ultra First Aid kit"
 SWEP.Slot			= 1
 SWEP.SlotPos		= 1
 SWEP.DrawAmmo		= false
@@ -24,7 +24,7 @@ SWEP.HoldType		= "normal"
 SWEP.Spawnable		= false
 SWEP.AdminSpawnable	= false
 
-SWEP.betterone				= "item_ultramedkit"
+SWEP.Uses					= 3
 SWEP.droppable				= true
 SWEP.teams					= {2,3,5,6}
 
@@ -54,15 +54,19 @@ end
 function SWEP:Reload()
 end
 function SWEP:PrimaryAttack()
-	if self.Owner:GTeam() == TEAM_SCP then return end
 	if self.Owner:Health() / self.Owner:GetMaxHealth() <= 0.8 then
+		self.Uses = self.Uses - 1
 		if SERVER then
 			self.Owner:SetHealth(self.Owner:GetMaxHealth())
-			self.Owner:StripWeapon("item_medkit")
+			if self.Uses < 1 then
+				self.Owner:StripWeapon("item_ultramedkit")
+			end
 		end
 	else
-		if SERVER then
-			self.Owner:PrintMessage(HUD_PRINTTALK, "You don't need healing yet")
+		if CLIENT then
+			if !(IsFirstTimePredicted()) then return end
+			//self.Owner:PrintMessage(HUD_PRINTTALK, "You don't need healing yet")
+			chat.AddText("You don't need healing yet")
 		end
 	end
 end
@@ -75,7 +79,10 @@ function SWEP:SecondaryAttack()
 			if(ent:GetPos():Distance(self.Owner:GetPos()) < 95) then
 				if ent:Health() / ent:GetMaxHealth() <= 0.8 then
 					ent:SetHealth(ent:GetMaxHealth())
-					self.Owner:StripWeapon("item_medkit")
+					self.Uses = self.Uses - 1
+					if self.Uses < 1 then
+						self.Owner:StripWeapon("item_ultramedkit")
+					end
 				else
 					self.Owner:PrintMessage(HUD_PRINTTALK, ent:Nick() .. " doesn't need healing yet")
 				end
