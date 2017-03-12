@@ -142,7 +142,7 @@ local function antirdm(victim, inflictor, attacker)
             if rdmTable[ attacker:Team() ] then --I FORGOT TO CHECK IF THE ATTACKER'S TABLE EXISTED
                 if (table.HasValue( rdmTable[ attacker:Team() ], victim:Team() ) and (attacker ~= victim)) --If Attacker and Victim were allies
                 or (attacker:GetNClass() == ROLE_SCP035 and victim:Team() == TEAM_CLASSD) --OR SCP-035 killed a Class D
-                or (victim:GetNClass() == ROLE_SCP035 and attacker:Team() == TEAM_CLASSD) then --OR Class D killed SCP-035 
+                or (victim:GetNClass() == ROLE_SCP035 and attacker:Team() == TEAM_CLASSD) then --OR Class D killed SCP-035
                     --AWARN ATTACKER
                     print("[AntiRDM] Warning \""..attacker:Nick().."\" for RDM")
                     if antirdm_enabled and (tostring(roundtype.name) ~= "Trouble in SCP Town") then --As long it's not TTT lol ...
@@ -158,21 +158,22 @@ local function antirdm(victim, inflictor, attacker)
                             victim.Respawns = AntiRDM_Respawns
                         end
                         if postround ~= true then
+                            victim.Respawns = victim.Respawns - 1
                             if victim.Respawns > 0 then
-                                ULib.tsayColor(victim,true,Color(0,255,0),"[AntiRDM]",Color(255,255,255)," You will be respawned in a few moments...")
+                                ULib.tsayColor(victim,true,Color(0,255,0),"[AntiRDM]",Color(255,255,255)," You will be respawned, Respawns Left: "..tostring(victim.Respawns))
+                                timer.Simple(7,function() --7 seconds JUST To be sure...
+                                    if victim.Respawns then
+                                        if (postround ~= true) and (victim:Team() == TEAM_SPEC) and victim.Respawns > 0 then --Respawn if the round didn't end yet AND the victim is _still_ dead (Fixes respawning when they're alive)
+                                            antirdm_respawn(victim,rl,vicTeam)
+                                            ULib.tsayColor(victim,true,Color(0,255,0),"[AntiRDM]",Color(255,255,255)," Respawns left: "..victim.Respawns)
+                                        end
+                                    end
+                                end)
                             else
                                 ULib.tsayColor(victim,true,Color(255,0,0),"[AntiRDM]",Color(255,255,255)," You will not be respawned as you have died too many times.")
                             end
                         end
-                        timer.Simple(7,function() --7 seconds JUST To be sure...
-                            if victim.Respawns then
-                                if (postround ~= true) and (victim:Team() == TEAM_SPEC) and victim.Respawns > 0 then --Respawn if the round didn't end yet AND the victim is _still_ dead (Fixes respawning when they're alive)
-                                    antirdm_respawn(victim,rl,vicTeam)
-                                    victim.Respawns = victim.Respawns - 1
-                                    ULib.tsayColor(victim,true,Color(0,255,0),"[AntiRDM]",Color(255,255,255)," Respawns left: "..victim.Respawns)
-                                end
-                            end
-                        end)
+
                     end
                 end
             end
