@@ -268,7 +268,7 @@ if CLIENT then
     function GM:OnEntityCreated( ent )
         if LocalPlayer() == ent then
             ent:SetCustomCollisionCheck(true)
-    end
+    	end
     end
 end
 
@@ -280,7 +280,7 @@ end)
 
 hook.Add( "ShouldCollide", "CollideCheck2", function(ent1,ent2)
 	if ( ent1:IsPlayer() and ent2:IsPlayer()) then
-		if(ent1:Team() ~= TEAM_SCP) and (ent2:Team() ~= TEAM_SCP) then
+		if ((ent1:Team() == TEAM_CLASSD) and (ent2:Team() == TEAM_CLASSD)) or ((ent1:Team() == TEAM_SCI) and (ent2:Team() == TEAM_SCI)) then
 			return false
 		else
 			return true
