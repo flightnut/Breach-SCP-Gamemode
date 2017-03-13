@@ -11,7 +11,7 @@ if CLIENT then return end --This should be in /autorun/server/, clients can't do
 --SpawnPerms are only on the SERVER
 --RoundNoSpec are Notified to clients && Replicated && Server-only
 
-link2006_SpawnPerms = CreateConVar("spawn_perms","Assistant",{FCVAR_SERVER_CAN_EXECUTE},"Case sensitive comma seperated list of (ulx) groups that can only !spawn players as classd")
+link2006_SpawnPerms = CreateConVar("spawn_perms","Assistant,moderator",{FCVAR_SERVER_CAN_EXECUTE},"Case sensitive comma seperated list of (ulx) groups that can only !spawn players as classd")
 link2006_ForceSpawn = CreateConVar("br_roundnospec","0",{FCVAR_SERVER_CAN_EXECUTE,FCVAR_REPLICATED,FCVAR_NOTIFY},"Always Respawn players during this round")
 link2006_RespawnTime = CreateConVar("br_roundnospec_delay","3.0",{FCVAR_SERVER_CAN_EXECUTE,FCVAR_REPLICATED},"Delay (in seconds) between death and respawn when br_roundnospec is 1")
 
