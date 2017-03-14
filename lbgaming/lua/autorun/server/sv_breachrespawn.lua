@@ -102,6 +102,18 @@ function Link2006_IsSpec(spec) --Made this so i can replace every checks at once
 	--return ((spec:Team() == TEAM_SPEC) or (spec:GetNClass() == "Spectator")) and ((spec.ActivePlayer ~= false) and (spec:Team() == TEAM_SPEC))
 end
 
+--This is the old code for checking the spawns
+--[[
+if #tSpecSpawns > 0 then
+	specNewSpawn,specKey = table.Random(tSpecSpawns)
+	--table.RemoveByValue(specNewSpawn,tSpecSpawns)
+	table.remove(tSpecSpawns,specKey)
+	spec:SetPos(specNewSpawn)
+else
+	--We did run out of spawns, let's ignore this for now and spawn them normally...
+	--print("[BreachRespawn] WARN: RAN OUT OF SPAWNS FOR SPECTATORS!")
+end
+]]--
 
 function Link2006_RespawnSpecs(pAdmin,sClass)
 	if sClass == nil then
@@ -112,39 +124,27 @@ function Link2006_RespawnSpecs(pAdmin,sClass)
 	--GET POSSIBLE SPAWNS
 	-- warning, if we exhaust our list; it's RIP and they spawn at the normal one... but it shouldnt be really a problem i guess
 	if sClass == "classd" then
-		local tSpecSpawns = Link2006_GetSpawns(SPAWN_CLASSD)
+		--local tSpecSpawns = Link2006_GetSpawns(SPAWN_CLASSD)
+		--ClassDs are actually nocollided now!
 
 		for k,spec in pairs(player.GetAll()) do
 			if Link2006_IsSpec(spec) then --Respawn Spectators (Team/GetNClass) but not br_spectate people
-				spec:SetClassD() -- We don't care if ClassDs can't spawn in their own spawns
-				if #tSpecSpawns > 0 then
-					specNewSpawn,specKey = table.Random(tSpecSpawns)
-					--table.RemoveByValue(specNewSpawn,tSpecSpawns)
-					table.remove(tSpecSpawns,specKey)
-					spec:SetPos(specNewSpawn)
-				else
-					--We did run out of spawns, let's ignore this for now and spawn them normally...
-					--print("[BreachRespawn] WARN: RAN OUT OF SPAWNS FOR SPECTATORS!")
-				end
+				spec:SetClassD() -- We set them to ClassD
+				spec:SetPos(table.Random(SPAWN_CLASSD)) --Players are nocollided, dont need to care where to spawn :)
+
+				--OldCode About Checking Spawns Here
+
 			end
 		end
 	elseif sClass == "researcher" then
 		--CODE HERE FOR RESEARCHERS
 		--table is SPAWN_SCIENT
-		local tSpecSpawns = Link2006_GetSpawns(SPAWN_SCIENT)
+		--local tSpecSpawns = Link2006_GetSpawns(SPAWN_SCIENT)
 
 		for k,spec in pairs(player.GetAll()) do
 			if Link2006_IsSpec(spec) then --Don't spawn people that have br_spectate set
 				spec:SetScientist() -- We don't care if Scientists/Researchers can't spawn in their own spawns, normal spawn is close enough anyway
-				if #tSpecSpawns > 0 then
-					specNewSpawn,specKey = table.Random(tSpecSpawns)
-					--table.RemoveByValue(specNewSpawn,tSpecSpawns)
-					table.remove(tSpecSpawns,specKey)
-					spec:SetPos(specNewSpawn)
-				else
-					--We did run out of spawns, let's ignore this for now and spawn them normally...
-					--print("[BreachRespawn] WARN: RAN OUT OF SPAWNS FOR SPECTATORS!")
-				end
+				spec:SetPos(table.Random(SPAWN_SCIENT))
 			end
 		end
 	elseif sClass == "mtf" then
@@ -265,13 +265,15 @@ hook.Add( "PlayerSay", "Link2006_SpecSpawn", function( ply, text)
 						else
 							if string.lower(spec_chatArgs[3]) == "classd" then --Class D
 								plySpawn:SetClassD()
-								plySpawn:SetPos(table.Random(Link2006_GetSpawns(SPAWN_CLASSD)))
+								--plySpawn:SetPos(table.Random(Link2006_GetSpawns(SPAWN_CLASSD)))
+								plySpawn:SetPos(table.Random(SPAWN_CLASSD))
 								--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as class D",plySpawn) --Tell everyone an admin respawned a player as what
 								Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as class D")
 							elseif string.lower(spec_chatArgs[3]) == "scientist" or string.lower(spec_chatArgs[3]) == "researcher" then
 								--Researcher
 								plySpawn:SetScientist()
-								plySpawn:SetPos(table.Random(Link2006_GetSpawns(SPAWN_SCIENT)))
+								--plySpawn:SetPos(table.Random(Link2006_GetSpawns(SPAWN_SCIENT)))
+								plySpawn:SetPos(table.Random(SPAWN_SCIENT))
 								--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as a researcher",plySpawn) --Tell everyone an admin respawned a player as what
 								Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as a researcher")
 							elseif string.lower(spec_chatArgs[3]) == "commander" then
@@ -369,7 +371,8 @@ hook.Add( "PlayerSay", "Link2006_SpecSpawn", function( ply, text)
 				if plySpawn then
 					if plySpawn.ActivePlayer ~= false then
 						plySpawn:SetClassD()
-						plySpawn:SetPos(table.Random(Link2006_GetSpawns(SPAWN_CLASSD)))
+						--plySpawn:SetPos(table.Random(Link2006_GetSpawns(SPAWN_CLASSD)))
+						plySpawn:SetPos(table.Random(SPAWN_CLASSD))
 						--ulx.fancyLogAdmin( pAdmin, "#A respawned #T",plySpawn) --Tell everyone an admin respawned a player as what
 						Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as a class D")
 					else
@@ -538,10 +541,12 @@ hook.Add("PlayerDeath","br_ForceRespawn", function(ply)
 		        end
 		    elseif rl == ROLE_CLASSD then
 		        ply:SetClassD()
-		        ply:SetPos(table.Random(Link2006_GetSpawns(SPAWN_CLASSD)))
+		        --ply:SetPos(table.Random(Link2006_GetSpawns(SPAWN_CLASSD)))
+				ply:SetPos(table.Random(SPAWN_CLASSD))
 		    elseif rl == ROLE_RES then
 		        ply:SetScientist()
-		        ply:SetPos(table.Random(Link2006_GetSpawns(SPAWN_SCIENT)))
+		        --ply:SetPos(table.Random(Link2006_GetSpawns(SPAWN_SCIENT)))
+				ply:SetPos(table.Random(SPAWN_SCIENT))
 		    elseif rl == ROLE_CHAOS then --TDM Chaos (Unused!)
 		        ply:SetChaosInsurgency() --Not the spy version.
 		        if roundtype then

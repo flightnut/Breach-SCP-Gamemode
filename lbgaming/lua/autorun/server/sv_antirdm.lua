@@ -1,12 +1,14 @@
 --Anti RDM using AWarn
 --  Original by DMX
 --  Modified by Link2006
---Version 1.4
+--Version 1.5
 
 print("[AntiRDM] Loading AntiRDM...")
-local AntiRDMVersion = "1.4" --I should have an habit of updating this :|
+local AntiRDMVersion = "1.5" --I should have an habit of updating this :|
 antirdm_enabled = true --Global so we can have it everywhere, also put it here so it's easy to find
-local rdmTable = {}
+br_friendlyfire = CreateConVar("br_friendlyfire","0",{FCVAR_SERVER_CAN_EXECUTE,FCVAR_NOTIFY},"0 = Disable FriendlyFire, 1 = Enable FriendlyFire") --Self Explained :)
+local rdmTable = {} -- Normal Table
+local rdmTable_ff = {} --FriendlyFire Table
 local AntiRDM
 local AntiRDM_Respawns = 2 --How many respawns do players get?
 
@@ -35,6 +37,26 @@ function rdmTableInit()
                 TEAM_SCP --Because of course SCP-035 gets point for killing other SCPs ... Why ?
             },
         }
+        --FriendlyFire Version of the table
+        rdmTable_ff = {
+                [TEAM_CLASSD]={
+                    TEAM_CLASSD,
+                    TEAM_CHAOS
+                },
+                [TEAM_CHAOS]={
+                    TEAM_CLASSD
+                },
+                [ TEAM_SCI ] =  {
+                    TEAM_SCI,
+                    TEAM_GUARD
+                },
+                [ TEAM_GUARD ] =  {
+                    TEAM_SCI
+                },
+                [ TEAM_SCP ] = {
+                    TEAM_SCP --Because of course SCP-035 gets point for killing other SCPs ... Why ?
+                },
+            }
     end
 end
 
@@ -191,16 +213,28 @@ hook.Add("PostCleanupMap","AntiRDM_CleanRespawns",function() --Resets respawns h
     end
     print("[AntiRDM] Done.")
 end)
+-- br_friendlyfire:GetBool() ~= true
 hook.Add("PlayerShouldTakeDamage","AntiRDM_NoDamage",function(victim,attacker)
     if postround ~= true then
         if victim:IsPlayer() then
             if attacker:IsPlayer() then
-                if rdmTable[ attacker:Team() ] then --I FORGOT TO CHECK IF THE ATTACKER'S TABLE EXISTED
-                    if (table.HasValue( rdmTable[ attacker:Team() ], victim:Team() ) and (attacker ~= victim)) --If Attacker and Victim were allies
-                    or (attacker:GetNClass() == ROLE_SCP035 and victim:Team() == TEAM_CLASSD) --OR SCP-035 attacked a Class D
-                    or (victim:GetNClass() == ROLE_SCP035 and attacker:Team() == TEAM_CLASSD) --OR Class D attacked SCP-035
-                    or (attacker:Team() == TEAM_SPEC) then --Or attacker's a spectator
-                        return false
+                if br_friendlyfire:GetBool() then
+                    if rdmTable_ff[ attacker:Team() ] then --I FORGOT TO CHECK IF THE ATTACKER'S TABLE EXISTED
+                        if (table.HasValue( rdmTable_ff[ attacker:Team() ], victim:Team() ) and (attacker ~= victim)) --If Attacker and Victim were allies
+                        or (attacker:GetNClass() == ROLE_SCP035 and victim:Team() == TEAM_CLASSD) --OR SCP-035 attacked a Class D
+                        or (victim:GetNClass() == ROLE_SCP035 and attacker:Team() == TEAM_CLASSD) --OR Class D attacked SCP-035
+                        or (attacker:Team() == TEAM_SPEC) then --Uh
+                            return false
+                        end
+                    end
+                else
+                    if rdmTable[ attacker:Team() ] then --I FORGOT TO CHECK IF THE ATTACKER'S TABLE EXISTED
+                        if (table.HasValue( rdmTable[ attacker:Team() ], victim:Team() ) and (attacker ~= victim)) --If Attacker and Victim were allies
+                        or (attacker:GetNClass() == ROLE_SCP035 and victim:Team() == TEAM_CLASSD) --OR SCP-035 attacked a Class D
+                        or (victim:GetNClass() == ROLE_SCP035 and attacker:Team() == TEAM_CLASSD) --OR Class D attacked SCP-035
+                        or (attacker:Team() == TEAM_SPEC) then --Or attacker's a spectator
+                            return false
+                        end
                     end
                 end
             end
