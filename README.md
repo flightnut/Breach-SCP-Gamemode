@@ -18,8 +18,9 @@ For Setting Karma to max for everyone
 * ulx luarun for k,v in pairs(player.GetAll()) do v:SetKarma(1200) end
 * ulx luarun for k,v in pairs(player.GetAll()) do v:UpdateNKarma() end
 * ulx luarun for k,v in pairs(player.GetAll()) do v:SaveKarma() end
-*ulx ent prop_physics model:"models/vinrax/scp294/scp294.mdl"
 
+
+* ulx ent prop_physics model:"models/vinrax/scp294/scp294.mdl"
 
 To add an entity you wish to make persistent to the database, look at it and run: 
 PermaWorld_Add
