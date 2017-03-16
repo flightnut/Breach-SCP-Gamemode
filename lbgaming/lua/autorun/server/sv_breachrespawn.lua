@@ -1,4 +1,4 @@
---Version 1.1
+--Version 1.2
 
 if CLIENT then return end --This should be in /autorun/server/, clients can't do anything
 
@@ -218,6 +218,7 @@ print("[BreachRespawn] Creating PlayerSay hook...")
 --I am very very sorry...
 
 hook.Add( "PlayerSay", "Link2006_SpecSpawn", function( ply, text)
+	--print("\""..text.."\" from "..ply:Nick()) --Debugs but cleaner lol
 	--If Player is an admin OR an Assistant:
 	local sPerms = string.Explode(",",link2006_SpawnPerms:GetString()) --Get table of the groups that aren't Admins
 	local spec_chatArgs = string.Explode(" ",text) --idunno if i should have it check if the player is admin
@@ -430,6 +431,18 @@ hook.Add("PostCleanupMap","Link2006_AutoSpawn",function() --On New Round
             timer.Create("BreachRespawn_Spectators", 12, 1, function()   Link2006_RespawnSpecs(nil,"classd") end)
         end
     end)
+	--Remove previous SCP-294 model from map
+	timer.Simple(1,function()
+		print("[BreachRespawn] Removing all scp-294 models ...")
+		local scp294 = ents.FindByModel("models/vinrax/scp294/scp294.mdl")
+		for _,prop in pairs(scp294) do
+			prop:Remove()
+		end
+	end)
+	--Load permaprops
+	timer.Simple(2,function()
+		RunConsoleCommand("PermaWorld_Restore") --Map got cleaned up, respawn the props. :)
+	end)
 end)
 
 print("[BreachRespawn] Installing br_roundnospec hook...")

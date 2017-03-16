@@ -1,10 +1,10 @@
 --Anti RDM using AWarn
 --  Original by DMX
 --  Modified by Link2006
---Version 1.5
+--Version 1.6
 
 print("[AntiRDM] Loading AntiRDM...")
-local AntiRDMVersion = "1.5" --I should have an habit of updating this :|
+local AntiRDMVersion = "1.6" --I should have an habit of updating this :|
 antirdm_enabled = true --Global so we can have it everywhere, also put it here so it's easy to find
 br_friendlyfire = CreateConVar("br_friendlyfire","0",{FCVAR_SERVER_CAN_EXECUTE,FCVAR_NOTIFY},"0 = Disable FriendlyFire, 1 = Enable FriendlyFire") --Self Explained :)
 local rdmTable = {} -- Normal Table
@@ -215,6 +215,9 @@ hook.Add("PostCleanupMap","AntiRDM_CleanRespawns",function() --Resets respawns h
 end)
 -- br_friendlyfire:GetBool() ~= true
 hook.Add("PlayerShouldTakeDamage","AntiRDM_NoDamage",function(victim,attacker)
+    if preparing then
+        return false --Stops the players from doing ANY damage during preparing round
+    end
     if postround ~= true then
         if victim:IsPlayer() then
             if attacker:IsPlayer() then

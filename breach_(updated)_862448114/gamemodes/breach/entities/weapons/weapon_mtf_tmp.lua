@@ -34,7 +34,7 @@ SWEP.Primary.Delay			= 0.07
 
 SWEP.Secondary.Ammo			= "none"
 SWEP.DeploySpeed			= 1
-SWEP.Damage					= 7
+SWEP.Damage					= 9
 SWEP.HeadshotMultiplier		= 2.35
 SWEP.UseHands				= true
 

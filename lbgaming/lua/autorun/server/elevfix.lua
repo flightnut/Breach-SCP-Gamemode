@@ -1,4 +1,4 @@
-Link2006_version = "1.6"
+Link2006_version = "1.7"
 
 if CLIENT then return end --This should be in /autorun/server/, clients can't do anything
 
@@ -153,8 +153,17 @@ function Link2006_AddFiles(name,remLength)
 	end
 end
 
+--lbgaming's sounds
 Link2006_AddFiles("addons/lbgaming/sound",string.len("addons/lbgaming/")) -- string Folder, string (length) to remove
-
+--SCP294's stuff
+Link2006_AddFiles("addons/scp-294_entity_774064122/materials",string.len("addons/scp-294_entity_774064122/"))
+Link2006_AddFiles("addons/scp-294_entity_774064122/models",string.len("addons/scp-294_entity_774064122/"))
+Link2006_AddFiles("addons/scp-294_entity_774064122/sound",string.len("addons/scp-294_entity_774064122/"))
+Link2006_AddFiles("addons/scp-294_entity_774064122/sound/scp_pack",string.len("addons/scp-294_entity_774064122/"))
+--SCP513's stuff
+Link2006_AddFiles("addons/scp-513_entity_[working]_770291148/materials",string.len("addons/scp-513_entity_[working]_770291148/"))
+Link2006_AddFiles("addons/scp-513_entity_[working]_770291148/models",string.len("addons/scp-513_entity_[working]_770291148/"))
+Link2006_AddFiles("addons/scp-513_entity_[working]_770291148/sound",string.len("addons/scp-513_entity_[working]_770291148/"))
 
 print("[Link2006] Ready. Version "..Link2006_version)
 
