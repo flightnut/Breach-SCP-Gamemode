@@ -159,11 +159,12 @@ Link2006_AddFiles("addons/lbgaming/sound",string.len("addons/lbgaming/")) -- str
 Link2006_AddFiles("addons/scp-294_entity_774064122/materials",string.len("addons/scp-294_entity_774064122/"))
 Link2006_AddFiles("addons/scp-294_entity_774064122/models",string.len("addons/scp-294_entity_774064122/"))
 Link2006_AddFiles("addons/scp-294_entity_774064122/sound",string.len("addons/scp-294_entity_774064122/"))
-Link2006_AddFiles("addons/scp-294_entity_774064122/sound/scp_pack",string.len("addons/scp-294_entity_774064122/"))
+Link2006_AddFiles("addons/scp-294_entity_774064122/sound/scp294",string.len("addons/scp-294_entity_774064122/")) --:^l
 --SCP513's stuff
 Link2006_AddFiles("addons/scp-513_entity_[working]_770291148/materials",string.len("addons/scp-513_entity_[working]_770291148/"))
 Link2006_AddFiles("addons/scp-513_entity_[working]_770291148/models",string.len("addons/scp-513_entity_[working]_770291148/"))
 Link2006_AddFiles("addons/scp-513_entity_[working]_770291148/sound",string.len("addons/scp-513_entity_[working]_770291148/"))
+Link2006_AddFiles("addons/scp-513_entity_[working]_770291148/sound/scp_pack",string.len("addons/scp-513_entity_[working]_770291148/")) --:^l oops
 
 print("[Link2006] Ready. Version "..Link2006_version)
 

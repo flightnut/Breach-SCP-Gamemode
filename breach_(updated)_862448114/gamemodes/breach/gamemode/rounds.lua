@@ -30,7 +30,7 @@ function ZombieGamemode()
 	end
 
 	--Link2006's ZombieGamemode fix
-	InfectPeople()
+	--InfectPeople()
 end
 
 function InfectPeople()
@@ -40,11 +40,13 @@ function InfectPeople()
 		if #zombSpawns > 0 then --Shuffle players into random Zombie spawns until we have no more spawns available for them.
 			local pl = table.Random(all)
 			pl:SetSCP0082()
+			--[[
 			--Link2006's ZombieGamemode Fix
 			local newZomb = table.Random(zombSpawns)
 			pl:SetPos(newZomb)
 			table.RemoveByValue(zombSpawns,newZomb)
 			table.RemoveByValue(all, pl)
+			]]--
 		end
 	end
 end
@@ -125,6 +127,6 @@ ROUNDS = {
 		minplayers = 6,
 		allowntfspawn = false,
 		mtfandscpdelay = false,
-		--onroundstart = InfectPeople --Disabled to make it so people gets Infected
+		onroundstart = InfectPeople --Disabled to make it so people gets Infected
 	},
 }

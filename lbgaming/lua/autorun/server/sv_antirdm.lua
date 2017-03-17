@@ -215,9 +215,15 @@ hook.Add("PostCleanupMap","AntiRDM_CleanRespawns",function() --Resets respawns h
 end)
 -- br_friendlyfire:GetBool() ~= true
 hook.Add("PlayerShouldTakeDamage","AntiRDM_NoDamage",function(victim,attacker)
+    --Force Friendly Fire OFF when round hasn't started
     if preparing then
         return false --Stops the players from doing ANY damage during preparing round
     end
+    --Force Friendly Fire ON when Round is "spies"
+    if roundtype and (roundtype.name == "Trouble in SCP Town") then --If it's the TTT Gamemode, respawn them lmao
+        return true
+    end
+    --Force Friendly Fire ON when round is over, but if it isn't then we do our checks. :)
     if postround ~= true then
         if victim:IsPlayer() then
             if attacker:IsPlayer() then

@@ -423,7 +423,11 @@ hook.Add("PostCleanupMap","Link2006_AutoSpawn",function() --On New Round
             if (roundtype.name == normalround.name) or (roundtype.name == "Multiple breaches") then --HARDCODED, Checks if it's a round with Class Ds...
                 print("[BreachRespawn] Round is "..roundtype.name..", Respawning specs in 12 seconds...")
                 timer.Create("BreachRespawn_Spectators", 12, 1, function()   Link2006_RespawnSpecs(nil,"classd") end)
-            else
+			elseif (roundtype.name == "Trouble in SCP Town") then
+                print("[BreachRespawn] Round is "..roundtype.name..", Respawning specs in 12 seconds...")
+				ULib.tsayColor(nil,true,Color(255,255,255),"Friendly fire is enabled for this round!") --We have FriendlyFire Enabled when it's TTT
+                timer.Create("BreachRespawn_Spectators", 12, 1, function()   Link2006_RespawnSpecs(nil,"mtf") end) --let's allow them to respawn as MTF anyway...
+            else --TODO: ADD SUPPORT FOR OTHER ROUNDS, NOT JUST THESE.
                 print("[BreachRespawn] Round is "..roundtype.name..", Skipping Respawn")
             end
         else

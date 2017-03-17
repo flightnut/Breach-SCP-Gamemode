@@ -30,7 +30,7 @@ function SCP294Panel()
 	S294P:SetSize( W, H )
 	S294P:SetTitle("")
 	S294P:SetDraggable( false )
-	S294P:ShowCloseButton( false )
+	S294P:ShowCloseButton( true )
 	S294P:MakePopup()
 	S294P.Paint = function()
 		if ( file.Exists( "materials/vgui/scp294/clavier.jpg", "GAME" ) ) then
