@@ -3,14 +3,48 @@ function AssaultGamemode()
 	local all = GetActivePlayers()
 	for i=1, math.Round(#player.GetAll() / 2) do
 		local pl = table.Random(all)
+		if pl == nil then break end  --WE'RE OUT OF USERS???
 		pl:SetNTF()
-		pl:SetPos(SPAWN_GUARD[i])
+		pl:SetPos(table.Random(SPAWN_GUARD))
+		--pl:SetPos(SPAWN_GUARD[i])
 		table.RemoveByValue(all, pl)
 	end
+
+	--This here is useless now that we're nocolliding people when in the assault gamemode
+	for i=1, math.Round(#player.GetAll() / 2) do
+		local pl = table.Random(all)
+		if pl == nil then break end --WE'RE OUT OF USERS ??? 
+		pl:SetChaosInsurgency(4)
+		pl:SetPos(table.Random(SPAWN_CLASSD))
+		--pl:SetPos(SPAWN_GUARD[i])
+		table.RemoveByValue(all, pl)
+	end
+
+	local assTeam = false -- when false, MTF, when true, Chaos; Makes sure EVERYONE gets a team :)
+	--Do the rest of the players that didn't spawn...
+	for k,pl in pairs (all) do
+		if assTeam then
+			--local pl = table.Random(all) --We're cycling through the rest of them RN...
+			pl:SetChaosInsurgency(4)
+			pl:SetPos(table.Random(SPAWN_CLASSD))
+			--pl:SetPos(SPAWN_GUARD[i])
+			--table.RemoveByValue(all, pl) --We dont need to clean that table anymore
+			assTeam = false
+		else
+			--local pl = table.Random(all) --We're cyclingt through the rest of them RN...
+			pl:SetNTF()
+			pl:SetPos(table.Random(SPAWN_GUARD))
+			--pl:SetPos(SPAWN_GUARD[i])
+			--table.RemoveByValue(all, pl) --We dont need to clean that table anymore
+			assTeam = true
+		end
+	end
+	--[[
 	for k,v in ipairs(all) do
 		v:SetChaosInsurgency(4)
 		v:SetPos(SPAWN_CLASSD[k])
 	end
+	]]--
 end
 
 function ZombieGamemode()

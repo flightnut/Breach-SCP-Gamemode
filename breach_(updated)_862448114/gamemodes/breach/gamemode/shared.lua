@@ -280,6 +280,23 @@ end)
 
 hook.Add( "ShouldCollide", "CollideCheck2", function(ent1,ent2)
 	if ( ent1:IsPlayer() and ent2:IsPlayer()) then
+		--SPECIAL ROUND RULES HERE, ASSAULT ONLY FOR NOW THOUGH PLEASE OK THX.
+		if roundtype then
+			if CLIENT then
+				roundtype_name = roundtype
+			else
+				roundtype_name = roundtype.name
+			end
+
+			if roundtype_name == "Assault" then
+				if ent1:Team() == ent2:Team() then
+					return false
+				else
+					return true
+				end
+			end
+		end
+		--The rest of nocollide stuff goes here thx.
 		if ((ent1:Team() == TEAM_CLASSD) and (ent2:Team() == TEAM_CLASSD)) or ((ent1:Team() == TEAM_SCI) and (ent2:Team() == TEAM_SCI)) then
 			return false
 		else
