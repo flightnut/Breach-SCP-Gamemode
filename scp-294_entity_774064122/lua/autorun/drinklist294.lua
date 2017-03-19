@@ -1,8 +1,8 @@
 DrinkList = {}
-SCP294BasicText = "A pretty good drink..." --We have nothing for this. 
+SCP294BasicText = "A pretty good drink..." --We have nothing for this.
 
 function SimpleDrink(name, text, col)
-	DrinkList[name] = 	{ 
+	DrinkList[name] = 	{
 		color 		= col,
 		effect 		= function(meta) meta:Say( text ) meta:EmitSound("scp294/slurp.ogg") end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
@@ -16,7 +16,7 @@ SimpleDrink("coconut", "A refreshing flavour of coconut milk ~", Color(170,0,0))
 SimpleDrink("cola", "It's cold and refreshing.", Color(75,50,15))
 SimpleDrink("egg", "It tastes just like raw eggs.", Color(255,190,0))
 
-DrinkList["water"] = 	{ 
+DrinkList["water"] = 	{
 		color 		= Color(40,200,200,200),
 		effect 		= function(meta)
 			meta:Say( "Slurp ... this is a fresh water !" )
@@ -24,21 +24,21 @@ DrinkList["water"] = 	{
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end
 	}
-DrinkList["air"] = { 
+DrinkList["air"] = {
 	color 		= Color(0,0,0,0),
 	effect 		= function(meta) meta:Say( "There is nothing to drink in the cup." ) end, }
-DrinkList["nothing"] = { 
+DrinkList["nothing"] = {
 	color 		= Color(0,0,0,0),
 	effect 		= function(meta) meta:Say( "There is nothing to drink in the cup." ) end, }
-DrinkList["hl3"] = { 
+DrinkList["hl3"] = {
 	color 		= Color(0,0,0,0),
 	effect 		= function(meta) meta:Say( "There is nothing to drink in the cup." ) end, }
-DrinkList["no"] = { 
+DrinkList["no"] = {
 		color 		= Color(0,0,0,0),
 		effect 		= function(meta) meta:Say( "There is nothing to drink in the cup." ) end, }
-DrinkList["beer"] = { 
+DrinkList["beer"] = {
 	color 		= Color(200,200,40,250),
-	effect 		= function(meta) 
+	effect 		= function(meta)
 		meta:SetNWBool("294Drunk", true)
 		meta:EmitSound("scp294/slurp.ogg")
 		timer.Simple(5 , function()
@@ -46,39 +46,39 @@ DrinkList["beer"] = {
 		end)
 	end,
 	dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["carbon"] = { 
+DrinkList["carbon"] = {
 		color 		= Color(30,30,30,250),
-		effect 		= function(meta) 
+		effect 		= function(meta)
 			meta:EmitSound("scp294/cough.ogg")
 			meta:Kill()
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end
 	}
-DrinkList["death"] = { 
+DrinkList["death"] = {
 		color 		= Color(0,0,0,255),
-		effect 		= function(meta) 
+		effect 		= function(meta)
 			meta:EmitSound("scp294/burn.ogg")
 			meta:Kill()
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["acid"] = { 
+DrinkList["acid"] = {
 		color 		= Color(100,255,100,50),
-		effect 		= function(meta) 
+		effect 		= function(meta)
 			meta:EmitSound("scp294/burn.ogg")
 			meta:Kill()
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["estus"] = { 
+DrinkList["estus"] = {
 	color 		= Color(205,170,20,220),
-	effect 		= function(meta) 
+	effect 		= function(meta)
 		meta:Say( "The taste is hard to describe. You feel refreshed." )
 		meta:SetHealth(100)
 		meta:EmitSound("scp294/slurp.ogg")
 	end,
 	dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["immortality"] = { 
+DrinkList["immortality"] = {
 	color 		= Color(200,0,0,240),
-	effect 		= function(meta) 
+	effect 		= function(meta)
 		meta:Say( "Wow ..." )
 		meta:SetHealth(99999999)
 		meta:EmitSound("scp294/ahh.ogg")
@@ -89,13 +89,13 @@ DrinkList["immortality"] = {
 					ply:SetHealth(100)
 				end
 			end
-		end		
+		end
 		timer.Simple(10, function() disableGodMod(meta) end)
 	end,
 	dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["chim"] = { 
+DrinkList["chim"] = {
 	color 		= Color(255,255,0,240),
-	effect 		= function(meta) 
+	effect 		= function(meta)
 		meta:Say( "There are no words in any human language to describe the taste of the liquid." )
 		meta:SetHealth(99999999)
 		meta:SetNWBool("294Crazy", true)
@@ -107,21 +107,21 @@ DrinkList["chim"] = {
 					ply:SetHealth(100)
 				end
 			end
-		end		
+		end
 		timer.Simple(10, function() disableGodMod(meta) meta:SetNWBool("294Crazy", false) end)
 	end,
 	dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["life"] = { 
+DrinkList["life"] = {
 	color 		= Color(200,0,0,240),
-	effect 		= function(meta) 
+	effect 		= function(meta)
 		meta:Say( "The drink tastes unlike anything you've drink before. You feel better than ever." )
 		meta:SetHealth(100)
 		meta:EmitSound("scp294/ahh.ogg")
 	end,
 	dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["blood"] = { 
+DrinkList["blood"] = {
 	color 		= Color(90,0,0,255),
-	effect 		= function(meta) 
+	effect 		= function(meta)
 		meta:Say( "The drink tastes like red wine." )
 		meta:SetNWBool("294Blur", true)
 		meta:EmitSound("scp294/spit.ogg")
@@ -137,7 +137,7 @@ DrinkList["blood"] = {
 					end
 				end
 			end
-		end		
+		end
 		timer.Simple(1, function() bleed(meta) end)
 		timer.Simple(2, function() bleed(meta) end)
 		timer.Simple(3, function() bleed(meta) end)
@@ -146,9 +146,9 @@ DrinkList["blood"] = {
 		timer.Simple(5, function() meta:SetNWBool("294Blur", false) end)
 	end,
 	dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["scp-106"] = { 
+DrinkList["scp-106"] = {
 	color 		= Color(0,0,0,255),
-	effect 		= function(meta) 
+	effect 		= function(meta)
 		meta:Say( "I feel something moving in my stomach..." )
 		meta:SetNWBool("294Blur", true)
 		meta:EmitSound("scp294/spit.ogg")
@@ -164,7 +164,7 @@ DrinkList["scp-106"] = {
 					end
 				end
 			end
-		end		
+		end
 		timer.Simple(1, function() bleed(meta) end)
 		timer.Simple(2, function() bleed(meta) end)
 		timer.Simple(3, function() bleed(meta) end)
@@ -173,9 +173,9 @@ DrinkList["scp-106"] = {
 		timer.Simple(5, function() meta:SetNWBool("294Blur", false) end)
 	end,
 	dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["love"] = { 
+DrinkList["love"] = {
 	color 		= Color(255,127,233,170),
-	effect 		= function(meta) 
+	effect 		= function(meta)
 		meta:Say( "I feel like ... happy ?!" )
 		meta:SetNWBool("294Love", true)
 		meta:EmitSound("scp294/slurp.ogg")
@@ -190,9 +190,9 @@ DrinkList["love"] = {
 		timer.Simple(15, function() die(meta) end)
 	end,
 	dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["oil"] = { 
+DrinkList["oil"] = {
 	color 		= Color(10,10,10,255),
-	effect 		= function(meta) 
+	effect 		= function(meta)
 		meta:Say( "Beurk ... !" )
 		meta:SetNWBool("294Blur", true)
 		meta:EmitSound("scp294/cough.ogg")
@@ -207,9 +207,9 @@ DrinkList["oil"] = {
 		timer.Simple(10, function() die(meta) end)
 	end,
 	dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["rage"] = { 
+DrinkList["rage"] = {
 	color 		= Color(255,100,0,255),
-	effect 		= function(meta) 
+	effect 		= function(meta)
 		meta:Say( "Grrr ..." )
 		meta:SetNWBool("294Rage", true)
 		meta:SetHealth(350)
@@ -237,9 +237,9 @@ DrinkList["rage"] = {
 		timer.Simple(10, function() die(meta) end)
 	end,
 	dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["anger"] = { 
+DrinkList["anger"] = {
 	color 		= Color(255,100,0,255),
-	effect 		= function(meta) 
+	effect 		= function(meta)
 		meta:Say( "Grrr ..." )
 		meta:SetNWBool("294Rage", true)
 		meta:SetHealth(350)
@@ -267,17 +267,17 @@ DrinkList["anger"] = {
 		timer.Simple(10, function() die(meta) end)
 	end,
 	dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["perfection"] = { 
+DrinkList["perfection"] = {
 	color 		= Color(255,255,255,255),
-	effect 		= function(meta) 
+	effect 		= function(meta)
 		meta:Say( "It's beautifull ... Uhh .. r .." )
 		meta:Kill()
 		meta:EmitSound("scp294/burn.ogg")
 	end,
 	dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["happiness"] = { 
+DrinkList["happiness"] = {
 	color 		= Color(0,255,255,255),
-	effect 		= function(meta) 
+	effect 		= function(meta)
 		meta:Say( "I feel so happy ~" )
 		meta:SetNWBool("294Happy", true)
 		meta:EmitSound("scp294/ahh.ogg")
@@ -292,9 +292,9 @@ DrinkList["happiness"] = {
 		timer.Simple(20, function() die(meta) end)
 	end,
 	dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["amnesia"] = { 
+DrinkList["amnesia"] = {
 	color 		= Color(80,80,80,255),
-	effect 		= function(meta) 
+	effect 		= function(meta)
 		meta:Say( "rhh .. bllsokijjihgsdijo .. !" )
 		meta:SetNWBool("294Crazy", true)
 		meta:EmitSound("scp294/slurp.ogg")
@@ -309,9 +309,9 @@ DrinkList["amnesia"] = {
 		timer.Simple(10, function() die(meta) end)
 	end,
 	dispense 	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["bleach"] = { 
+DrinkList["bleach"] = {
 	color 		= Color(240,240,240,255),
-	effect 		= function(meta) 
+	effect 		= function(meta)
 		meta:Say( "The liquid burns in my mouth and throat." )
 		meta:SetNWBool("294Blur", true)
 		meta:EmitSound("scp294/beurk.ogg")
@@ -328,7 +328,7 @@ DrinkList["bleach"] = {
 	dispense 	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
 
 -- ADDED IN VERSION 1.1
-DrinkList["blood of jesus"] = 	{ 
+DrinkList["blood of jesus"] = 	{
 		color 		= Color(120,0,0,200),
 		effect 		= function(meta)
 			meta:Say( "The drink tastes like red wine.." )
@@ -336,31 +336,31 @@ DrinkList["blood of jesus"] = 	{
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end
 	}
-DrinkList["gold"] = { 
+DrinkList["gold"] = {
 		color 		= Color(255,255,0,255),
-		effect 		= function(meta) 
+		effect 		= function(meta)
 			meta:EmitSound("scp294/burn.ogg")
 			meta:Kill()
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["lava"] = { 
+DrinkList["lava"] = {
 		color 		= Color(255,130,0,255),
-		effect 		= function(meta) 
+		effect 		= function(meta)
 			meta:EmitSound("scp294/burn.ogg")
 			meta:Kill()
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["fire"] = { 
+DrinkList["fire"] = {
 		color 		= Color(255,130,0,255),
-		effect 		= function(meta) 
+		effect 		= function(meta)
 			meta:EmitSound("scp294/burn.ogg")
 			meta:Say( "HOT HOT HOT!" )
 			meta:Ignite( 60 )
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["meme"] = { 
+DrinkList["meme"] = {
 		color 		= Color(0,50,200,200),
-		effect 		= function(meta) 
+		effect 		= function(meta)
 			meta:Say( "Me gusta xDD lel !" )
 			meta:SetNWBool("294Drunk", true)
 			meta:EmitSound("scp294/slurp.ogg")
@@ -374,9 +374,9 @@ DrinkList["meme"] = {
 			timer.Simple(10, function() removeBuff(meta) end)
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["memes"] = { 
+DrinkList["memes"] = {
 		color 		= Color(0,50,200,200),
-		effect 		= function(meta) 
+		effect 		= function(meta)
 			meta:Say( "Me gusta xDD lel !" )
 			meta:SetNWBool("294Drunk", true)
 			meta:EmitSound("scp294/slurp.ogg")
@@ -390,77 +390,77 @@ DrinkList["memes"] = {
 			timer.Simple(10, function() removeBuff(meta) end)
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["milk"] = { 
+DrinkList["milk"] = {
 		color 		= Color(240,240,240,200),
-		effect 		= function(meta) 
+		effect 		= function(meta)
 			meta:Say( "This milk is pretty good !" )
 			meta:EmitSound("scp294/slurp.ogg")
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["tea"] = { 
+DrinkList["tea"] = {
 		color 		= Color(255,180,100,80),
-		effect 		= function(meta) 
+		effect 		= function(meta)
 			meta:Say( "It's too hot!" )
 			meta:EmitSound("scp294/slurp.ogg")
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["orange"] = { 
+DrinkList["orange"] = {
 		color 		= Color(255,130,0,180),
-		effect 		= function(meta) 
+		effect 		= function(meta)
 			meta:Say( "The drink tastes sweet and has quite a bit of pulp." )
 			meta:EmitSound("scp294/slurp.ogg")
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["orange juice"] = { 
+DrinkList["orange juice"] = {
 		color 		= Color(255,130,0,180),
-		effect 		= function(meta) 
+		effect 		= function(meta)
 			meta:Say( "The drink tastes sweet and has quite a bit of pulp." )
 			meta:EmitSound("scp294/slurp.ogg")
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["hot tea"] = { 
+DrinkList["hot tea"] = {
 		color 		= Color(255,180,100,80),
-		effect 		= function(meta) 
+		effect 		= function(meta)
 			meta:Say( "It's too hot!" )
 			meta:EmitSound("scp294/slurp.ogg")
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["green tea"] = { 
+DrinkList["green tea"] = {
 		color 		= Color(0,180,50,80),
-		effect 		= function(meta) 
+		effect 		= function(meta)
 			meta:Say( "Mmh, good tea." )
 			meta:EmitSound("scp294/slurp.ogg")
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["explosion"] = { 
+DrinkList["explosion"] = {
 		color 		= Color(255,180,100,80),
-		effect 		= function(meta) 
+		effect 		= function(meta)
 			meta:EmitSound("scp294/slurp.ogg")
 			local explode = ents.Create( "env_explosion" )
 			explode:SetPos( meta:GetPos() )
 			explode:SetOwner( meta )
 			explode:Spawn()
-			explode:SetKeyValue( "iMagnitude", "800" )
+			explode:SetKeyValue( "iMagnitude", "150" )
 			explode:Fire( "Explode", 0, 0 )
 			explode:EmitSound( "weapon_AWP.Single", 400, 400 )
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["tnt"] = { 
+DrinkList["tnt"] = {
 		color 		= Color(255,180,100,80),
-		effect 		= function(meta) 
+		effect 		= function(meta)
 			meta:EmitSound("scp294/slurp.ogg")
 			local explode = ents.Create( "env_explosion" )
 			explode:SetPos( meta:GetPos() )
 			explode:SetOwner( meta )
 			explode:Spawn()
-			explode:SetKeyValue( "iMagnitude", "800" )
+			explode:SetKeyValue( "iMagnitude", "150" )
 			explode:Fire( "Explode", 0, 0 )
 			explode:EmitSound( "weapon_AWP.Single", 400, 400 )
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["pain killer"] = { 
+DrinkList["pain killer"] = {
 		color 		= Color(255,50,20,150),
-		effect 		= function(meta) 
+		effect 		= function(meta)
 			meta:Say( "This is very pleasant ..." )
 			meta:EmitSound("scp294/slurp.ogg")
 			meta:SetNWBool("294Blur", true)
@@ -476,19 +476,19 @@ DrinkList["pain killer"] = {
 						end
 					end
 				end
-			end		
+			end
 			timer.Simple(1, function() ktp(meta) end)
 			timer.Simple(2, function() ktp(meta) end)
 			timer.Simple(3, function() ktp(meta) end)
 			timer.Simple(4, function() ktp(meta) end)
 			timer.Simple(5, function() ktp(meta) end)
 			timer.Simple(6, function() ktp(meta) end)
-			timer.Simple(7, function() meta:SetNWBool("294Blur", false) end)			
+			timer.Simple(7, function() meta:SetNWBool("294Blur", false) end)
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["mercury"] = { 
+DrinkList["mercury"] = {
 		color 		= Color(240,240,240,150),
-		effect 		= function(meta) 
+		effect 		= function(meta)
 			meta:Say( "This is very pleasant ..." )
 			meta:EmitSound("scp294/slurp.ogg")
 			meta:SetNWBool("294Blur", true)
@@ -504,17 +504,17 @@ DrinkList["mercury"] = {
 						end
 					end
 				end
-			end		
+			end
 			timer.Simple(1, function() ktp(meta) end)
 			timer.Simple(2, function() ktp(meta) end)
 			timer.Simple(3, function() ktp(meta) end)
 			timer.Simple(4, function() ktp(meta) end)
 			timer.Simple(5, function() ktp(meta) end)
 			timer.Simple(6, function() ktp(meta) end)
-			timer.Simple(7, function() meta:SetNWBool("294Blur", false) end)			
+			timer.Simple(7, function() meta:SetNWBool("294Blur", false) end)
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["random drink"] = { 
+DrinkList["random drink"] = {
 		color 		= Color(240,240,240,150),
 		effect 		= function(meta)
 			local allKey = {}
@@ -523,16 +523,16 @@ DrinkList["random drink"] = {
 			end
 			local id 	= math.random(1, #allKey)
 			print(allKey[id])
-			
+
 			if allKey[id] == "random drink" then
 				meta:EmitSound("scp294/burn.ogg")
 				meta:Kill()
 			else
-				DrinkList[allKey[id]].effect(meta)			
-			end 
+				DrinkList[allKey[id]].effect(meta)
+			end
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["ammunition"] = { 
+DrinkList["ammunition"] = {
 		color 		= Color(240,240,240,150),
 		effect 		= function(meta)
 			for k , v in pairs (meta:GetWeapons()) do
@@ -541,26 +541,12 @@ DrinkList["ammunition"] = {
 			end
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["me"] = { 
+DrinkList["me"] = {
 		color 		= Color(240,240,240,150),
 		effect 		= function(meta)
 				meta:EmitSound("scp294/burn.ogg")
 				meta:KillSilent()
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-	
+
 SimpleDrink("hl2", "I think you dropped this back at black mesa.", Color(255,190,0))
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	

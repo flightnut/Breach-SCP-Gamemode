@@ -159,7 +159,6 @@ function mply:SetSpectator()
 	self:RemoveAllAmmo()
 	self:SetTeam(TEAM_SPEC)
 	self:SetNoDraw(true)
-	self:SetNoCollideWithTeammates(true)
 	if self.SetNClass then
 		self:SetNClass(ROLE_SPEC)
 	end
@@ -171,6 +170,7 @@ function mply:SetSpectator()
 	self.BaseStats = nil
 	self.UsingArmor = nil
 	//self:Spectate(OBS_MODE_IN_EYE)
+	self:SetNoCollideWithTeammates(true)
 end
 
 function mply:SetSCP1048a()
@@ -192,7 +192,6 @@ function mply:SetSCP1048a()
 	self:SetMaxSpeed(180)
 	self:SetJumpPower(250)
 	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
 	self.Active = true
 	self:SetupHands()
 	self.canblink = false
@@ -203,6 +202,7 @@ function mply:SetSCP1048a()
 	self:SelectWeapon("weapon_scp_1048a")
 	self.BaseStats = nil
 	self.UsingArmor = nil
+	self:SetNoCollideWithTeammates(false)
 end
 
 function mply:SetSCP035()
@@ -224,7 +224,6 @@ function mply:SetSCP035()
 	self:SetMaxSpeed(235)
 	self:SetJumpPower(200)
 	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
 	self.Active = true
 	self.canblink = false
 	self:AllowFlashlight( true )
@@ -246,6 +245,7 @@ function mply:SetSCP035()
 	self:SetupHands()
 	self.BaseStats = nil
 	self.UsingArmor = nil
+	self:SetNoCollideWithTeammates(false)
 end
 
 function mply:SetClassD()
@@ -265,7 +265,6 @@ function mply:SetClassD()
 	self:SetMaxSpeed(240)
 	self:SetJumpPower(200)
 	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
 	self:SetNClass(ROLE_CLASSD)
 	self.Active = true
 	self:SetupHands()
@@ -275,6 +274,7 @@ function mply:SetClassD()
 	self:SetNoTarget( false )
 	self.BaseStats = nil
 	self.UsingArmor = nil
+	self:SetNoCollideWithTeammates(true)
 end
 
 function mply:SetScientist()
@@ -294,7 +294,6 @@ function mply:SetScientist()
 	self:SetMaxSpeed(240)
 	self:SetJumpPower(200)
 	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
 	self:SetNClass(ROLE_RES)
 	self.Active = true
 	self:SetupHands()
@@ -305,6 +304,7 @@ function mply:SetScientist()
 	self:Give("keycard_level2")
 	self.BaseStats = nil
 	self.UsingArmor = nil
+	self:SetNoCollideWithTeammates(true)
 end
 
 function mply:SetCommander()
@@ -323,7 +323,6 @@ function mply:SetCommander()
 	self:SetMaxSpeed(240)
 	self:SetJumpPower(200)
 	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
 	self:SetNClass(ROLE_MTFCOM)
 	self.Active = true
 	self:Give("keycard_level4")
@@ -340,6 +339,7 @@ function mply:SetCommander()
 	self.WasTeam = TEAM_GUARD
 	self:SetNoTarget( false )
 	self:MTFComArmor()
+	self:SetNoCollideWithTeammates(false)
 end
 
 function mply:SetGuard()
@@ -358,7 +358,6 @@ function mply:SetGuard()
 	self:SetMaxSpeed(240)
 	self:SetJumpPower(200)
 	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
 	self:SetNClass(ROLE_MTFGUARD)
 	self.Active = true
 	self:Give("keycard_level3")
@@ -372,6 +371,7 @@ function mply:SetGuard()
 	self.WasTeam = TEAM_GUARD
 	self:SetNoTarget( false )
 	self:MTFArmor()
+	self:SetNoCollideWithTeammates(false)
 end
 
 function mply:SetChaosInsurgency(stealth)
@@ -394,7 +394,6 @@ function mply:SetChaosInsurgency(stealth)
 	self:SetMaxSpeed(240)
 	self:SetJumpPower(200)
 	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
 	self.Active = true
 	self:Give("weapon_slam")
 	self:Give("weapon_stunstick")
@@ -427,6 +426,7 @@ function mply:SetChaosInsurgency(stealth)
 	self:AllowFlashlight( true )
 	self.WasTeam = TEAM_CHAOS
 	self:SetNoTarget( false )
+	self:SetNoCollideWithTeammates(false)
 end
 
 function mply:SetChaosInsCom(spawn)
@@ -455,7 +455,6 @@ function mply:SetChaosInsCom(spawn)
 	self:SetMaxSpeed(255)
 	self:SetJumpPower(200)
 	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
 	self.Active = true
 	self:Give("weapon_slam")
 	self:Give("weapon_stunstick")
@@ -470,6 +469,7 @@ function mply:SetChaosInsCom(spawn)
 	self.WasTeam = TEAM_CHAOS
 	self:SetNClass(ROLE_CHAOSCOM)
 	self:SetNoTarget( false )
+	self:SetNoCollideWithTeammates(false)
 end
 
 function mply:SetSiteDirector(spawn)
@@ -492,7 +492,6 @@ function mply:SetSiteDirector(spawn)
 	self:SetMaxSpeed(255)
 	self:SetJumpPower(200)
 	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
 	self.Active = true
 	self:Give("item_radio")
 	self:Give("keycard_level5")
@@ -506,6 +505,7 @@ function mply:SetSiteDirector(spawn)
 	self.WasTeam = TEAM_GUARD
 	self:SetNClass(ROLE_SITEDIRECTOR)
 	self:SetNoTarget( false )
+	self:SetNoCollideWithTeammates(false)
 end
 
 function mply:SetNTF()
@@ -525,7 +525,6 @@ function mply:SetNTF()
 	self:SetMaxSpeed(240)
 	self:SetJumpPower(200)
 	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
 	self:SetNClass(ROLE_MTFNTF)
 	self.Active = true
 	self:Give("keycard_level4")
@@ -540,6 +539,7 @@ function mply:SetNTF()
 	net.Start("RolesSelected")
 	net.Send(self)
 	self:NTFArmor()
+	self:SetNoCollideWithTeammates(false)
 end
 
 function mply:SetSCP173()
@@ -562,7 +562,6 @@ function mply:SetSCP173()
 	self:SetMaxSpeed(500)
 	self:SetJumpPower(200)
 	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
 	self.Active = true
 	self:SetupHands()
 	self.canblink = false
@@ -573,6 +572,7 @@ function mply:SetSCP173()
 	self:SelectWeapon("weapon_scp_173")
 	self.BaseStats = nil
 	self.UsingArmor = nil
+	self:SetNoCollideWithTeammates(false)
 end
 
 function mply:SetSCP106()
@@ -594,7 +594,6 @@ function mply:SetSCP106()
 	self:SetMaxSpeed(165)
 	self:SetJumpPower(200)
 	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
 	self.Active = true
 	self:SetupHands()
 	self.canblink = false
@@ -605,6 +604,7 @@ function mply:SetSCP106()
 	self:SelectWeapon("weapon_scp_106")
 	self.BaseStats = nil
 	self.UsingArmor = nil
+	self:SetNoCollideWithTeammates(false)
 end
 
 function mply:SetSCP049()
@@ -626,7 +626,6 @@ function mply:SetSCP049()
 	self:SetMaxSpeed(140)
 	self:SetJumpPower(200)
 	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
 	self.Active = true
 	self:SetupHands()
 	self.canblink = false
@@ -637,6 +636,7 @@ function mply:SetSCP049()
 	self:SelectWeapon("weapon_scp_049")
 	self.BaseStats = nil
 	self.UsingArmor = nil
+	self:SetNoCollideWithTeammates(false)
 end
 
 function mply:SetSCP457()
@@ -659,7 +659,6 @@ function mply:SetSCP457()
 	self:SetMaxSpeed(200)
 	self:SetJumpPower(215)
 	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
 	self.Active = true
 	self:SetupHands()
 	self.canblink = false
@@ -670,6 +669,7 @@ function mply:SetSCP457()
 	self:SelectWeapon("weapon_scp_457")
 	self.BaseStats = nil
 	self.UsingArmor = nil
+	self:SetNoCollideWithTeammates(false)
 end
 
 function mply:DropWep(class, clip)
@@ -697,7 +697,6 @@ function mply:SetSCP0082()
 	self:SetMaxSpeed(160)
 	self:SetJumpPower(200)
 	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
 	self:SetNClass(ROLE_SCP0082)
 	self.Active = true
 	print("adding " .. self:Nick() .. " to zombies")
@@ -725,6 +724,7 @@ function mply:SetSCP0082()
 	self:SelectWeapon("weapon_br_zombie_infect")
 	self.BaseStats = nil
 	self.UsingArmor = nil
+	self:SetNoCollideWithTeammates(true)
 end
 
 function mply:SetSCP0492()
@@ -741,7 +741,6 @@ function mply:SetSCP0492()
 	self:SetMaxSpeed(160)
 	self:SetJumpPower(200)
 	self:SetNoDraw(false)
-	self:SetNoCollideWithTeammates(false)
 	self:SetNClass(ROLE_SCP0492)
 	self.Active = true
 	print("adding " .. self:Nick() .. " to zombies")
@@ -769,6 +768,7 @@ function mply:SetSCP0492()
 	self:SelectWeapon("weapon_br_zombie")
 	self.BaseStats = nil
 	self.UsingArmor = nil
+	self:SetNoCollideWithTeammates(true)
 end
 
 function mply:IsActivePlayer()

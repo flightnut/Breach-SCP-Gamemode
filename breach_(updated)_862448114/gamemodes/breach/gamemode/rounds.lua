@@ -5,6 +5,7 @@ function AssaultGamemode()
 		local pl = table.Random(all)
 		if pl == nil then break end  --WE'RE OUT OF USERS???
 		pl:SetNTF()
+		pl:SetNoCollideWithTeammates(true) --Force noCollide for this round :)
 		pl:SetPos(table.Random(SPAWN_GUARD))
 		--pl:SetPos(SPAWN_GUARD[i])
 		table.RemoveByValue(all, pl)
@@ -13,8 +14,10 @@ function AssaultGamemode()
 	--This here is useless now that we're nocolliding people when in the assault gamemode
 	for i=1, math.Round(#player.GetAll() / 2) do
 		local pl = table.Random(all)
-		if pl == nil then break end --WE'RE OUT OF USERS ??? 
+		if pl == nil then break end --WE'RE OUT OF USERS ???
 		pl:SetChaosInsurgency(4)
+		--pl:SetTeam(TEAM_CLASSD) --WORKAROUND FOR NOCOLLIDE, DO NOT USE OUTSIDE ASSAULT.
+		pl:SetNoCollideWithTeammates(true) --Force noCollide for this round :)
 		pl:SetPos(table.Random(SPAWN_CLASSD))
 		--pl:SetPos(SPAWN_GUARD[i])
 		table.RemoveByValue(all, pl)
@@ -26,6 +29,8 @@ function AssaultGamemode()
 		if assTeam then
 			--local pl = table.Random(all) --We're cycling through the rest of them RN...
 			pl:SetChaosInsurgency(4)
+			--pl:SetTeam(TEAM_CLASSD) --WORKAROUND FOR NOCOLLIDE, DO NOT USE OUTSIDE ASSAULT.
+			pl:SetNoCollideWithTeammates(true) --Force noCollide for this round :)
 			pl:SetPos(table.Random(SPAWN_CLASSD))
 			--pl:SetPos(SPAWN_GUARD[i])
 			--table.RemoveByValue(all, pl) --We dont need to clean that table anymore
@@ -33,6 +38,7 @@ function AssaultGamemode()
 		else
 			--local pl = table.Random(all) --We're cyclingt through the rest of them RN...
 			pl:SetNTF()
+			pl:SetNoCollideWithTeammates(true) --Force noCollide for this round :)
 			pl:SetPos(table.Random(SPAWN_GUARD))
 			--pl:SetPos(SPAWN_GUARD[i])
 			--table.RemoveByValue(all, pl) --We dont need to clean that table anymore
@@ -54,23 +60,38 @@ function ZombieGamemode()
 	--table.Add(allspawns, SPAWN_OUTSIDE)
 	table.Add(allspawns, SPAWN_SCIENT)
 	table.Add(allspawns, SPAWN_CLASSD)
+
+	--Link2006's ZombieGamemode fix
+	--New attempt to fix it, again.  This should make it so it has less chances of ending the round too early.
+
+	for i=1,math.Round(#all/16) do --Attempt at nerfing how many zombies spawn
+		local pl = table.Random(all)
+		local newZomb = table.Random(SPAWN_ZOMBIES)
+		pl:SetSCP0082() --Set a random player as 008-2
+		pl:SetPos(newZomb)
+		table.RemoveByValue(all, pl)
+	end
+	
 	for i=1, #all do
 		local pl = table.Random(all)
 		local spawn = table.Random(allspawns)
 		pl:SetGuard()
+		pl:SetNoCollideWithTeammates(true) --Force noCollide for this round :)
 		pl:SetPos(spawn)
 		table.RemoveByValue(allspawns, spawn)
 		table.RemoveByValue(all, pl)
 	end
 
-	--Link2006's ZombieGamemode fix
+
+	--Old fix
 	--InfectPeople()
 end
 
 function InfectPeople()
 	local all = GetActivePlayers()
 	local zombSpawns = table.Copy(SPAWN_ZOMBIES)
-	for i=1, #all / 4 do
+	for i=1,math.Round(#all/8) do --Attempt at nerfing how many zombies spawn
+	--for i=1, #all / 4 do
 		if #zombSpawns > 0 then --Shuffle players into random Zombie spawns until we have no more spawns available for them.
 			local pl = table.Random(all)
 			pl:SetSCP0082()
@@ -120,6 +141,8 @@ normalround = {
 }
 
 ROUNDS = {
+	--Assault is disabled for now, Sorry. I cannot figure a fix for this one :(
+	--[[
 	assault = {
 		playersetup = AssaultGamemode,
 		name = "Assault",
@@ -128,6 +151,7 @@ ROUNDS = {
 		mtfandscpdelay = false,
 		onroundstart = nil
 	},
+	]]--
 	spies = {
 		playersetup = SpyGamemode,
 		name = "Trouble in SCP Town",

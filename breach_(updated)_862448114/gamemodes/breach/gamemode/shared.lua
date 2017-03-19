@@ -12,8 +12,13 @@ end
 TEAM_SCP = 1
 TEAM_GUARD = 2
 TEAM_CLASSD = 3
-TEAM_SPEC = 4
-TEAM_SCI = 5
+--Link2006's Attempt to fix TeamNoCollide :)--
+-------------------
+--	TEAM_SPEC = 4 -
+TEAM_SPEC = 5
+--	TEAM_SPEC = 5 -
+TEAM_SCI = 4
+----------------- -
 TEAM_CHAOS = 6
 
 MINPLAYERS = 2
@@ -272,6 +277,8 @@ if CLIENT then
     end
 end
 
+--TEMPORARLY DISABLED TO TRY THINGS DONT MIND ME
+--[[
 hook.Add("PlayerInitialSpawn","CollideCheck",function(ply)
     ply:SetCustomCollisionCheck(true)
 end)
@@ -304,3 +311,4 @@ hook.Add( "ShouldCollide", "CollideCheck2", function(ent1,ent2)
         end
 	end
 end)
+]]--
