@@ -25,7 +25,7 @@ SWEP.AdminSpawnable	= false
 
 SWEP.droppable				= true
 SWEP.clevel					= 1
-SWEP.teams					= {2,3,5,6}
+SWEP.teams					= {2,3,4,6}
 
 SWEP.Primary.ClipSize		= -1
 SWEP.Primary.DefaultClip	= -1

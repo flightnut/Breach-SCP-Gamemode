@@ -43,7 +43,7 @@ SWEP.CSMuzzleFlashes 		= true
 SWEP.CSMuzzleX				= false
 
 SWEP.droppable				= true
-SWEP.teams					= {2, 3, 5, 6}
+SWEP.teams					= {2,3,4,6}
 SWEP.IDK					= 90
 SWEP.ZoomFov				= 50
 SWEP.HasScope				= false

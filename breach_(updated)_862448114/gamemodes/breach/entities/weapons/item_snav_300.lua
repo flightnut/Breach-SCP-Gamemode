@@ -25,7 +25,7 @@ SWEP.AdminSpawnable	= false
 
 SWEP.betterone = "item_snav_ultimate"
 SWEP.droppable				= true
-SWEP.teams					= {2,3,5,6}
+SWEP.teams					= {2,3,4,6}
 
 SWEP.Primary.ClipSize		= -1
 SWEP.Primary.DefaultClip	= -1
