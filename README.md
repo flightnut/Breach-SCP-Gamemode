@@ -27,16 +27,16 @@ For Setting Karma to max for everyone
 * ulx ent prop_physics model:"models/vinrax/scp294/scp294.mdl"
 
 To add an entity you wish to make persistent to the database, look at it and run: 
-PermaWorld_Add
+* PermaWorld_Add
 
 To make an entity no-longer persistent and remove it from the database, look at it and run: 
-PermaWorld_Remove
+* PermaWorld_Remove
 
 To reload the persistent entities for any reason (see: accidental deletion), run: 
-PermaWorld_Restore
+* PermaWorld_Restore
 
 To purge the persistent world database of all entities, run: 
-PermaWorld_Purge
+* PermaWorld_Purge
 
 To remove all persistent world entities from the map, run: 
-PermaWorld_CleanMap
+* PermaWorld_CleanMap
