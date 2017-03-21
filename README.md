@@ -13,6 +13,7 @@ This README would normally document whatever steps are necessary to get your app
 * antirdm_enable
 * antirdm_disable
 * antirdm_status
+* ulx ent weapon_physgun
 
 For Bots: (replace 58 with the number of bots you want) 
 
