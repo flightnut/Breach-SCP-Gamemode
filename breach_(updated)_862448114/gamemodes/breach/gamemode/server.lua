@@ -94,7 +94,7 @@ net.Receive( "DropWeapon", function( len, ply )
 				wep.SavedAmmo = wep:Clip1()
 			end
 		end
-		
+
 		if wep:GetClass() == nil then return end
 		if wep.droppable != nil then
 			if wep.droppable == false then return end
@@ -112,39 +112,79 @@ function dofloor(num, yes)
 end
 
 function GetRoleTable(all)
+	print("first all = " .. all )
+	--INIT PART
 	local classds = 0
 	local mtfs = 0
 	local researchers = 0
 	local scps = 0
 	local chaosinsurgency = 0
+	local mtfmul = 0.33
+	--Mtf setting here,
+	--print("CURRENTLY THERE IS "..all.. " PLAYERS!!!") --Debug
+	if all > 62 then
+		mtfmul = 0.20
+	elseif all > 52 then
+		mtfmul = 0.22
+	elseif all > 42 then
+		mtfmul = 0.24
+	elseif all > 32 then
+		mtfmul = 0.26
+	elseif all > 22 then
+		mtfmul = 0.28
+	elseif all > 12 then
+		mtfmul = 0.3
+	end
+	--print("MTFMUL IS AT "..mtfmul)
+	--Set how many SCPs here
 	if all < 8 then
 		scps = 1
 		all = all - 1
 	elseif all > 7 and all < 16 then
 		scps = 2
 		all = all - 2
-	elseif all > 15 then
+	elseif all > 15 and all < 29 then
 		scps = 3
 		all = all - 3
+	elseif all > 30 then
+		scps = 4
+		all = all - 4
 	end
 	//mtfs = math.Round(all * 0.299)
-	local mtfmul = 0.33
-	if all > 12 then
-		mtfmul = 0.3
-	elseif all > 22 then
-		mtfmul = 0.28
-	end
+
 	mtfs = math.Round(all * mtfmul)
 	all = all - mtfs
-	if mtfs > 6 then
-		if math.random(1,3) == 1 then
+	--print("SELECTED "..mtfs.." MTFS")
+	--print("ALL IS NOW "..all)
+	--NOTE: Maybe we should make 6,10,14,18,22
+	--		But i'm not sure if that's blanaced...
+	--		Or buff how many CIs there is.
+	if mtfs > 24 then
+		chaosinsurgency = 4
+	elseif mtfs > 18 then
+		chaosinsurgency = 3
+	elseif mtfs > 12 then
+		chaosinsurgency = 2
+	elseif mtfs > 6 then
+		--if math.random(1,3) == 1 then
 			chaosinsurgency = 1
-		end
-		mtfs = mtfs - chaosinsurgency
+		--end
 	end
-	researchers = math.floor(all * 0.42)
+	mtfs = mtfs - chaosinsurgency
+	print("MTFs without CI: "..mtfs)
+	print("chaos: "..chaosinsurgency)
+	--print("MTFS IS NOW "..mtfs)
+	--print("CHAOS SPAWNING: "..chaosinsurgency)
+	--New researcher math
+	researchers = math.floor(all * 0.52)
+	print(researchers .. " researchers")
+	--print("Researchers: "..researchers)
+	--Old Researcher math
+	--researchers = math.floor(all * 0.42)
 	all = all - researchers
+	print("last all = " .. all )
 	classds = all
+	print("ClassDs: "..classds)
 	//print(scps .. "," .. mtfs .. "," .. classds .. "," .. researchers .. "," .. chaosinsurgency)
 	/*
 	print("scps: " .. scps)
@@ -184,7 +224,7 @@ function SetupPlayers(pltab)
 	//local pltab = GetRoleTable(#player.GetAll())
 	local allply = GetActivePlayers()
 	-- SCP, MTF, Class D, Researchers, Chaos Insurgency --
-	
+
 	// SCP
 	local spctab = table.Copy(SPCS)
 	for i=1, pltab[1] do
@@ -210,7 +250,7 @@ function SetupPlayers(pltab)
 		table.RemoveByValue(mtfspawns, spawn)
 		table.RemoveByValue(allply, pl)
 	end
-	
+
 	// MTF
 	for i=1, (pltab[2] - 1) do
 		if #mtfspawns > 0 then
@@ -235,32 +275,37 @@ function SetupPlayers(pltab)
 			table.RemoveByValue(allply, pl)
 		end
 	end
-	// Class D
-	local dspawns = table.Copy(SPAWN_CLASSD)
-	for i=1, pltab[3] do
-		if #dspawns > 0 then
+	// Scientists
+	--local scispawns = table.Copy(SPAWN_SCIENT)
+	for i=1, pltab[4] do
+		--They nocollide, removed spawn check
+		--if #scispawns > 0 then
 			local pl = table.Random(allply)
-			local spawn = table.Random(dspawns)
+			print("assigning " .. pl:Nick() .. " to scientists")
+			--local spawn = table.Random(scispawns)
+			local spawn = table.Random(SPAWN_SCIENT)
+			pl:SetScientist()
+			pl:SetPos(spawn)
+			--table.RemoveByValue(scispawns, spawn)
+			table.RemoveByValue(allply, pl)
+		--end
+	end
+	// Class D
+	--local dspawns = table.Copy(SPAWN_CLASSD)
+	for i=1, pltab[3] do
+		--They nocollide, removed spawn check
+		--if #dspawns > 0 then
+			local pl = table.Random(allply)
+			--local spawn = table.Random(dspawns)
+			local spawn = table.Random(SPAWN_CLASSD)
 			pl:SetClassD()
 			pl:SetPos(spawn)
 			print("assigning " .. pl:Nick() .. " to classds")
-			table.RemoveByValue(dspawns, spawn)
+			--table.RemoveByValue(dspawns, spawn)
 			table.RemoveByValue(allply, pl)
-		end
+		--end
 	end
-	// Scientists
-	local scispawns = table.Copy(SPAWN_SCIENT)
-	for i=1, pltab[4] do
-		if #scispawns > 0 then
-			local pl = table.Random(allply)
-			print("assigning " .. pl:Nick() .. " to scientists")
-			local spawn = table.Random(scispawns)
-			pl:SetScientist()
-			pl:SetPos(spawn)
-			table.RemoveByValue(scispawns, spawn)
-			table.RemoveByValue(allply, pl)
-		end
-	end
+
 	timer.Simple(0.1, function()
 		net.Start("RolesSelected")
 		net.Broadcast()

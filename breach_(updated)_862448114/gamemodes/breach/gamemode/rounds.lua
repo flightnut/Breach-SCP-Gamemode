@@ -1,12 +1,23 @@
 
 function AssaultGamemode()
 	local all = GetActivePlayers()
+	local guardSpawns = {}
+	table.Add(guardSpawns, SPAWN_GUARD)
+	table.Add(guardSpawns, SPAWN_SCIENT)
+	table.Add(guardSpawns, SPAWN_CLASSD)
+
+	local chaosSpawns = {}
+	table.Add(chaosSpawns, SPAWN_OUTSIDE)
+
 	for i=1, math.Round(#player.GetAll() / 2) do
 		local pl = table.Random(all)
 		if pl == nil then break end  --WE'RE OUT OF USERS???
 		pl:SetNTF()
-		pl:SetNoCollideWithTeammates(true) --Force noCollide for this round :)
-		pl:SetPos(table.Random(SPAWN_GUARD))
+		pl:SetNoCollideWithTeammates(false) --Force noCollide for this round :)
+		local newGuard = table.Random(guardSpawns)
+		pl:SetPos(newGuard)
+		table.RemoveByValue(guardSpawns, newGuard)
+		--pl:SetPos(table.Random(SPAWN_GUARD))
 		--pl:SetPos(SPAWN_GUARD[i])
 		table.RemoveByValue(all, pl)
 	end
@@ -17,8 +28,11 @@ function AssaultGamemode()
 		if pl == nil then break end --WE'RE OUT OF USERS ???
 		pl:SetChaosInsurgency(4)
 		--pl:SetTeam(TEAM_CLASSD) --WORKAROUND FOR NOCOLLIDE, DO NOT USE OUTSIDE ASSAULT.
-		pl:SetNoCollideWithTeammates(true) --Force noCollide for this round :)
-		pl:SetPos(table.Random(SPAWN_CLASSD))
+		pl:SetNoCollideWithTeammates(false) --Force noCollide for this round :)
+		--pl:SetPos(table.Random(SPAWN_OUTSIDE))
+		local newChaos = table.Random(chaosSpawns)
+		pl:SetPos(newChaos)
+		table.RemoveByValue(chaosSpawns, newChaos)
 		--pl:SetPos(SPAWN_GUARD[i])
 		table.RemoveByValue(all, pl)
 	end
@@ -30,16 +44,24 @@ function AssaultGamemode()
 			--local pl = table.Random(all) --We're cycling through the rest of them RN...
 			pl:SetChaosInsurgency(4)
 			--pl:SetTeam(TEAM_CLASSD) --WORKAROUND FOR NOCOLLIDE, DO NOT USE OUTSIDE ASSAULT.
-			pl:SetNoCollideWithTeammates(true) --Force noCollide for this round :)
-			pl:SetPos(table.Random(SPAWN_CLASSD))
+			pl:SetNoCollideWithTeammates(false) --Force noCollide for this round :)
+			--pl:SetPos(table.Random(SPAWN_OUTSIDE))
+			local newChaos = table.Random(chaosSpawns)
+			pl:SetPos(newChaos)
+			table.RemoveByValue(chaosSpawns, newChaos)
 			--pl:SetPos(SPAWN_GUARD[i])
 			--table.RemoveByValue(all, pl) --We dont need to clean that table anymore
 			assTeam = false
 		else
 			--local pl = table.Random(all) --We're cyclingt through the rest of them RN...
 			pl:SetNTF()
-			pl:SetNoCollideWithTeammates(true) --Force noCollide for this round :)
-			pl:SetPos(table.Random(SPAWN_GUARD))
+			pl:SetNoCollideWithTeammates(false) --Force noCollide for this round :)
+
+			local newGuard = table.Random(guardSpawns)
+			pl:SetPos(newGuard)
+			table.RemoveByValue(guardSpawns, newGuard)
+
+			--pl:SetPos(table.Random(SPAWN_GUARD))
 			--pl:SetPos(SPAWN_GUARD[i])
 			--table.RemoveByValue(all, pl) --We dont need to clean that table anymore
 			assTeam = true
@@ -64,14 +86,14 @@ function ZombieGamemode()
 	--Link2006's ZombieGamemode fix
 	--New attempt to fix it, again.  This should make it so it has less chances of ending the round too early.
 
-	for i=1,math.Round(#all/16) do --Attempt at nerfing how many zombies spawn
+	for i=1,math.Round(#all/25) do --Attempt at nerfing how many zombies spawn | ATTEMPT #2 BECAUSE HOLY SHIT.
 		local pl = table.Random(all)
 		local newZomb = table.Random(SPAWN_ZOMBIES)
 		pl:SetSCP0082() --Set a random player as 008-2
 		pl:SetPos(newZomb)
 		table.RemoveByValue(all, pl)
 	end
-	
+
 	for i=1, #all do
 		local pl = table.Random(all)
 		local spawn = table.Random(allspawns)
@@ -142,7 +164,6 @@ normalround = {
 
 ROUNDS = {
 	--Assault is disabled for now, Sorry. I cannot figure a fix for this one :(
-	--[[
 	assault = {
 		playersetup = AssaultGamemode,
 		name = "Assault",
@@ -151,7 +172,6 @@ ROUNDS = {
 		mtfandscpdelay = false,
 		onroundstart = nil
 	},
-	]]--
 	spies = {
 		playersetup = SpyGamemode,
 		name = "Trouble in SCP Town",

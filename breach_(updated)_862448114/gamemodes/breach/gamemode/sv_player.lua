@@ -689,8 +689,8 @@ function mply:SetSCP0082()
 	self:GodDisable()
 	self:SetTeam(TEAM_SCP)
 	self:SetModel("models/player/zombie_classic.mdl")
-	self:SetHealth(850)
-	self:SetMaxHealth(850)
+	self:SetHealth(425)
+	self:SetMaxHealth(425)
 	self:SetArmor(0)
 	self:SetWalkSpeed(160)
 	self:SetRunSpeed(160)
@@ -768,7 +768,7 @@ function mply:SetSCP0492()
 	self:SelectWeapon("weapon_br_zombie")
 	self.BaseStats = nil
 	self.UsingArmor = nil
-	self:SetNoCollideWithTeammates(true)
+	self:SetNoCollideWithTeammates(false)
 end
 
 function mply:IsActivePlayer()

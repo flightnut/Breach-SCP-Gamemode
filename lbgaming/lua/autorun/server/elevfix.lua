@@ -5,7 +5,8 @@ if CLIENT then return end --This should be in /autorun/server/, clients can't do
 --Configurable damage for elevators and doors
 local elevDamage = 0 -- Default: 0 (RECOMMENDED)
 local doorDamage = 0 -- Default: 0 (RECOMMENDED)
-
+local fixElevators = false -- Default: false (RECOMMENDED FOR NOW)
+--This boolean will disable the elevator fix and allow me to re-enable it whenever.
 
 --DON'T TOUCH BELOW PLEASE, THANK YOU
 -- by http://steamcommunity.com/profiles/76561197971790479/
@@ -92,7 +93,7 @@ end
 
 function Link2006_FixElevators()
 	for k,elev in pairs(ents.FindByClass("func_movelinear")) do --For every entities of func_movelinear;
-		--Set Crushing damage to 1000 for ALL elevators/func_movelinear, not just a few (<,<)
+		--Set Crushing damage to elevDamage for ALL elevators/func_movelinear, not just a few (<,<)
 		elev:SetKeyValue("BlockDamage",elevDamage)
 		--And set collision_group to only playes (and props); items/weapons goes through.
 		elev:SetCollisionGroup(COLLISION_GROUP_PLAYER)
@@ -125,14 +126,18 @@ hook.Add("PostCleanupMap","Link2006_NewRound",function() --On New Round
 	print("[Link2006] CleanUpMap() called, Waiting a bit...")
 	timer.Simple(1.0,function()
 		print("[Link2006] Running Fixes...")
-		Link2006_FixElevators()
+		if fixElevators then 
+			Link2006_FixElevators()
+		end
 		Link2006_FreezeAllProps()
 		Link2006_FixDoors()
 	end)
 end)
 
 print("[Link2006] Forcing changes to the map immediately...")
-Link2006_FixElevators()
+if fixElevators then
+	Link2006_FixElevators()
+end
 Link2006_FreezeAllProps()
 Link2006_FixDoors()
 print("[Link2006] Generating list of files needed by clients...")
