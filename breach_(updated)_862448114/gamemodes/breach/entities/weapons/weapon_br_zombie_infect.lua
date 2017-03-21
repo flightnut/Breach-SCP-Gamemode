@@ -43,7 +43,7 @@ SWEP.Range					= 100
 SWEP.UseHands				= false
 SWEP.DrawCustomCrosshair	= true
 SWEP.DeploySpeed			= 1
-SWEP.AttackTeams			= {2,3,5,6} // Attack only humans
+SWEP.AttackTeams			= {2,3,4,6} // Attack only humans
 SWEP.AttackNPCs				= false
 
 SWEP.ZombieWeapon			= true
