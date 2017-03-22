@@ -26,7 +26,10 @@ util.AddNetworkString("spawnthemas")
 net.Receive( "SpectateMode", function( len, ply )
 	if ply.ActivePlayer == true then
 		if ply:Alive() and ply:Team() != TEAM_SPEC then
-			ply:SetSpectator()
+			--ply:SetSpectator()
+			ply:Kill() --Forces players to die
+			-- Fixes exploits that dont expect them to switch team and stay alive (code like player:Alive() )
+			-- Also fixes players deleting items from the game entirely. 
 		end
 		ply.ActivePlayer = false
 		ply:PrintMessage(HUD_PRINTTALK, "Changed mode to spectator")
