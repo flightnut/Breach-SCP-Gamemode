@@ -82,18 +82,18 @@ function ENT:Initialize()
 	self:SetCollisionGroup(COLLISION_GROUP_WORLD)
 	self:SetModel( "models/shaklin/scp/096/scp_096.mdl" );
 	//self:StopParticles()
-	
+
 	local model = self:SetModel(self.Model)
-	
+
 	self.LoseTargetDist	= 200	-- How far the enemy has to be before we lose them
 	self.SearchRadius 	= 2	-- How far to search for enemies
-	
-	self.loco:SetStepHeight(35)	
+
+	self.loco:SetStepHeight(35)
 	self.loco:SetAcceleration(900)
 	self.loco:SetDeceleration(900)
-	
+
 	self:SetHealth(self.health)
-	
+
 	self:Precache()
 	self.LastPos = self:GetPos()
 	self.StartPos = self:GetPos()
@@ -102,11 +102,11 @@ function ENT:Initialize()
 	//self.Width = self:BoundingRadius() * 0.5
 	//self:StartActivity( ACT_IDLE_STIMULATED )
 	self:StartActivity( ACT_IDLE_ANGRY )
-	//local SpawnPos = self.Entity:GetPos() 
+	//local SpawnPos = self.Entity:GetPos()
 	//self:SetPos(SpawnPos + Vector(0,0,-100))
 	//self:SetAngles(Angle(-1, 0,0))
 	self.Width = self:BoundingRadius() * 0.5
-	
+
 	self.playLost1 = CreateSound(self.Entity, self.Lost1)
 	self.playLost1:Play()
 end
@@ -121,18 +121,20 @@ end
 
 function ENT:SetEnemy(ent)
 	--ent = player.GetAll()[math.random(1,#player.GetAll())]
-	--What the fuck is this, No! 
+	--What the fuck is this, No!
+	--print("SetEnemy(): "..tostring(ent))
 	self.Enemy = ent
 end
 
 function ENT:GetEnemy()
+	--print("GetEnemy(): "..tostring(self.Enemy))
 	return self.Enemy
 end
 
 function ENT:OnStuck()
 	if self.LastPos:Distance( self.Entity:GetPos() ) < 100 then
 		self.Entity:SetPos( self.LastPos + Vector(60, 60, 60))
-		//print ("stuck")
+		print ("stuck")
 	end
 end
 
@@ -152,19 +154,19 @@ function ENT:GetDoor(ent)
 	doors[8] = "models/props_silo/silo_door01_static.mdl"
 	doors[9] = "models/props_wasteland/prison_celldoor001b.mdl"
 	doors[10] = "models/props_wasteland/prison_celldoor001a.mdl"
-	
+
 	doors[11] = "models/props_radiostation/radio_metaldoor01.mdl"
 	doors[12] = "models/props_radiostation/radio_metaldoor01a.mdl"
 	doors[13] = "models/props_radiostation/radio_metaldoor01b.mdl"
 	doors[14] = "models/props_radiostation/radio_metaldoor01c.mdl"
-	
-	
+
+
 	for k,v in pairs( doors ) do
 		if ent:GetModel() == v and string.find(ent:GetClass(), "door") then
 			return "door"
 		end
 	end
-	
+
 end
 --------------------------------------------------------------------------------------------------
 --------------------------------------------Enemy-------------------------------------------------
@@ -177,11 +179,11 @@ if st == 0 then
 	if ( self:GetEnemy() and IsValid( self:GetEnemy() ) ) then
 		if ( self:GetRangeTo( self:GetEnemy():GetPos() ) > self.LoseTargetDist ) then
 		self.Count = self.Count -1
-		
+
 			return self:FindEnemy()
 		elseif ( self:GetEnemy():IsPlayer() and (!self:GetEnemy():Alive() or (self:GetEnemy():Team() ~= TEAM_SPEC and self:GetEnemy():Team() ~= TEAM_SCP))) then
 				return self:FindEnemy()
-		end	
+		end
 		//self.loco:FaceTowards( self:GetEnemy():GetPos() )
 		//self:SetAngles(self.GetEnemy:Angle())
 		return true
@@ -195,23 +197,53 @@ end
 -- ENT:FindEnemy()
 -- Returns true and sets our enemy if ( we find one
 ----------------------------------------------------
-
-function ENT:FindEnemy()
-local st = GetConVarNumber("ai_ignoreplayers")
-if st == 0 then
+function ENT:GetNewEnemy()
+	--print("GetNewEnemy() Called!")
 	local _ents = ents.FindInSphere( self:GetPos(), self.SearchRadius )
 	for k,v in pairs( _ents ) do
 		if ( v:IsPlayer() && v:Health() > 0 ) then
-			if(v:Team() ~= TEAM_SPEC and v:Team() ~= TEAM_SCP) then 
-				self:SetEnemy( v )
+			--print("SCP-096 PlayerList: "..tostring(v))
+			if(v:Team() ~= TEAM_SPEC and v:Team() ~= TEAM_SCP) then
+				self:SetEnemy( v ) -- Randomly get an enemy.
 				return true
 			end
 		end
 	end
--- We found nothing so we will set our enemy as nil ( nothing ) and return false
-	self:SetEnemy( nil )
-	return false
 end
+
+function ENT:FindEnemy()
+	local st = GetConVarNumber("ai_ignoreplayers")
+	if st == 0 then
+		if (self:GetEnemy()) then
+			if (self:GetEnemy():IsValid()) then
+				if (self:GetEnemy():IsPlayer() && self:GetEnemy():Health() > 0) then
+					if(self:GetEnemy():Team() ~= TEAM_SCP && self:GetEnemy():Team() ~= TEAM_SPEC) then
+						--print("FindEnemy() we still have our Enemy, keep him!")
+						self:SetEnemy(self:GetEnemy()) --Lol :^)
+						return true --We keep our current player.
+					else
+						--print("Getting new Enemy from FindEnemy() <SCP/SPEC Team>")
+						return self:GetNewEnemy()
+					end
+				else
+					--Invalid Player!
+					--print("Getting new Enemy from FindEnemy() <DeadPlayer>")
+					return self:GetNewEnemy()
+				end
+			else
+				--print("Getting new Enemy from FindEnemy() <Invalid Player>")
+				return self:GetNewEnemy()
+			end
+			-- We found nothing so we will set our enemy as nil ( nothing ) and return false
+
+			--print("Deleting Enemy! <Unexpected behavior1>")
+			self:SetEnemy( nil ) --This seems to cause issues?
+			return false
+		else
+			--print("Getting new Enemy from FindEnemy() <Enemy is nil>")
+			return self:GetNewEnemy()
+		end
+	end
 end
 
 ----------------------------------------------------
@@ -225,106 +257,122 @@ end
 function ENT:ChaseEnemy( options )
 	self.Damage = 1000
 	local options = options or {}
+	--print("ChaseEnemy();")
+	--print("|- options: "..table.concat( options, ","))
 	local path = Path( "Follow" )
 	path:SetMinLookAheadDistance( options.lookahead or 300 )
 	path:SetGoalTolerance( options.tolerance or 20 )
 	path:Compute( self, self:GetEnemy():GetPos() )
-	if (  !path:IsValid() ) then return "failed" end
+	if (  !path:IsValid() ) then
+		--print("ChaseEnemy Path failed!")
+		return "failed"
+	end
 	while ( path:IsValid() and self:HaveEnemy() ) do
-
-		if ( path:GetAge() > 0.1 ) then	
+		--Part 1 of attempt to fix chaseEnemy against Spectators / SCPs;
+		if self:GetEnemy():IsPlayer() then
+			if self:GetEnemy():Team() == TEAM_SCP or self:GetEnemy():Team() == TEAM_SPEC then
+				--print("ChaseEnemy is chasing a Spectator (or SCP)! Returning Failed!")
+				return "failed"
+			end
+		end
+		--print(path)
+		--print("Goal is: "..tostring(path:GetCurrentGoal().pos))
+		--print("Enemy is: "..tostring(self:GetEnemy()))
+		--print("Current Position is: "..tostring(self:GetPos()))
+		if ( path:GetAge() > 0.1 ) then
 			path:Compute( self, self:GetEnemy():GetPos() )
 		end
-		path:Update( self )	
+		path:Update( self )
 		if ( options.draw ) then path:Draw() end
 		if ( self.loco:IsStuck() ) then
 			self:HandleStuck()
+			--print("ChaseEnemy: SCP-096 is stuck!")
 			return "stuck"
 		end
 
-if SERVER then
-				//Sound before Attack
-	self:stopAlert1()
-	self:stopLost1()
-		if (self.playMusic1 == 0) then
-		
-		self.playMusic1 = CreateSound(self.Entity, self.Music1)
-		self.playMusic1:Play() 
-		self.playStart1 = CreateSound(self.Entity, self.Start1)
-		self.playStart1:Play() end
-		if self.playMusic1:IsPlaying()  then
-		
-		else self.playMusic1 = CreateSound(self.Entity, self.Music1)
-		self.playMusic1:Play() -- Starts the attack music 
-		end
-end
-		
+		if SERVER then
+			//Sound before Attack
+			self:stopAlert1()
+			self:stopLost1()
+			if (self.playMusic1 == 0) then
+
+				self.playMusic1 = CreateSound(self.Entity, self.Music1)
+				self.playMusic1:Play()
+				self.playStart1 = CreateSound(self.Entity, self.Start1)
+				self.playStart1:Play() end
+				if self.playMusic1:IsPlaying()  then
+
+				else self.playMusic1 = CreateSound(self.Entity, self.Music1)
+					self.playMusic1:Play() -- Starts the attack music
+				end
+			end
+
 		//local EnemyP = self:GetEnemy():GetPos()
 		//if (self:GetRangeTo(EnemyP) < 95) then
 		//self.RunAnim =( ACT_RUN_CROUCH )
 		//else
 		//self.RunAnim =( ACT_RUN )
 		//end
-		
+
 		local func_door = ents.FindInSphere(self:GetPos(),40)
 		if func_door then
 			for i = 1, #func_door do
 				local v = func_door[i]
 				if v:GetClass() == "func_door" then
-				v:Fire("Unlock", "", 0)
-				v:Fire("Open", "", 0.01)
-				//print ("func_door")
+					v:Fire("Unlock", "", 0)
+					v:Fire("Open", "", 0.01)
+				print ("func_door")
 				end
-				end
-				end
-				
+			end
+		end
+
 		local door = ents.FindInSphere(self:GetPos(),40)
 		if door then
 			for i = 1, #door do
 				local v = door[i]
 				if !v:IsPlayer() and v != self and IsValid( v ) then
-				
+
 					if self:GetDoor( v ) == "door" then
-					
+
 						if v.Hitsleft == nil then
 							v.Hitsleft = 10
 						end
-						
+
 						if v != NULL and v.Hitsleft > 0 then
 							if (self:GetRangeTo(v) < 45) then
-							
+
 							function BreakSounds()
-							if not ( v:IsValid() ) then return end
-							v:EmitSound(self.DoorBreak)
+								if not ( v:IsValid() ) then return end
+								v:EmitSound(self.DoorBreak)
 							end
-							
-								timer.Create("Break Sounds", 0.6, 2, BreakSounds ) 
+
+								timer.Create("Break Sounds", 0.6, 2, BreakSounds )
 								self.loco:SetDesiredSpeed(0)
 								self:StartActivity( ACT_RUN_CROUCH )
 								//self:StartActivity(self.AttackAnim)
 								if v != NULL and v.Hitsleft != nil then
 									if v.Hitsleft > 0 then
-									v.Hitsleft = v.Hitsleft - 1
-									
+										v.Hitsleft = v.Hitsleft - 1
+
 									end
 								end
 							end
 						end
 						if v != NULL and v.Hitsleft < 1 then
 							v:Remove()
-							
+
 						local door = ents.Create("prop_physics")
 						door:SetModel(v:GetModel())
 						door:SetPos(v:GetPos())
 						door:SetAngles(v:GetAngles())
 						door:Spawn()
 						door:EmitSound("Wood_Plank.Break")
-						
+
 						local phys = door:GetPhysicsObject()
 						if (phys != nil && phys != NULL && phys:IsValid()) then
 						phys:ApplyForceCenter(self:GetForward():GetNormalized()*20000 + Vector(0, 0, 2))
 						end
-						
+
 						door:SetSkin(v:GetSkin())
 						door:SetColor(v:GetColor())
 						door:SetMaterial(v:GetMaterial())
@@ -334,63 +382,63 @@ end
 						self:StartActivity( self.WalkAnim )
 						self.loco:SetDesiredSpeed(self.Speed)
 						end
-		
+
 						if self.Count > 2 then
 						self.loco:SetDesiredSpeed( 450 )
 						self:StartActivity( self.RunAnim )
 						end
-						
+
 						end
 						end
 						end
 						end
-						
+
 	///////////////
-	
-	local ent = ents.FindInSphere( self:GetPos(), 55) 
+
+	local ent = ents.FindInSphere( self:GetPos(), 55)
 		for k,v in pairs( ent ) do
-		
+
 		if ((v:IsNPC() || (v:IsPlayer() && v:Alive() && !self.IgnorePlayer))) then
 		if not ( v:IsValid() && v:Health() > 0 ) then return end
 		if ( v:Team() == TEAM_SPEC or v:Team() == TEAM_SCP ) then return end --No SCPs/ No Spectators!
-		
+
 		//
 		self:StartActivity( ACT_RUN_CROUCH )
 		//self:AttackAnimation()
 		//self:StartActivity(self.AttackAnim)
 		coroutine.wait(self.AttackWaitTime)
 		self:EmitSound(self.Miss)
-		
+
 		if (self:GetRangeTo(v) < 65) then
 
 		if ( v:IsPlayer() && v:Health() > 0 ) then
 			self.Damage = 1000
 			v:EmitSound(self.Hit)
-			v:TakeDamage(self.Damage, self)			
+			v:TakeDamage(self.Damage, self)
 			v:ViewPunch(Angle(math.random(-1, 1)*self.Damage, math.random(-1, 1)*self.Damage, math.random(-1, 1)*self.Damage))
-			
+
 			local moveAdd=Vector(0,0,150)
 		if not v:IsOnGround() then
 		moveAdd=Vector(0,0,0)
 		end
-		
+
 		--v:SetVelocity(moveAdd+((self.Enemy:GetPos()-self:GetPos()):GetNormal()*100)) -- apply the velocity
 		v:SetVelocity(moveAdd+((v:GetPos()-v:GetPos()):GetNormal()*100)) -- apply the velocity; Fixed by Link2006?
-		
+
 			end
 
 		if v:IsNPC() then
 			v:EmitSound(self.Hit)
-			v:TakeDamage(self.Damage, self)	
+			v:TakeDamage(self.Damage, self)
 			end
-		
+
 
 		end
-		coroutine.wait(self.AttackFinishTime)	
+		coroutine.wait(self.AttackFinishTime)
 		self:StartActivity( self.RunAnim )
 		self.loco:SetDesiredSpeed( 450 )
 		//self:PlayChaseMusic()
-		
+
 		///////////////player dead, go back
 		--if ( v:IsPlayer() && v:Health() <= 0 ) then
 		if ( v:IsPlayer() && v:Health() <= 0 ) or (v:IsPlayer() and (v:Team() == TEAM_SPEC or v:Team() == TEAM_SCP)) then
@@ -398,17 +446,17 @@ end
 			//self:StartActivity( self.WalkAnim )
 			//self.loco:SetDesiredSpeed(self.Speed)
 			self.Enemy = nil
-			
+
 			self:StartActivity( ACT_GESTURE_FLINCH_HEAD )
 			coroutine.wait( 6.5 )
-		
+
 			self:WaitAfterKill()
 			self:WaitAfterKill()
 			self:WaitAfterKill()
 			self:WaitAfterKill()
 			self:WaitAfterKill()
 			self:WaitAfterKill()
-			
+
 			self.Enemy = nil
 			self.Count = 0
 			self:StartActivity( self.RunAnim )
@@ -417,7 +465,7 @@ end
 			self:SetAngles(self.StartPosx)
 			self:SCP096Reset()
 		end
-		
+
 		end
 		end
 		////////////////////
@@ -429,7 +477,7 @@ end
 			end
 		end
 		//////////////////
-		
+
 
 		coroutine.yield()
 	end
@@ -468,20 +516,20 @@ if SERVER then
 		self.playMusic1:Play() -- Starts the attack music
 	end
 end
-	
+
 function ENT:AlertSound()
 if self.Count != 99 then
 local st = GetConVarNumber("ai_ignoreplayers")
 	if st == 0 then
 if SERVER then
 		//lost sound
-		//local ply = self:GetEnemy()	
+		//local ply = self:GetEnemy()
 		if (self.playAlert1 == 0) then
-		
+
 		self.playAlert1 = CreateSound(self.Entity, self.Alert1)
 		self.playAlert1:Play() end
 		if self.playAlert1:IsPlaying()  then
-		
+
 		else self.playAlert1 = CreateSound(self.Entity, self.Alert1)
 		self.playAlert1:Play()
 		end
@@ -496,9 +544,9 @@ function ENT:LostSound()
 if SERVER then
 		//lost sound
 		self.MusicCount = self.MusicCount +1
-		//print( "+1" )
-		if self.MusicCount >= 7 then 
-		//print( "7" )
+		--print( "+1" )
+		if self.MusicCount >= 7 then
+		--print( "7" )
 		self.MusicCount = 0
 		if self.playLost1:IsPlaying()  then
 		self.playLost1:Stop()
@@ -518,11 +566,11 @@ local st = GetConVarNumber("ai_ignoreplayers")
 if SERVER then
 		//lost sound
 		if (self.playLost1 == 0) then
-		
+
 		self.playLost1 = CreateSound(self.Entity, self.Lost1)
 		self.playLost1:Play() end
 		if self.playLost1:IsPlaying()  then
-		
+
 		else self.playLost1 = CreateSound(self.Entity, self.Lost1)
 		self.playLost1:Play()
 		end
@@ -540,35 +588,67 @@ end
 function ENT:RunBehaviour()
 -- Here is the loop, it will run forever
 	while ( true ) do
-	self:FindEnemy()
-		if ( self:HaveEnemy() && self.Count > 2 or self:SeeMe() or self:SeeMe2() ) then
-		
-			//self.loco:FaceTowards( self:GetEnemy():GetPos() )	-- Face our enemy
-			//self:SetAngles(self.Enemy:Angle())
-			//ent:SetAngles(Angle(0, Enemy:EyeAngles().yaw+180, 0))
-			//self:AlertSound()
-			
-			self:warnplayer()
-			//coroutine.wait( 1 )
-			
-			if self.Count > 2 then --How many times before angry
-			self.LoseTargetDist	= 9999999999	-- How far the enemy has to be before we lose them
-			self.SearchRadius 	= 9999999999	-- How far to search for enemies
-			self.loco:SetDesiredSpeed( 450 )
-			self:StartActivity( self.RunAnim )
-			self:ChaseEnemy()
-			self.CountProp = 0
+	local findEnemy_res = self:FindEnemy()
+	--print("RunBehavior()")
+	--print("FindEnemy is: "..tostring(findEnemy_res))
+		if ( self:HaveEnemy() && self.Count > 2 or self:SeeMe() or self:SeeMe2() ) then --TODO: add 'and Enemy is Not TEAM_SPEC/Not TEAM_SCP (or Alive) ?'
+
+			--Part 2 to attempt fixing ChaseEnemy?
+			if self:HaveEnemy() then
+				if self:GetEnemy():IsPlayer() then
+					if self:GetEnemy():Team() ~= TEAM_SPEC and self:GetEnemy():Team() ~= TEAM_SCP then
+						//self.loco:FaceTowards( self:GetEnemy():GetPos() )	-- Face our enemy
+						//self:SetAngles(self.Enemy:Angle())
+						//ent:SetAngles(Angle(0, Enemy:EyeAngles().yaw+180, 0))
+						//self:AlertSound()
+						--print("RunBehavior: Enemy is "..tostring(self:GetEnemy()))
+						self:warnplayer()
+						--print("Player warned")
+						//coroutine.wait( 1 )
+						if self:GetEnemy():Team() ~= TEAM_SPEC and self:GetEnemy():Team() ~= TEAM_SCP then
+							if self.Count > 2 then --How many times before angry
+								self.LoseTargetDist	= 9999999999	-- How far the enemy has to be before we lose them
+								self.SearchRadius 	= 9999999999	-- How far to search for enemies
+								self.loco:SetDesiredSpeed( 450 )
+								self:StartActivity( self.RunAnim )
+								self:ChaseEnemy()
+								self.CountProp = 0
+							end
+						else
+							--DUPLICATE BY LINK2006 HAAAAAAAAAA
+							self:playernear()
+							self:GoHome()
+							-- Sit around
+							//self:SetEyeAngles(Angle(0, self:EyeAngles().yaw+180, 0));
+
+							self:SCP096Reset()
+							self:stopMusic1() -- stops the music
+							self:stopAlert1()
+							//self:stopLost1()
+							//self:StartActivity( ACT_WALK )
+							//self.loco:SetDesiredSpeed( self.Speed )
+							// Sit idle animation
+							local idletype
+							idletyp = (math.random(0,4))
+							if idletyp == 0 then
+								self:StartActivity( ACT_COWER )
+								coroutine.wait( 6 )
+							else self:StartActivity( ACT_CROUCHIDLE )
+								coroutine.wait( 2 )
+							end
+						end
+					end
+				end
 			end
-			
-			
-			
+
+
 		else
-		
-		self:playernear()
-		self:GoHome()
+
+			self:playernear()
+			self:GoHome()
 			-- Sit around
 			//self:SetEyeAngles(Angle(0, self:EyeAngles().yaw+180, 0));
-			
+
 			self:SCP096Reset()
 			self:stopMusic1() -- stops the music
 			self:stopAlert1()
@@ -579,17 +659,17 @@ function ENT:RunBehaviour()
 			local idletype
 			idletyp = (math.random(0,4))
 			if idletyp == 0 then
-			self:StartActivity( ACT_COWER )
-			coroutine.wait( 6 )
+				self:StartActivity( ACT_COWER )
+				coroutine.wait( 6 )
 			else self:StartActivity( ACT_CROUCHIDLE )
-			coroutine.wait( 2 )
+				coroutine.wait( 2 )
 			end
-			
+
 		end
-		
+
 		coroutine.wait( 2 )
 	end
-end	
+end
 
 --------------------------------------------------------------------------------------------------
 ---------------------------------------------AI---------------------------------------------------
@@ -618,7 +698,7 @@ function ENT:MoveToPos( pos, options )
 		end
 		end
 		end
-		
+
 		-- Draw the path (only visible on listen servers or single player)
 		if ( options.draw ) then
 			path:Draw()
@@ -628,7 +708,7 @@ function ENT:MoveToPos( pos, options )
 		if ( self.loco:IsStuck() ) then
 
 			self:HandleStuck();
-			
+
 			return "stuck"
 
 		end
@@ -646,17 +726,17 @@ function ENT:MoveToPos( pos, options )
 		if ( options.repath ) then
 			if ( path:GetAge() > options.repath ) then path:Compute( self, pos ) end
 		end
-		
+
 		if self.Count == 99 then
 		return "ok"
 		end
-		
+
 		coroutine.yield()
 
 	end
 
 	return "ok"
-	
+
 end
 
 function ENT:playernear()
@@ -668,11 +748,11 @@ function ENT:playernear()
 		//local headpos = v:GetBonePosition( v:LookupBone( "ValveBiped.Bip01_Head1" ) )
 		//self:SetEyeTarget( headpos )
 		//self:SetEyeTarget( v:EyePos() )
-		
+
 			if SERVER then
 				self:LostSound()
 		end
-		
+
 		end
 		end
 end
@@ -680,85 +760,84 @@ end
 ///////////////////////////////
 
 function ENT:SeeMe()
-local st = GetConVarNumber("ai_ignoreplayers")
+	local st = GetConVarNumber("ai_ignoreplayers")
 	if st == 0 && self.Count <= 0 then
-local ok1 = 0
-local ok2 = 0
-local _ents = ents.FindInSphere( self:GetPos(), 100 )
-	for k,v in pairs( _ents ) do
-		if ( v:IsPlayer() && v:Alive() ) and (v:Team() ~= TEAM_SPEC and v:Team() ~= TEAM_SCP) then
-		//self:SetEyeTarget( v:EyePos() )
-		//print( self:EyePos()) 
-local tr = util.TraceLine( {
-	start = self:EyePos(), 
-	endpos = self:EyePos() + self:EyeAngles():Forward() * 10000,
-	filter = function( ent )
-	if ( ent:IsPlayer() && ent:Alive() && ent:EyeAngles():Forward() ) and (ent:Team() ~= TEAM_SPEC and ent:Team() ~= TEAM_SCP) then
-	ok1 = 1
-	//print( "ok1 i see a player" )
-	return true
-	else
-	//print( "false1" )
-	return false
+		local ok1 = 0
+		local ok2 = 0
+		local _ents = ents.FindInSphere( self:GetPos(), 100 )
+		for k,v in pairs( _ents ) do
+			if ( v:IsPlayer() && v:Alive() ) and (v:Team() ~= TEAM_SPEC and v:Team() ~= TEAM_SCP) then
+				//self:SetEyeTarget( v:EyePos() )
+				--print( self:EyePos())
+				local tr = util.TraceLine( {
+					start = self:EyePos(),
+					endpos = self:EyePos() + self:EyeAngles():Forward() * 10000,
+					filter = function( ent )
+						--print("TraceLine TR: "..tostring(ent))
+						if ( ent:IsPlayer() && ent:Alive() && ent:EyeAngles():Forward() ) and (ent:Team() ~= TEAM_SPEC and ent:Team() ~= TEAM_SCP) then
+							ok1 = 1
+							--print( "ok1 i see a player" )
+							return true
+						else
+							--What if we ok1 = 0 here?
+							--print( "false1" )
+							return false
+						end
+					end
+				} )
+				if ( IsValid( tr.Entity ) )then
+					--print( "valid" )
+					local tr2 = util.TraceLine( {
+						start = v:EyePos(),
+						endpos = v:EyePos() + v:EyeAngles():Forward() * 10000,
+						filter = function( ent2 )
+							--print("TraceLine TR2: "..tostring(ent2))
+							if ent2 == self and v:Team() ~= TEAM_SCP and v:Team() ~= TEAM_SPEC then
+								ok2 = 1
+								--print( "ok2 player can see me" )
+								return true
+							else
+								--What if we ok2 = 0 here?
+								--print( "false2" )
+								return false
+							end
+						end
+					} )
+				end
+				if ok1 == 1 && ok2 == 1 then
+					self.Enemy = v
+					print ("successful")
+					return true
+				else
+					--print( "fail" )
+					return false
+				end
+			end
+		end
 	end
-	end
-} )
-
-
-if ( IsValid( tr.Entity ) )then 
-//print( "valid" )
-local tr2 = util.TraceLine( {
-	start = v:EyePos(), 
-	endpos = v:EyePos() + v:EyeAngles():Forward() * 10000, 
-	filter = function( ent2 )
-	if ent2 == self then
-	ok2 = 1
-	//print( "ok2 player can see me" )
-	return true
-	else
-	//print( "false2" )
-	return false
-	end
-	end
-} )
-
-end
-if ok1 == 1 && ok2 == 1 then
-self.Enemy = v
-//print ("successful")
-return true
-else
-//print( "fail" )
-return false
-end
-
-end
-end
-
-end
 end
 
 function ENT:SeeMe2()
-local st = GetConVarNumber("ai_ignoreplayers")
+	local st = GetConVarNumber("ai_ignoreplayers")
 	if st == 0 && self.Count <= 0 then
-local _ents = ents.FindInSphere( self:GetPos(), 100 )
-	for k,v in pairs( _ents ) do
-		if ( v:IsPlayer() && v:Alive() ) and (v:Team() ~= TEAM_SPEC and v:Team() ~= TEAM_SCP) then
-local tr = util.TraceLine( util.GetPlayerTrace( v ) )
-local target = tr.Entity
-local targetb = tr.HitBox
-if target == self && targetb == 0 then
-if ( IsValid( tr.Entity ) )then 
-self.Enemy = v
-//print( "I saw a "..tr.Entity:GetModel() )
-return true
-end
-end
-//print( "I saw a nix" )
-return false
-end
-end
-end
+		local _ents = ents.FindInSphere( self:GetPos(), 100 )
+		for k,v in pairs( _ents ) do
+			if ( v:IsPlayer() && v:Alive() ) and (v:Team() ~= TEAM_SPEC and v:Team() ~= TEAM_SCP) then
+				local tr = util.TraceLine( util.GetPlayerTrace( v ) )
+				local target = tr.Entity
+				local targetb = tr.HitBox
+				if target == self && targetb == 0 then
+					if ( IsValid( tr.Entity ) )then
+						self.Enemy = v
+						--print( "I saw a "..tr.Entity:GetModel() )
+						return true
+					end
+				end
+				--print( "I saw a nix" )
+				return false
+			end
+		end
+	end
 end
 
 function ENT:warnplayer()
@@ -777,7 +856,7 @@ if st == 0 then
 	if self.Count == 0 then
 	local immun = self.Health
 	self:SetHealth(99999999)
-	//local SpawnPos = self.Entity:GetPos() 
+	//local SpawnPos = self.Entity:GetPos()
 	//self:SetPos(SpawnPos + Vector(0,0,-10))
 	//self:SetAngles(Angle(-1, 0,0))
 	//self:StartActivity( ACT_IDLE_STIMULATED )
@@ -800,7 +879,7 @@ if st == 0 then
 	self:SetHealth(self.health)
 	self.Count = 99
 	end
-	
+
 
 end
 
@@ -817,7 +896,7 @@ function ENT:GoHome()
 		self:SetAngles(self.StartPosx)
 		self.Stucks = self.Stucks +1
 		if self.Stucks > 5 then
-		//print ("help")
+		print ("help")
 		self:SetPos(self.StartPos)
 		self:SetAngles(self.StartPosx)
 		self.Stucks = 0
@@ -836,7 +915,7 @@ end
 function ENT:AttackProp()
 	local entstoattack = ents.FindInSphere(self:GetPos(), 55)
 	for _,v in pairs(entstoattack) do
-	
+
 		if (v:GetClass() == "prop_physics" && self.CountProp < 6) then
 		self.CountProp = self.CountProp + 1
 		if SERVER then
@@ -847,25 +926,25 @@ function ENT:AttackProp()
 		//self:StartActivity(self.AttackAnim)
 		coroutine.wait(self.AttackWaitTime)
 		self:EmitSound(self.Miss)
-		
+
 		if not ( v:IsValid() ) then return end
 		if (self:GetRangeTo(v) < 60) then
 		if not ( v:IsValid() ) then return end
-		
+
 		if not ( v:IsValid() ) then return end
 		local phys = v:GetPhysicsObject()
 			if (phys != nil && phys != NULL && phys:IsValid()) then
 			phys:ApplyForceCenter(self:GetForward():GetNormalized()*30000 + Vector(0, 0, 2))
 			v:EmitSound(self.DoorBreak)
-			v:TakeDamage(self.Damage, self)	
+			v:TakeDamage(self.Damage, self)
 			end
-			
+
 		end
-		coroutine.wait(self.AttackFinishTime)	
+		coroutine.wait(self.AttackFinishTime)
 		if self.Count <= 0 then
 		self:StartActivity( self.WalkAnim )
 		end
-		
+
 		if self.Count > 2 then
 		self.loco:SetDesiredSpeed( 450 )
 		self:StartActivity( self.RunAnim )
@@ -879,24 +958,24 @@ end
 function ENT:AttackBreakable()
 	local entstoattack = ents.FindInSphere(self:GetPos(), 55)
 	for _,v in pairs(entstoattack) do
-	
+
 		if (v:GetClass() == "func_breakable") then
-		
+
 		if SERVER then
 		self:EmitSound(self.Hit)
 		end
 	self:StartActivity( ACT_RUN_CROUCH )
 	//self:AttackPropAnimation()
 	//self:StartActivity(self.AttackAnim)
-		
+
 		coroutine.wait(self.AttackWaitTime)
 		self:EmitSound(self.Miss)
-		
+
 		if not ( v:IsValid() ) then return end
 			v:EmitSound(self.DoorBreak)
-			v:TakeDamage(self.Damage, self)	
-			
-		coroutine.wait(self.AttackFinishTime)	
+			v:TakeDamage(self.Damage, self)
+
+		coroutine.wait(self.AttackFinishTime)
 		self:StartActivity( self.WalkAnim )
 			return true
 		end
@@ -945,7 +1024,7 @@ self:stopMusic1()
 end
 end
 
-function ENT:OnLeaveGround() 
+function ENT:OnLeaveGround()
 self:StartActivity(self.FallAnim)
 if self.Count > 2 then
 self.loco:SetDesiredSpeed( 450 )
@@ -953,7 +1032,7 @@ self:StartActivity( self.RunAnim )
 end
 end
 
-function ENT:OnLandOnGround() 
+function ENT:OnLandOnGround()
 self:StartActivity( self.WalkAnim )
 if self.Count > 2 then
 self.loco:SetDesiredSpeed( 450 )
@@ -962,41 +1041,52 @@ end
 end
 
 if SERVER then
-function ENT:OnKilled( dmginfo )
-	
-	self:stopMusic1()
-	self:stopAlert1()
-	self:stopLost1()
-	self:BecomeRagdoll( dmginfo )
-	
-end
+	function ENT:OnKilled( dmginfo )
 
-function ENT:OnInjured( dmginfo )
-//if self:Health() < 139 then
-//self.Health = 99999999999
-//self:StartActivity( ACT_DYINGTODEAD )
-//self.Health = 0
-//end
+		self:stopMusic1()
+		self:stopAlert1()
+		self:stopLost1()
+		self:BecomeRagdoll( dmginfo )
 
-local st = GetConVarNumber("ai_ignoreplayers")
-	if st == 0 then
+	end
 
-		self:beattacked()
-		local ent = dmginfo:GetAttacker()
-		if IsValid(ent) then 
-			if ent:IsPlayer() and ent:Team() ~= TEAM_SCP and ent:Team() ~= TEAM_SPEC then 
-				self.Enemy = ent 
-			end 
+	function ENT:OnInjured( dmginfo )
+		--print("035 DEBUG:")
+		--print(dmginfo)
+		--print(dmginfo:GetAttacker()) --Who attacked it???
+		--print(dmginfo:GetAttacker():GetClass()) --Flames detection
+		if(dmginfo:GetAttacker():IsPlayer()) then
+			if (dmginfo:GetAttacker():Team() == TEAM_SCP) or (dmginfo:GetAttacker():Team() == TEAM_SPEC) then
+				return
+			end
+		else
+			return -- dont do anything to other types of damage please :(
+		end
+		--print(dmginfo:GetInflictor())
+		--print("===")
+		//if self:Health() < 139 then
+		//self.Health = 99999999999
+		//self:StartActivity( ACT_DYINGTODEAD )
+		//self.Health = 0
+		//end
+
+		local st = GetConVarNumber("ai_ignoreplayers")
+		if st == 0 then
+			self:beattacked()
+			local ent = dmginfo:GetAttacker()
+			if IsValid(ent) then
+				if ent:IsPlayer() and ent:Team() ~= TEAM_SCP and ent:Team() ~= TEAM_SPEC then
+					self.Enemy = ent
+				end
+			end
+		end
+
+		if st == 1 then
+			//Nothing here.
 		end
 	end
-	
-	if st == 1 then
-	
-	//
-	end
-	end
-	end
-	
+end
+
 function ENT:OnOtherKilled()
 //for _,v in pairs ( player.GetAll()) do v:SendLua([[RunConsoleCommand("stopsound")]]) end
 if SERVER then
@@ -1042,3 +1132,4 @@ end
 
 --------------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------------
+--print("SCP-096 Loaded, Ported to breach by Link2006.") --Lol :)
