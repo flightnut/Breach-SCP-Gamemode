@@ -105,7 +105,8 @@ function mply:MTFComArmor()
 	self:SetWalkSpeed(self.BaseStats.wspeed * 0.90)
 	self:SetRunSpeed(self.BaseStats.rspeed * 0.90)
 	self:SetJumpPower(self.BaseStats.jpower * 0.90)
-	self:SetModel("models/player/riot.mdl")
+	--self:SetModel("models/player/riot.mdl")
+	self:SetModel("models/player/kerry/class_securety_2.mdl")
 	self.UsingArmor = "armor_mtfcom"
 end
 
@@ -119,7 +120,8 @@ function mply:NTFArmor()
 	self:SetWalkSpeed(self.BaseStats.wspeed * 0.85)
 	self:SetRunSpeed(self.BaseStats.rspeed * 0.85)
 	self:SetJumpPower(self.BaseStats.jpower * 0.85)
-	self:SetModel("models/player/urban.mdl")
+	--self:SetModel("models/player/urban.mdl")
+	self:SetModel("models/player/kerry/ntf.mdl")
 	self.UsingArmor = "armor_ntf"
 end
 
@@ -133,7 +135,8 @@ function mply:ChaosInsArmor()
 	self:SetWalkSpeed(self.BaseStats.wspeed * 0.86)
 	self:SetRunSpeed(self.BaseStats.rspeed * 0.86)
 	self:SetJumpPower(self.BaseStats.jpower * 0.86)
-	self:SetModel("models/mw2/skin_04/mw2_soldier_04.mdl")
+	--self:SetModel("models/mw2/skin_04/mw2_soldier_04.mdl")
+	self:SetModel("models/mw2/skin_05/mw2_soldier_04.mdl")
 	self.UsingArmor = "armor_chaosins"
 end
 
@@ -688,7 +691,36 @@ function mply:SetSCP0082()
 	self:UnSpectate()
 	self:GodDisable()
 	self:SetTeam(TEAM_SCP)
-	self:SetModel("models/player/zombie_classic.mdl")
+	print("SCP-008-2 on \""..self:Nick().."\" with model \""..self:GetModel().."\"")
+	if string.match(self:GetModel(),"models/player/kerry/class_d_%d.mdl",0) then --Should only replace when
+		local newModel = string.Replace(self:GetModel(),"models/player/kerry/class_d_","models/player/kerry/class_d_zombie_")
+		print(newModel)
+		self:SetModel(newModel)
+	elseif string.match(self:GetModel(),"models/player/kerry/class_scientist_%d.mdl",0) then
+		local newModel = string.Replace(self:GetModel(),"models/player/kerry/class_scientist_","models/player/kerry/class_c_zombie_")
+		print(newModel)
+		self:SetModel(newModel)
+	elseif self:GetModel() == "models/player/kerry/class_securety_2.mdl" then
+		print("Commander Into Zombie!")
+		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
+	elseif self:GetModel() == "models/player/kerry/class_securety.mdl" then
+		--MTF
+		print("MTF Into zombie")
+		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
+	elseif self:GetModel() == "models/player/kerry/ntf.mdl" then
+		--NTF
+		print("NTF Into zombie")
+		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
+	elseif self:GetModel() == "models/mw2/skin_04/mw2_soldier_04.mdl" then
+		--Chaos!
+		print("Chaos into zombie")
+		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
+	else
+		print("UNKNOWN MODEL, Setting to zombie_classic!")
+		--TODO: maybe actually choose a random model instead of this?
+		--		i'll keep this for now though.
+		self:SetModel("models/player/zombie_classic.mdl")
+	end
 	self:SetHealth(425)
 	self:SetMaxHealth(425)
 	self:SetArmor(0)
@@ -732,7 +764,42 @@ function mply:SetSCP0492()
 	self:UnSpectate()
 	self:GodDisable()
 	self:SetTeam(TEAM_SCP)
-	self:SetModel("models/player/zombie_classic.mdl")
+	--TODO: If Model name starts with ClassD's model, then ClassD zombie
+	--		elseif model name starts with Researcher model, then Researcher zombie
+	--		elseif model name starts with MTF model, then MTF zombie
+	--		elseif model name starts with NTF model, then MTF zombie - TEMPORARY UNTIL WE GET NTF AND CHAOS
+	--		elseif model name starts with CHAOS model, then MTF zombies - TEMPORARY ^
+	--		else model sets to zombie_classic (NO MODEL AVAILABLE?)
+	print("SCP-049-2 on \""..self:Nick().."\" with model \""..self:GetModel().."\"")
+	if string.match(self:GetModel(),"models/player/kerry/class_d_%d.mdl",0) then --Should only replace when
+		local newModel = string.Replace(self:GetModel(),"models/player/kerry/class_d_","models/player/kerry/class_d_zombie_")
+		print(newModel)
+		self:SetModel(newModel)
+	elseif string.match(self:GetModel(),"models/player/kerry/class_scientist_%d.mdl",0) then
+		local newModel = string.Replace(self:GetModel(),"models/player/kerry/class_scientist_","models/player/kerry/class_c_zombie_")
+		print(newModel)
+		self:SetModel(newModel)
+	elseif self:GetModel() == "models/player/kerry/class_securety_2.mdl" then
+		print("Commander Into Zombie!")
+		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
+	elseif self:GetModel() == "models/player/kerry/class_securety.mdl" then
+		--MTF
+		print("MTF Into zombie")
+		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
+	elseif self:GetModel() == "models/player/kerry/ntf.mdl" then
+		--NTF
+		print("NTF Into zombie")
+		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
+	elseif self:GetModel() == "models/mw2/skin_05/mw2_soldier_04.mdl" then
+		--Chaos!
+		print("Chaos into zombie")
+		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
+	else
+		print("UNKNOWN MODEL, Setting to zombie_classic!")
+		--TODO: maybe actually choose a random model instead of this?
+		--		i'll keep this for now though.
+		self:SetModel("models/player/zombie_classic.mdl")
+	end
 	self:SetHealth(750)
 	self:SetMaxHealth(750)
 	self:SetArmor(0)
