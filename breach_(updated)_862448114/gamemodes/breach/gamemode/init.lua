@@ -542,13 +542,27 @@ hook.Add("Tick", "debug3254t3t35", function()
 end)
 */
 
-buttonstatus = 0
+buttonstatus = -1
 lasttime914b = 0
+lasttime914 = 0
+
+hook.Add("PostCleanupMap","Reset914B",function()
+	print("Resetting SCP-914...")
+	buttonstatus = -1
+	lasttime914b = 0
+	lasttime914 = 0
+	print("Done.")
+end)
 function Use914B(activator, ent)
-	if CurTime() < lasttime914b then return end
+	--DEBUG Link2006 Trying to make this much more correct in code.
+	if CurTime() < lasttime914 then return end -- This is when the Knob CANNOT turn.
+	if CurTime() < lasttime914b then return end --This is when you already pressed the knob, wait please.
 	lasttime914b = CurTime() + 1.3
 	ForceUse(ent, 1, 1)
-	if buttonstatus == 0 then
+	if buttonstatus == -1 then --BUTTON IS FUCKED LOL
+		buttonstatus = 0 --Button is locked hold on
+		activator:PrintMessage(HUD_PRINTTALK, "Changed to rough") -- :^)
+	elseif buttonstatus == 0 then
 		buttonstatus = 1
 		activator:PrintMessage(HUD_PRINTTALK, "Changed to coarse")
 	elseif buttonstatus == 1 then
@@ -566,11 +580,15 @@ function Use914B(activator, ent)
 	end
 end
 
-lasttime914 = 0
 function Use914(ent)
 	if CurTime() < lasttime914 then return end
 	lasttime914 = CurTime() + 20
-	ForceUse(ent, 0, 1)
+
+
+	ForceUse(ent, 0, 1) --?
+	--FIXED BY LINK2006 !!!
+	--ent:Fire ('PressIn','' ,0 )  --Is this required, Do we only need ForceUse ?
+	ent:Fire ('PressOut','' ,21 ) -- Wait until we can fix it? 
 	local pos = ENTER914
 	local pos2 = EXIR914
 	timer.Create("914Use", 4, 1, function()
