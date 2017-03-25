@@ -29,7 +29,7 @@ net.Receive( "SpectateMode", function( len, ply )
 			--ply:SetSpectator()
 			ply:Kill() --Forces players to die
 			-- Fixes exploits that dont expect them to switch team and stay alive (code like player:Alive() )
-			-- Also fixes players deleting items from the game entirely. 
+			-- Also fixes players deleting items from the game entirely.
 		end
 		ply.ActivePlayer = false
 		ply:PrintMessage(HUD_PRINTTALK, "Changed mode to spectator")
@@ -223,6 +223,9 @@ cvars.AddChangeCallback( "br_roundrestart", function( convar_name, value_old, va
 end )
 
 function SetupPlayers(pltab)
+	for k,v in pairs(player.GetAll()) do
+		v:SetSpectator() --I dont know anymore :^l
+	end
 	//local pltab = PLAYER_SETUP[#player.GetAll() - 2]
 	//local pltab = GetRoleTable(#player.GetAll())
 	local allply = GetActivePlayers()

@@ -1,5 +1,9 @@
 
 function AssaultGamemode()
+	for k,v in pairs(player.GetAll()) do
+		v:SetSpectator() --I dont know anymore :^l
+	end
+
 	local all = GetActivePlayers()
 	local guardSpawns = {}
 	table.Add(guardSpawns, SPAWN_GUARD)
@@ -76,6 +80,10 @@ function AssaultGamemode()
 end
 
 function ZombieGamemode()
+	for k,v in pairs(player.GetAll()) do
+		v:SetSpectator() --I dont know anymore :^l
+	end
+	--Get All players
 	local all = GetActivePlayers()
 	local allspawns = {}
 	table.Add(allspawns, SPAWN_GUARD)
@@ -86,15 +94,8 @@ function ZombieGamemode()
 	--Link2006's ZombieGamemode fix
 	--New attempt to fix it, again.  This should make it so it has less chances of ending the round too early.
 
-	
-	for i=1,2 do --Only 2 alpha zombies 
-		local pl = table.Random(all)
-		local newZomb = table.Random(SPAWN_ZOMBIES)
-		pl:SetSCP0082() --Set a random player as 008-2
-		pl:SetPos(newZomb)
-		table.RemoveByValue(all, pl)
-	end
 
+	--Spawn Everyone.
 	for i=1, #all do
 		local pl = table.Random(all)
 		local spawn = table.Random(allspawns)
@@ -105,6 +106,16 @@ function ZombieGamemode()
 		table.RemoveByValue(all, pl)
 	end
 
+	--Get everyone again
+	all = GetActivePlayers()
+	--select 2 players to switch into zombies.
+	for i=1,2 do --Only 2 alpha zombies
+		local pl = table.Random(all)
+		local newZomb = table.Random(SPAWN_ZOMBIES)
+		pl:SetSCP0082() --Set a random player as 008-2
+		pl:SetPos(newZomb)
+		table.RemoveByValue(all, pl)
+	end
 
 	--Old fix
 	--InfectPeople()
@@ -130,6 +141,9 @@ function InfectPeople()
 end
 
 function SpyGamemode()
+	for k,v in pairs(player.GetAll()) do
+		v:SetSpectator() --I dont know anymore :^l
+	end
 	local all = GetActivePlayers()
 	local allspawns = {}
 	table.Add(allspawns, SPAWN_GUARD)
