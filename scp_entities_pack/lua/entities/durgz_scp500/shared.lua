@@ -1,0 +1,10 @@
+ENT.Type = "anim"
+ENT.Base = "durgz_base"
+ENT.PrintName = "SCP-500"
+ENT.Category = "SCP Entity"
+ENT.Nicknames = {0}
+ENT.OverdosePhrase = {0}
+ENT.Author = "Joni"
+ENT.Spawnable = true
+ENT.AdminSpawnable = true 
+ENT.Information	 = "It's AHUENNO!" 

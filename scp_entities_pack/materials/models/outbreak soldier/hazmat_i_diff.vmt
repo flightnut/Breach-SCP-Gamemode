@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\outbreak soldier/hazmat_I_diff"
+	"$nocull" "1"
+	"$model" "1"
+	"$halflambert" 1
+	
+}

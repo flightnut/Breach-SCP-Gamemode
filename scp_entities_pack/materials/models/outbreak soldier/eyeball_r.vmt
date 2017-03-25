@@ -1,0 +1,6 @@
+"eyes"
+{
+	"$baseTexture" "models\outbreak soldier/eyeball_r"
+	"$iris" "models/outbreak soldier/6aec0f2a"
+	"$halflambert" 1
+}

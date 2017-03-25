@@ -86,7 +86,8 @@ function ZombieGamemode()
 	--Link2006's ZombieGamemode fix
 	--New attempt to fix it, again.  This should make it so it has less chances of ending the round too early.
 
-	for i=1,math.Round(#all/25) do --Attempt at nerfing how many zombies spawn | ATTEMPT #2 BECAUSE HOLY SHIT.
+	
+	for i=1,2 do --Only 2 alpha zombies 
 		local pl = table.Random(all)
 		local newZomb = table.Random(SPAWN_ZOMBIES)
 		pl:SetSCP0082() --Set a random player as 008-2
@@ -112,7 +113,7 @@ end
 function InfectPeople()
 	local all = GetActivePlayers()
 	local zombSpawns = table.Copy(SPAWN_ZOMBIES)
-	for i=1,math.Round(#all/8) do --Attempt at nerfing how many zombies spawn
+	for i=1,math.Round(#all/16) do --Attempt at nerfing how many zombies spawn
 	--for i=1, #all / 4 do
 		if #zombSpawns > 0 then --Shuffle players into random Zombie spawns until we have no more spawns available for them.
 			local pl = table.Random(all)
