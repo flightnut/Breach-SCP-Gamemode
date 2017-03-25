@@ -14,6 +14,11 @@ This README would normally document whatever steps are necessary to get your app
 * antirdm_disable
 * antirdm_status
 * ulx ent weapon_physgun
+* ulx ent scp_087_b_1
+* ulx ent scp_087_b_3
+* ulx ent ent_scp_1123
+* ulx ent durgz_scp420j
+* ulx ent durgz_scp500
 
 For Bots: (replace 58 with the number of bots you want) 
 
