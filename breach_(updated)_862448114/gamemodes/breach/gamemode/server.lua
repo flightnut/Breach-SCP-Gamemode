@@ -140,16 +140,16 @@ function GetRoleTable(all)
 	end
 	--print("MTFMUL IS AT "..mtfmul)
 	--Set how many SCPs here
-	if all < 8 then
+	if all < 8 then --0 to 7
 		scps = 1
 		all = all - 1
-	elseif all > 7 and all < 16 then
+	elseif all > 7 and all < 16 then --8 to 15
 		scps = 2
 		all = all - 2
-	elseif all > 15 and all < 29 then
+	elseif all > 15 and all < 29 then --16 to 28
 		scps = 3
 		all = all - 3
-	elseif all > 30 then
+	elseif all > 28 then --29+
 		scps = 4
 		all = all - 4
 	end
