@@ -35,7 +35,7 @@ function OpenMenu()
 	local ply = LocalPlayer()
 	if !(ply:Team() == TEAM_GUARD or ply:Team() == TEAM_CHAOS) then return end
 	local clevel = LocalPlayer():CLevelGlobal()
-	
+
 	MTFMenuFrame = vgui.Create( "DFrame" )
 	MTFMenuFrame:SetTitle( "" )
 	MTFMenuFrame:SetSize( 265, 375 )
@@ -49,7 +49,7 @@ function OpenMenu()
 		draw.RoundedBox( 2, 0, 0, w, h, Color(0, 0, 0) )
 		draw.RoundedBox( 2, 1, 1, w - 2, h - 2, Color(90, 90, 95) )
 	end
-	
+
 	local maininfo = vgui.Create( "DLabel", MTFMenuFrame )
 	maininfo:SetText( "Mobile Task Force Manager" )
 	maininfo:Dock( TOP )
@@ -61,10 +61,10 @@ function OpenMenu()
 		draw.RoundedBox( 2, 0, 0, w, h, Color(0, 0, 0) )
 		draw.RoundedBox( 2, 1, 1, w - 2, h - 2, Color(90, 90, 95) )
 	end
-	
+
 	if clevel > 3 then
 		local button_gatea = vgui.Create( "DButton", MTFMenuFrame )
-		button_gatea:SetText( "Request Gate A Open" )
+		button_gatea:SetText( "Request Gate Lock Toggle" )
 		button_gatea:Dock( TOP )
 		button_gatea:SetFont("MTF_Main")
 		button_gatea:SetContentAlignment( 5 )
@@ -142,7 +142,3 @@ function OpenMenu()
 		MTFMenuFrame:Close()
 	end
 end
-
-
-
-

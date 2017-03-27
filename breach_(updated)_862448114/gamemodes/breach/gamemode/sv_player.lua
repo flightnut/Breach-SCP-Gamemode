@@ -157,6 +157,7 @@ end
 
 function mply:SetSpectator()
 	self.handsmodel = nil
+	self:DropObject() --Drop the object they're holding (i.e. The stupidly OP melon), Link2006's fix.
 	self:Spectate(6)
 	self:StripWeapons()
 	self:RemoveAllAmmo()

@@ -114,7 +114,7 @@ function GM:PlayerDeath( victim, inflictor, attacker )
 				end
 			elseif attacker:Team() == TEAM_CHAOS then
 				victim:PrintMessage(HUD_PRINTTALK, "You were killed by a Chaos Insurgency Soldier: " .. attacker:Nick())
-				if victim:Team() == TEAM_GUARD then 
+				if victim:Team() == TEAM_GUARD then
 					attacker:PrintMessage(HUD_PRINTTALK, "You've been awarded with 2 points for killng an MTF Guard!")
 					attacker:AddFrags(2)
 				elseif victim:Team() == TEAM_SCI then
@@ -133,7 +133,7 @@ function GM:PlayerDeath( victim, inflictor, attacker )
 				attacker:AddFrags(2)
 			elseif attacker:Team() == TEAM_CLASSD then
 				victim:PrintMessage(HUD_PRINTTALK, "You were killed by a Class D: " .. attacker:Nick())
-				if victim:Team() == TEAM_GUARD then 
+				if victim:Team() == TEAM_GUARD then
 					attacker:PrintMessage(HUD_PRINTTALK, "You've been awarded with 4 points for killng an MTF Guard!")
 					attacker:AddFrags(4)
 				elseif victim:Team() == TEAM_SCI then
@@ -273,6 +273,11 @@ end
 
 
 function GM:PlayerCanPickupWeapon( ply, wep )
+	--Link2006's Change to disallow double FlashLight usage
+	--If the player already has a flashlight && The wep is a flashlight; Return false :)
+	if ply:CanUseFlashlight() and wep:GetClass() == "flashlight" then
+		return false
+	end
 	//if ply.lastwcheck == nil then ply.lastwcheck = 0 end
 	//if ply.lastwcheck > CurTime() then return end
 	//ply.lastwcheck = CurTime() + 0.5
@@ -364,6 +369,8 @@ function GM:AllowPlayerPickup( ply, ent )
 	return !(ply:Team() == TEAM_SPEC)
 end
 // usesounds = true,
+
+--TODO: Nuclear Button Support here!
 function GM:PlayerUse( ply, ent )
 	if ply:Team() == TEAM_SPEC then return false end
 	if ply.lastuse == nil then ply.lastuse = 0 end
@@ -418,7 +425,3 @@ end
 function GM:CanPlayerSuicide( ply )
 	return false
 end
-
-
-
-

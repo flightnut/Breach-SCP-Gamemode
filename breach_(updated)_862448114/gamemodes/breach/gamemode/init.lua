@@ -221,10 +221,10 @@ function RequestOpenGateA(ply)
 	if ply:CLevelGlobal() < 4 then return end
 	if !(ply:Team() == TEAM_GUARD or ply:Team() == TEAM_CHAOS) then return end
 	if nextgateaopen > CurTime() then
-		ply:PrintMessage(HUD_PRINTTALK, "You cannot open Gate A now, you must wait " .. math.Round(nextgateaopen - CurTime()) .. " seconds")
+		ply:PrintMessage(HUD_PRINTTALK, "You cannot toggle gate locks, you must wait " .. math.Round(nextgateaopen - CurTime()) .. " seconds")
 		return
 	end
-	local gatea
+	--local gatea
 	local rdc
 	for id,ent in pairs(ents.FindByClass("func_rot_button")) do
 		for k,v in pairs(MAPBUTTONS) do
@@ -236,6 +236,12 @@ function RequestOpenGateA(ply)
 			end
 		end
 	end
+	ply:PrintMessage(HUD_PRINTTALK,"Request to toggle remote door control received.")
+	timer.Simple(2,function()
+		ply:PrintMessage(HUD_PRINTTALK, "Remote door control has been toggled")
+	end)
+	nextgateaopen = CurTime() + 60
+	--[[
 	for id,ent in pairs(ents.FindByClass("func_button")) do
 		for k,v in pairs(MAPBUTTONS) do
 			if v["pos"] == ent:GetPos() then
@@ -253,6 +259,8 @@ function RequestOpenGateA(ply)
 			end
 		end)
 	end
+	]]--
+
 end
 
 local lastpocketd = 0
@@ -588,7 +596,7 @@ function Use914(ent)
 	ForceUse(ent, 0, 1) --?
 	--FIXED BY LINK2006 !!!
 	--ent:Fire ('PressIn','' ,0 )  --Is this required, Do we only need ForceUse ?
-	ent:Fire ('PressOut','' ,21 ) -- Wait until we can fix it? 
+	ent:Fire ('PressOut','' ,21 ) -- Wait until we can fix it?
 	local pos = ENTER914
 	local pos2 = EXIR914
 	timer.Create("914Use", 4, 1, function()
