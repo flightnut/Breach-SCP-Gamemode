@@ -1,10 +1,10 @@
 --Anti RDM using AWarn
 --  Original by DMX
 --  Modified by Link2006
---Version 1.6
+--Version 1.7
 
 print("[AntiRDM] Loading AntiRDM...")
-local AntiRDMVersion = "1.6" --I should have an habit of updating this :|
+local AntiRDMVersion = "1.7" --I should have an habit of updating this :|
 antirdm_enabled = true --Global so we can have it everywhere, also put it here so it's easy to find
 br_friendlyfire = CreateConVar("br_friendlyfire","0",{FCVAR_SERVER_CAN_EXECUTE,FCVAR_NOTIFY},"0 = Disable FriendlyFire, 1 = Enable FriendlyFire") --Self Explained :)
 local rdmTable = {} -- Normal Table
@@ -211,6 +211,31 @@ hook.Add("PostCleanupMap","AntiRDM_CleanRespawns",function() --Resets respawns h
     for k,v in pairs(player.GetAll()) do
         v.Respawns = nil --Make it invalid.
     end
+    print("[AntiRDM] Destroying remaining timers...")
+    timer.Remove("noChaosHurt")
+    timer.Remove("noChaosHurt_notify")
+    if roundtype then
+        if roundtype.name == normalround.name then --Only the normal round we can protect the Chaos/MTF
+            print("[AntiRDM] Disabling MTF<->Chaos damage for 90 seconds...")
+            noChaosHurt = true
+            timer.Create("noChaosHurt_notify",60,1,function()
+                for k,v in pairs(player.GetAll()) do
+                    if v:Team() == TEAM_CHAOS then
+                        v:ChatPrint("Spawn protection enabled")
+                    end
+                end
+            end)
+            timer.Create("noChaosHurt",90,1,function()
+                print("[AntiRDM] Enabling MTF<->Chaos damage for 90 seconds...")
+                noChaosHurt = nil
+                for k,v in pairs(player.GetAll()) do
+                    if v:Team() == TEAM_CHAOS then
+                        v:ChatPrint("Spawn protection disabled")
+                    end
+                end
+            end)
+        end
+    end
     print("[AntiRDM] Done.")
 end)
 -- br_friendlyfire:GetBool() ~= true
@@ -218,6 +243,11 @@ hook.Add("PlayerShouldTakeDamage","AntiRDM_NoDamage",function(victim,attacker)
     --Force Friendly Fire OFF when round hasn't started
     if preparing then
         return false --Stops the players from doing ANY damage during preparing round
+    end
+    if noChaosHurt then
+        if (victim:Team() == TEAM_GUARD and attacker:Team() == TEAM_CHAOS) or (attacker:Team() == TEAM_GUARD and victim:Team() == TEAM_CHAOS) then
+            return false
+        end
     end
     --Force Friendly Fire ON when Round is "spies"
     if roundtype and (roundtype.name == "Trouble in SCP Town") then --If it's the TTT Gamemode, respawn them lmao

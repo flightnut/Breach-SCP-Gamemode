@@ -48,10 +48,39 @@ function SWEP:Initialize()
 	self:SetHoldType("normal")
 end
 
-function SWEP:Think()
+function SWEP:RenderLight()
+	if self.toggleLight ~= true then return end --If Not true, return.
+	if CLIENT then
+		if IsValid(scp_nightVision) == false then
+			scp_nightVision = DynamicLight( self.Owner:EntIndex() ) --Do not take 0, Used for NV. This should be
+		end
+		if ( scp_nightVision ) then --Welp. :|
+			scp_nightVision.Pos = self.Owner:GetPos()
+			scp_nightVision.r = 128
+			scp_nightVision.g = 128
+			scp_nightVision.b = 128
+			scp_nightVision.Brightness = 0.85
+			scp_nightVision.Size = 900
+			scp_nightVision.DieTime = CurTime()+0.25 --Don't let it stay please.
+			scp_nightVision.Style = 0 -- https://developer.valvesoftware.com/wiki/Light_dynamic#Appearances
+		end
+	end
 end
 
+
+function SWEP:Think()
+	if CLIENT then self:RenderLight() end
+end
+
+scp_toggleLight_cooldown = 0
 function SWEP:Reload()
+	if scp_toggleLight_cooldown >= CurTime() then return end
+	if self.toggleLight then
+		self.toggleLight = false
+	else
+		self.toggleLight = true
+	end
+	scp_toggleLight_cooldown = CurTime() + 2
 end
 
 function SWEP:PrimaryAttack()
@@ -95,15 +124,27 @@ end
 
 function SWEP:DrawHUD()
 	if disablehud == true then return end
-	
+
 	local showtext = "Ready to attack"
 	local showcolor = Color(0,255,0)
-	
+
 	if self.NextAttackW > CurTime() then
 		showtext = "Next attack in " .. math.Round(self.NextAttackW - CurTime())
 		showcolor = Color(255,0,0)
 	end
-	
+
+	local NvKey = input.LookupBinding('+reload') --Get key for reload
+	if type(NvKey) == 'no value' then NvKey = 'NOT BOUND' end -- The key is not bound!
+
+	draw.Text( {
+		text = "Press "..NvKey.." for nightvision",
+		pos = { ScrW() / 2, ScrH() - 50 },
+		font = "173font",
+		color = showcolor,
+		xalign = TEXT_ALIGN_CENTER,
+		yalign = TEXT_ALIGN_CENTER,
+	})
+
 	draw.Text( {
 		text = showtext,
 		pos = { ScrW() / 2, ScrH() - 30 },
@@ -112,13 +153,13 @@ function SWEP:DrawHUD()
 		xalign = TEXT_ALIGN_CENTER,
 		yalign = TEXT_ALIGN_CENTER,
 	})
-	
+
 	local x = ScrW() / 2.0
 	local y = ScrH() / 2.0
 
 	local scale = 0.3
 	surface.SetDrawColor( 0, 255, 0, 255 )
-	
+
 	local gap = 5
 	local length = gap + 20 * scale
 	surface.DrawLine( x - length, y, x - gap, y )
@@ -126,5 +167,3 @@ function SWEP:DrawHUD()
 	surface.DrawLine( x, y - length, x, y - gap )
 	surface.DrawLine( x, y + length, x, y + gap )
 end
-
-

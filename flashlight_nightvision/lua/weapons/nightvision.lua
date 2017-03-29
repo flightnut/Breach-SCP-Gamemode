@@ -37,12 +37,16 @@ SWEP.droppable = false
 if ( SERVER ) then
 	util.AddNetworkString( "RASKO_NightvisionOn" )
 	util.AddNetworkString( "RASKO_NightvisionOff" )
+	util.AddNetworkString( "Link2006_NightVisionTuto" )
 end
 
 function SWEP:Initialize()
 
 	self:SetWeaponHoldType( self.HoldType )
 
+	if ( SERVER ) then
+		self.NvOwner = self:GetOwner() --Just in case ;)
+	end
 end
 
 
@@ -88,8 +92,6 @@ function SWEP:Deploy()
 	end
 end
 
-function SWEP:OnRemove()
-end
 
 --[[
 function SWEP:Holster()
@@ -111,23 +113,44 @@ function SWEP:OnDrop()
 	if SERVER then
 		self.Nightvision = false
 		net.Start( "RASKO_NightvisionOff" )
-		net.WriteEntity( self.NvOwner )
-		net.Send( self.NvOwner )
+		net.WriteEntity( self.Owner )
+		net.Send( self.Owner )
 		return true
 	end
 end
 
---Same here when they die, delete themselves.
+--Same here when they die, delete themselves. ...?
 function SWEP:OnRemove()
 	if SERVER then
-		self.Nightvision = false
-		net.Start( "RASKO_NightvisionOff" )
-		net.WriteEntity( self.NvOwner )
-		net.Send( self.NvOwner )
-		return true
+		if self.Owner then
+			self.Nightvision = false
+			net.Start( "RASKO_NightvisionOff" )
+			net.WriteEntity( self.Owner )
+			net.Send( self.Owner )
+			return true
+		elseif self.NvOwner then
+			self.Nightvision = false
+			net.Start( "RASKO_NightvisionOff" )
+			net.WriteEntity( self.NvOwner )
+			net.Send( self.NvOwner )
+			return true
+		else
+			--Last resort :(
+			self.Nightvision = false
+			net.Start( "RASKO_NightvisionOff" )
+			net.WriteEntity( self:GetOwner() )
+			net.Send( self:GetOwner() )
+			return true
+		end
 	end
 end
 
+
+--When someone gets this 'weapon'
+function SWEP:Equip(ply)
+	net.Start( "Link2006_NightVisionTuto" )
+	net.Send( ply ) --Owner
+end
 if( CLIENT ) then
 
 	net.Receive( "RASKO_NightvisionOn", function ( len, ply )
@@ -155,5 +178,12 @@ if( CLIENT ) then
 			am_nightvision.DieTime = CurTime()+0.1
 		end
 	end)
-
+	--Link2006's ChatPrint Thing.
+	net.Receive( "Link2006_NightVisionTuto", function ()
+		timer.Simple(0.25, function()
+			local NvKey = input.LookupBinding('+reload') --Get key for reload
+			if type(NvKey) == 'no value' then NvKey = 'NOT BOUND' end -- The key is not bound!
+			chat.AddText(Color(255,255,255),'You got ',Color(0,255,0),'Nightvision',Color(255,255,255),'! Select it, then press "'..NvKey..'" to toggle!')
+		end)
+	end)
 end

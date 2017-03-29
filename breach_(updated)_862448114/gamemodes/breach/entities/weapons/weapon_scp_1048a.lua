@@ -40,7 +40,7 @@ SWEP.Secondary.ClipSize		= -1
 SWEP.Secondary.DefaultClip	= 0
 SWEP.Secondary.Automatic	= false
 SWEP.NextAttackW			= 0
- 
+
 function SWEP:Deploy()
 	self.Owner:DrawViewModel( false )
 end
@@ -51,14 +51,46 @@ function SWEP:Initialize()
 end
 
 SWEP.DrawRed = 0
+
+function SWEP:RenderLight()
+	if self.toggleLight ~= true then return end --If Not true, return.
+	if CLIENT then
+		if IsValid(scp_nightVision) == false then
+			scp_nightVision = DynamicLight( self.Owner:EntIndex() ) --Do not take 0, Used for NV. This should be
+		end
+		if ( scp_nightVision ) then --Welp. :|
+			scp_nightVision.Pos = self.Owner:GetPos()
+			scp_nightVision.r = 128
+			scp_nightVision.g = 128
+			scp_nightVision.b = 128
+			scp_nightVision.Brightness = 0.85
+			scp_nightVision.Size = 900
+			scp_nightVision.DieTime = CurTime()+0.25 --Don't let it stay please.
+			scp_nightVision.Style = 0 -- https://developer.valvesoftware.com/wiki/Light_dynamic#Appearances
+		end
+	end
+end
 function SWEP:Think()
-	
+	if CLIENT then self:RenderLight() end
 end
 
+scp_toggleLight_cooldown = 0
+function SWEP:Reload()
+	if scp_toggleLight_cooldown >= CurTime() then return end
+	if self.toggleLight then
+		self.toggleLight = false
+	else
+		self.toggleLight = true
+	end
+	scp_toggleLight_cooldown = CurTime() + 2
+end
+
+--[[--
 function SWEP:Reload()
 	if preparing or postround then return end
 	if not IsFirstTimePredicted() then return end
 end
+--]]--
 
 function SWEP:PrimaryAttack()
 	if preparing or postround then return end
@@ -74,7 +106,7 @@ function SWEP:PrimaryAttack()
 				ent:TakeDamage( 15, self.Owner, self.Owner )
 			else
 				if ent:GetClass() == "func_breakable" then
-					if ent.TakeDamage then 
+					if ent.TakeDamage then
 						ent:TakeDamage( 100, self.Owner, self.Owner )
 					end
 				end
@@ -102,7 +134,7 @@ function SWEP:SecondaryAttack()
 				table.ForceInsert(foundplayers, v)
 			end
 		elseif v:GetClass() == "func_breakable" then
-			if v.TakeDamage then 
+			if v.TakeDamage then
 				v:TakeDamage( 100, self.Owner, self.Owner )
 			end
 		end
@@ -113,7 +145,7 @@ function SWEP:SecondaryAttack()
 		local numi = 0
 		for k,v in pairs(foundplayers) do
 			numi = numi + 1
-			
+
 			if numi == 1 then
 				fixednicks = fixednicks .. v:Nick()
 			elseif numi == #foundplayers then
@@ -122,9 +154,9 @@ function SWEP:SecondaryAttack()
 				fixednicks = fixednicks .. ", " .. v:Nick()
 			end
 			v:SendLua( 'surface.PlaySound("1048attack.ogg")' )
-			
+
 			v:TakeDamage( ((v:Health() / 100) * 75), self.Owner, self.Owner )
-			
+
 		end
 		self.Owner:PrintMessage(HUD_PRINTTALK, fixednicks)
 	end
@@ -153,22 +185,34 @@ function SWEP:DrawHUD()
 	else
 		self.CColor = Color(0,255,0)
 	end
-	
+
+	local NvKey = input.LookupBinding('+reload') --Get key for reload
+	if type(NvKey) == 'no value' then NvKey = 'NOT BOUND' end -- The key is not bound!
+
 	draw.Text( {
-		text = showtext,
+		text = "Press "..NvKey.." for nightvision",
 		pos = { ScrW() / 2, ScrH() - 50 },
 		font = "173font",
 		color = showcolor,
 		xalign = TEXT_ALIGN_CENTER,
 		yalign = TEXT_ALIGN_CENTER,
 	})
-	
+
+	draw.Text( {
+		text = showtext,
+		pos = { ScrW() / 2, ScrH() - 30 },
+		font = "173font",
+		color = showcolor,
+		xalign = TEXT_ALIGN_CENTER,
+		yalign = TEXT_ALIGN_CENTER,
+	})
+
 	local x = ScrW() / 2.0
 	local y = ScrH() / 2.0
 
 	local scale = 0.3
 	surface.SetDrawColor( self.CColor.r, self.CColor.g, self.CColor.b, 255 )
-	
+
 	local gap = 5
 	local length = gap + 20 * scale
 	surface.DrawLine( x - length, y, x - gap, y )
@@ -176,5 +220,3 @@ function SWEP:DrawHUD()
 	surface.DrawLine( x, y - length, x, y - gap )
 	surface.DrawLine( x, y + length, x, y + gap )
 end
-
-

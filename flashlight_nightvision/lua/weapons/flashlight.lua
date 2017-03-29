@@ -8,7 +8,7 @@ SWEP.AdminSpawnable = true
 SWEP.Category = "Link2006"
 
 SWEP.HoldType = "normal"
-SWEP.ViewModel = "" --No view model; We won't see it. 
+SWEP.ViewModel = "" --No view model; We won't see it.
 SWEP.WorldModel = "models/weapons/w_flashlight_zm.mdl" --WorldModel so players can still see a model in the pointshop :)
 SWEP.DrawCrosshair = false
 
@@ -28,14 +28,32 @@ SWEP.Secondary.Ammo			= "none"
 SWEP.Secondary.Delay = 5
 -----------------------------------------------
 
---Semi-Unused 
+--Semi-Unused
 SWEP.Slot				= 0
 SWEP.SlotPos			= 0
---Link2006's Temporary fix for Nightvision/flashlight; never share (you cant anyway lol) 
+--Link2006's Temporary fix for Nightvision/flashlight; never share (you cant anyway lol)
 SWEP.droppable = false
 
 function SWEP:Equip(ply)
+	--Send Tutorial
+	net.Start( "Link2006_FlashLightTuto" )
+	net.Send( ply )
+	--Sent, Let's give them stuff.
 	ply:AllowFlashlight(true) --Set them to allow using F/flashlight...
 	ply:StripWeapon(self:GetClass()) --Remove itself from user's inventory. :)
 	--We're done.
+end
+
+if (SERVER) then
+	util.AddNetworkString( "Link2006_FlashLightTuto" )
+end
+
+if (CLIENT) then
+	net.Receive( "Link2006_FlashLightTuto", function ()
+		timer.Simple(0.25, function()
+			local FlKey = input.LookupBinding('impulse 100')
+			if type(FlKey) == 'no value' then FlKey = 'NOT BOUND' end -- The key is not bound!
+			chat.AddText(Color(255,255,255),'You got a ',Color(0,255,0),'flashlight',Color(255,255,255),'! Press "'..FlKey..'" to toggle!')
+		end)
+	end)
 end
