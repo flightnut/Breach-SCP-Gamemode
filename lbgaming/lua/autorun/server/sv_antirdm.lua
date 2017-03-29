@@ -211,6 +211,8 @@ hook.Add("PostCleanupMap","AntiRDM_CleanRespawns",function() --Resets respawns h
     for k,v in pairs(player.GetAll()) do
         v.Respawns = nil --Make it invalid.
     end
+    print("[AntiRDM] Forcing noChaosHurt to nil")
+    noChaosHurt = nil
     print("[AntiRDM] Destroying remaining timers...")
     timer.Remove("noChaosHurt")
     timer.Remove("noChaosHurt_notify")
@@ -226,7 +228,7 @@ hook.Add("PostCleanupMap","AntiRDM_CleanRespawns",function() --Resets respawns h
                 end
             end)
             timer.Create("noChaosHurt",90,1,function()
-                print("[AntiRDM] Enabling MTF<->Chaos damage for 90 seconds...")
+                print("[AntiRDM] Enabling MTF<->Chaos damage...")
                 noChaosHurt = nil
                 for k,v in pairs(player.GetAll()) do
                     if v:Team() == TEAM_CHAOS then
@@ -245,7 +247,8 @@ hook.Add("PlayerShouldTakeDamage","AntiRDM_NoDamage",function(victim,attacker)
         return false --Stops the players from doing ANY damage during preparing round
     end
     if noChaosHurt then
-        if (victim:Team() == TEAM_GUARD and attacker:Team() == TEAM_CHAOS) or (attacker:Team() == TEAM_GUARD and victim:Team() == TEAM_CHAOS) then
+        --Prevent Finding chaos between 13:00 and 12:30 ... oops
+        if (victim:Team() == TEAM_GUARD and attacker:Team() == TEAM_GUARD) or (victim:Team() == TEAM_GUARD and attacker:Team() == TEAM_CHAOS) or (attacker:Team() == TEAM_GUARD and victim:Team() == TEAM_CHAOS) then
             return false
         end
     end
