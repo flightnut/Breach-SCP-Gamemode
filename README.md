@@ -13,6 +13,7 @@ This README would normally document whatever steps are necessary to get your app
 * antirdm_enable
 * antirdm_disable
 * antirdm_status
+* reload_legacy_addons
 * ulx ent weapon_physgun
 * ulx ent scp_087_b_1
 * ulx ent scp_087_b_3
