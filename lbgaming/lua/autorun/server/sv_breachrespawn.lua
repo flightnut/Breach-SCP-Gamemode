@@ -115,7 +115,11 @@ else
 end
 ]]--
 
-function Link2006_RespawnSpecs(pAdmin,sClass)
+function Link2006_RespawnSpecs(pAdmin,sClass,pCount_max)
+	if pCount_max then
+		pCount = 0
+	end
+
 	if sClass == nil then
 		sClass = "classd" --we'll spawn them as Class D...
 	end
@@ -126,14 +130,20 @@ function Link2006_RespawnSpecs(pAdmin,sClass)
 	if sClass == "classd" then
 		--local tSpecSpawns = Link2006_GetSpawns(SPAWN_CLASSD)
 		--ClassDs are actually nocollided now!
-
 		for k,spec in pairs(player.GetAll()) do
+
 			if Link2006_IsSpec(spec) then --Respawn Spectators (Team/GetNClass) but not br_spectate people
 				spec:SetClassD() -- We set them to ClassD
 				spec:SetPos(table.Random(SPAWN_CLASSD)) --Players are nocollided, dont need to care where to spawn :)
-
 				--OldCode About Checking Spawns Here
 
+				if pCount_max then
+					pCount = pCount + 1
+					--print(pCount)
+					if pCount >= pCount_max then
+						break  -- Stop spawning Spectators
+					end
+				end
 			end
 		end
 	elseif sClass == "researcher" then
@@ -145,6 +155,13 @@ function Link2006_RespawnSpecs(pAdmin,sClass)
 			if Link2006_IsSpec(spec) then --Don't spawn people that have br_spectate set
 				spec:SetScientist() -- We don't care if Scientists/Researchers can't spawn in their own spawns, normal spawn is close enough anyway
 				spec:SetPos(table.Random(SPAWN_SCIENT))
+				if pCount_max then
+					pCount = pCount + 1
+					--print(pCount)
+					if pCount >= pCount_max then
+						break  -- Stop spawning Spectators
+					end
+				end
 			end
 		end
 	elseif sClass == "mtf" then
@@ -159,11 +176,19 @@ function Link2006_RespawnSpecs(pAdmin,sClass)
 					--table.RemoveByValue(specNewSpawn,tSpecSpawns)
 					table.remove(tSpecSpawns,specKey)
 					spec:SetPos(specNewSpawn)
+					if pCount_max then
+						pCount = pCount + 1
+						--print(pCount)
+						if pCount >= pCount_max then
+							break  -- Stop spawning Spectators
+						end
+					end
 				else
 					--We did run out of spawns, let's ignore this for now and spawn them normally...
 					--print("[BreachRespawn] WARN: RAN OUT OF SPAWNS FOR SPECTATORS!")
 				end
 			end
+
 		end
 
 	elseif sClass == "ntf" then
@@ -178,11 +203,19 @@ function Link2006_RespawnSpecs(pAdmin,sClass)
 					--table.RemoveByValue(specNewSpawn,tSpecSpawns)
 					table.remove(tSpecSpawns,specKey)
 					spec:SetPos(specNewSpawn)
+					if pCount_max then
+						pCount = pCount + 1
+						--print(pCount)
+						if pCount >= pCount_max then
+							break  -- Stop spawning Spectators
+						end
+					end
 				else
 					--We did run out of spawns, let's ignore this for now and spawn them normally...
 					--print("[BreachRespawn] WARN: RAN OUT OF SPAWNS FOR SPECTATORS!")
 				end
 			end
+
 		end
 	elseif sClass == "chaos" then
 		--CODE HERE FOR CHAOS INSURGENCY (AS NTF)
@@ -196,19 +229,35 @@ function Link2006_RespawnSpecs(pAdmin,sClass)
 					--table.RemoveByValue(specNewSpawn,tSpecSpawns)
 					table.remove(tSpecSpawns,specKey)
 					spec:SetPos(specNewSpawn)
+					if pCount_max then
+						pCount = pCount + 1
+						--print(pCount)
+						if pCount >= pCount_max then
+							break  -- Stop spawning Spectators
+						end
+					end
 				else
 					--We did run out of spawns, let's ignore this for now and spawn them normally...
 					--print("[BreachRespawn] WARN: RAN OUT OF SPAWNS FOR SPECTATORS!")
 				end
 			end
+
+		end
+	end
+
+	local pCount_str = 'all'
+	if pCount_max then
+		if pCount then
+			pCount_str = tostring(pCount)..' '
 		end
 	end
 	if (pAdmin ~= nil) and (ulx ~= nil) then --Just making sure we do have ulx installed and the admin do exist
 		--ulx.fancyLogAdmin( pAdmin, "#A respawned spectators as "..sClass) --Tell everyone which admin respawned spectators.
 		if sClass == "chaos" then sClass = "ntf" end --Fixed.
-		Link2006_tSayColor(pAdmin,"respawned spectators as "..sClass)
+		Link2006_tSayColor(pAdmin,"respawned "..pCount_str.." spectators as "..sClass)
 	end
-	print("[BreachRespawn] Spectators have been respawned as "..sClass)
+
+	print("[BreachRespawn] "..pCount_str.." Spectators have been respawned as "..sClass)
 end
 
 print("[BreachRespawn] Creating PlayerSay hook...")
@@ -230,15 +279,15 @@ hook.Add( "PlayerSay", "Link2006_SpecSpawn", function( ply, text)
 			if (spec_chatArgs[2] ~= nil and spec_chatArgs[2] ~= "") then -- and !table.HasValue( sPerms, ply:GetUserGroup() ) then
 				if string.lower(spec_chatArgs[2]) == "scientist" or string.lower(spec_chatArgs[2]) == "scientists" or string.lower(spec_chatArgs[2]) == "researcher" or string.lower(spec_chatArgs[2]) == "researchers" then
 				--Researcher
-					Link2006_RespawnSpecs(ply,"researcher") --Respawn as Researcher
+					Link2006_RespawnSpecs(ply,"researcher",tonumber(spec_chatArgs[3])) --Respawn as Researcher
 				elseif string.lower(spec_chatArgs[2]) == "chaos" then --those are TeamDM Chaos for now; will probably force-change to ntf chaos
-					Link2006_RespawnSpecs(ply,"chaos") --Respawn as CI
+					Link2006_RespawnSpecs(ply,"chaos",tonumber(spec_chatArgs[3])) --Respawn as CI
 				elseif string.lower(spec_chatArgs[2]) == "ntf" or string.lower(spec_chatArgs[2]) == "ntfs" then --real ntf
-					Link2006_RespawnSpecs(ply,"ntf") --Respawn as NTF
+					Link2006_RespawnSpecs(ply,"ntf",tonumber(spec_chatArgs[3])) --Respawn as NTF
 				elseif string.lower(spec_chatArgs[2]) == "mtf" or string.lower(spec_chatArgs[2]) == "mtfs" then
-					Link2006_RespawnSpecs(ply,"mtf") --Respawn as MTF
+					Link2006_RespawnSpecs(ply,"mtf",tonumber(spec_chatArgs[3])) --Respawn as MTF
 				elseif string.lower(spec_chatArgs[2]) == "classd" then --Class D (invalid args or simply "classd")
-					Link2006_RespawnSpecs(ply,"classd") --Call RespawnSpecs and pass the admin entity through
+					Link2006_RespawnSpecs(ply,"classd",tonumber(spec_chatArgs[3])) --Call RespawnSpecs and pass the admin entity through
 				else
 					ULib.tsayError(ply,"Invalid class specified, Valid Choices are: ",true)
 					ULib.tsayError(ply,"classd,researcher,mtf,chaos,ntf",true)
@@ -422,17 +471,17 @@ hook.Add("PostCleanupMap","Link2006_AutoSpawn",function() --On New Round
 
             if (roundtype.name == normalround.name) or (roundtype.name == "Multiple breaches") then --HARDCODED, Checks if it's a round with Class Ds...
                 print("[BreachRespawn] Round is "..roundtype.name..", Respawning specs in 12 seconds...")
-                timer.Create("BreachRespawn_Spectators", 12, 1, function()   Link2006_RespawnSpecs(nil,"classd") end)
+                timer.Create("BreachRespawn_Spectators", 12, 1, function()   Link2006_RespawnSpecs(nil,"classd",nil) end)
 			elseif (roundtype.name == "Trouble in SCP Town") then
                 print("[BreachRespawn] Round is "..roundtype.name..", Respawning specs in 12 seconds...")
 				ULib.tsayColor(nil,true,Color(255,255,255),"Friendly fire is enabled for this round!") --We have FriendlyFire Enabled when it's TTT
-                timer.Create("BreachRespawn_Spectators", 12, 1, function()   Link2006_RespawnSpecs(nil,"mtf") end) --let's allow them to respawn as MTF anyway...
+                timer.Create("BreachRespawn_Spectators", 12, 1, function()   Link2006_RespawnSpecs(nil,"mtf",nil) end) --let's allow them to respawn as MTF anyway...
             else --TODO: ADD SUPPORT FOR OTHER ROUNDS, NOT JUST THESE.
                 print("[BreachRespawn] Round is "..roundtype.name..", Skipping Respawn")
             end
         else
             print("[BreachRespawn] roundtype/normalround is false/nil, Respawning specs in 12 seconds...")
-            timer.Create("BreachRespawn_Spectators", 12, 1, function()   Link2006_RespawnSpecs(nil,"classd") end)
+            timer.Create("BreachRespawn_Spectators", 12, 1, function()   Link2006_RespawnSpecs(nil,"classd",nil) end)
         end
     end)
 	--Remove previous SCP-294 model from map
