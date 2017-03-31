@@ -1,4 +1,4 @@
-Link2006_version = "1.7"
+Link2006_version = "1.8"
 
 if CLIENT then return end --This should be in /autorun/server/, clients can't do anything
 
@@ -14,53 +14,13 @@ local fixElevators = false -- Default: false (RECOMMENDED FOR NOW)
 
 --FREEZES ALL PROPS
 print("[Link2006] Script made by: http://steamcommunity.com/profiles/76561197971790479/  :)")
---Update 1.6
---	* Moved everything related  to respawning into sv_breachrespawn
---	* This file now only has Mapfixes and nothing else.
 
+--------------------------------
+--Update 1.7+ 				  --
+--	* Deleted Changelog 	  --
+--------------------------------
 
---Update 1.5
---	FIXED "Fake Spectators"
---	* For other stuff not in this changelog, check the bitbucket.
-
---Update 1.44
---	Added resource.AddFile generation at the bottom :)
-
---Update 1.43
---	Added announcement when a player is spawned (Chaos are announced as "MTF", Intended.)
---	Improved look of messages in chat about Spawning a player
-
---Update 1.42
---	Fixed !specspawn not always working (Made it a table instead of text=="!specspawn")
---	Added spawn_perms ConVar to change who has access to respawn a player.
---	Added "!spawn target"
---	Added "!spawn target class" for Admins+
---	Added Arguments for !specspawn
---	General code improvement to spawning players
-
---Update 1.41
---	Fixed people with br_spectate spawning anyway
---	Added ulx.fancyLogAdmin to tell if an admin spawned spectators
---	Commented debug text
---	Added !spawnspec alias
-
---Update 1.4 [BREAKING CHANGES]
--- Changed PostCleanupMap hook name to Link2006_NewRound
--- Added !specspawn to respawn spectators (as Class D)
--- Added automatic respawn of spectators 10 seconds after hook was called, should fix an issue where some would be stuck as spectator.
--- Removed Door damage (they will not re-open automaticly
--- Removed Elevator damage (It was abused)
-
---Update 1.3
--- Attempts to not freeze
-
---UPDATE 1.2
--- Added FreezeAllProps by Me, Prevents abuse with props.
-
---UPDATE 1.1
---	Fixed script not starting on any maps
---	added warning when not used on gm_site19
-if string.StartWith( game.GetMap() , "gm_site19" ) == false then --if map does not start with gm_site19 \
+if string.StartWith( game.GetMap() , "gm_site19" ) == false then --if map does not start with gm_site19
 	print("[Link2006] ========== WARNING ==========")
 	print("[Link2006] This script was meant for gm_site19 (and variants)!")
 	print("[Link2006] If you have issues, remove this script.")
@@ -126,12 +86,88 @@ hook.Add("PostCleanupMap","Link2006_NewRound",function() --On New Round
 	print("[Link2006] CleanUpMap() called, Waiting a bit...")
 	timer.Simple(1.0,function()
 		print("[Link2006] Running Fixes...")
-		if fixElevators then 
+		if fixElevators then
 			Link2006_FixElevators()
 		end
 		Link2006_FreezeAllProps()
 		Link2006_FixDoors()
 	end)
+end)
+
+--Moves entities too, not just props / players
+--	WARNING: I have no idea what the fuck i'm doing.
+
+--GateA_BotTele; GateA_TopTele; GateB_BotTele; GateB_TopTele;
+local ElevTeles ={
+	'GateA_BotTele', --Bottom
+	'GateA_TopTele', --Top
+	'GateB_TopTele', --Bottom (They are INVERTED!!)
+	'GateB_BotTele', -- Top (Props fucked up c:)
+}
+local TeleBlacklist = {
+	'trigger_teleport', --Lol?
+	'player', --Players are already teleported, we dont need to :)
+	'predicted_viewmodel', --???
+	'func_door', --Doors
+	'prop_dynamic', --Doors
+	'entityflame',--SCP457's Flame
+	'func_button',-- We dont want to break the buttons do we ;)
+	'ambient_generic', --sounds
+	'env_sprite', --Sprites
+	'info_player_start', --WHAT ARE YOU DOING HERE WHAT?
+}
+--When those trigger, we also check anything inside their box and tp them up/down C:
+--Blacklist system up there because some entities SHOULD NOT MOVE.
+
+hook.Add("AcceptInput","Link2006_TeleFix",function(ent,trigger)
+	if table.HasValue(ElevTeles,ent:GetName()) then
+		if trigger == "Enable" then --Teleport them.
+			local MinVec,MaxVec = ent:GetCollisionBounds()
+			MinVec = ent:GetPos() + MinVec
+			MaxVec = ent:GetPos() + MaxVec
+			local TeleEnts = ents.FindInBox(MinVec,MaxVec)
+			if ent:GetName() == 'GateA_BotTele' then
+				--Teleport the entities to the top
+				for k,v in pairs(TeleEnts) do
+					if table.HasValue(TeleBlacklist,v:GetClass()) == false then
+						print("A <BotTele> TELEPORTING ["..v:GetClass().."] named: "..v:GetName())
+						v:SetPos(Vector(v:GetPos().x,v:GetPos().y,v:GetPos().z+1024))
+					end
+				end
+			elseif ent:GetName() == 'GateA_TopTele'	then
+				--Teleport the entities to the bottom
+				for k,v in pairs(TeleEnts) do
+					if table.HasValue(TeleBlacklist,v:GetClass()) == false then
+						print("A <TopTele>TELEPORTING ["..v:GetClass().."] named: "..v:GetName())
+						v:SetPos(Vector(v:GetPos().x,v:GetPos().y,v:GetPos().z-1024))
+					end
+				end
+			elseif ent:GetName() == 'GateB_TopTele'	then
+				--Teleport the entities to the top
+				for k,v in pairs(TeleEnts) do
+
+					if table.HasValue(TeleBlacklist,v:GetClass()) == false then
+						--Pos is: -3888.000000 1788.000000 64.000000
+						-- ulx luarun par:SetPos(Vector(par:GetPos().x+3248,par:GetPos().y+2942,par:GetPos().z+1024))
+						print("B <TopTele> TELEPORTING ["..v:GetClass().."] named: "..v:GetName())
+						v:SetPos(Vector(v:GetPos().x+3248,v:GetPos().y+2942,v:GetPos().z+1024))
+					end
+				end
+			elseif ent:GetName() == 'GateB_BotTele'	then
+				--Teleport the entities to the bottom
+				for k,v in pairs(TeleEnts) do
+					if table.HasValue(TeleBlacklist,v:GetClass()) == false then
+						--Pos is: -640.000000 4730.009766 1088.000000
+						-- ulx luarun par:SetPos(Vector(par:GetPos().x-3248,par:GetPos().y-2942,par:GetPos().z-1024))
+						print("B <BotTele> TELEPORTING ["..v:GetClass().."] named: "..v:GetName())
+						--v:SetPos(Vector(v:GetPos().x,v:GetPos().y,v:GetPos().z-1024))
+						v:SetPos(Vector(v:GetPos().x-3248,v:GetPos().y-2942,v:GetPos().z-1024))
+					end
+				end
+			end
+
+		end
+	end
 end)
 
 print("[Link2006] Forcing changes to the map immediately...")
@@ -172,5 +208,3 @@ Link2006_AddFiles("addons/scp-513_entity_[working]_770291148/sound",string.len("
 Link2006_AddFiles("addons/scp-513_entity_[working]_770291148/sound/scp_pack",string.len("addons/scp-513_entity_[working]_770291148/")) --:^l oops
 
 print("[Link2006] Ready. Version "..Link2006_version)
-
---Link2006 was here
