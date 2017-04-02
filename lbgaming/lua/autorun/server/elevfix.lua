@@ -120,7 +120,7 @@ local TeleBlacklist = {
 --Blacklist system up there because some entities SHOULD NOT MOVE.
 
 hook.Add("AcceptInput","Link2006_TeleFix",function(ent,trigger)
-	if table.HasValue(ElevTeles,ent:GetName()) then
+	if table.HasValue(ElevTeles,ent:GetName()) and ent:GetClass() ~= "player" then --NO PLAYER PLEASE. 
 		if trigger == "Enable" then --Teleport them.
 			local MinVec,MaxVec = ent:GetCollisionBounds()
 			MinVec = ent:GetPos() + MinVec

@@ -273,6 +273,9 @@ end
 
 
 function GM:PlayerCanPickupWeapon( ply, wep )
+	if ply:HasWeapon(wep:GetClass()) then
+		return false --Hold on, we already have that weapon...
+	end
 	--Link2006's Change to disallow double FlashLight usage
 	--If the player already has a flashlight && The wep is a flashlight; Return false :)
 	if ply:CanUseFlashlight() and wep:GetClass() == "flashlight" then
