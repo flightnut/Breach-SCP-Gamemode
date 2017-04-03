@@ -20,6 +20,11 @@ This README would normally document whatever steps are necessary to get your app
 * ulx ent ent_scp_1123
 * ulx ent durgz_scp420j
 * ulx ent durgz_scp500
+* ulx playsound nukes/siren.ogg
+* ulx playsound nukes/nuke1.ogg
+* ulx playsound nukes/nuke2.ogg; ulx explode *
+* ulx playsound nukes/alpha_warheads_fail.ogg
+
 
 For Bots: (replace 58 with the number of bots you want) 
 
