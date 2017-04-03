@@ -88,6 +88,8 @@ function SWEP:Reload()
 end
 --]]--
 
+scp106_laughCooldown = 0
+
 function SWEP:PrimaryAttack()
 	//if ( !self:CanPrimaryAttack() ) then return end
 	if preparing or postround then return end
@@ -115,6 +117,13 @@ function SWEP:PrimaryAttack()
 					self.Owner:SetHealth(self.Owner:Health() + 100)
 					ent:TakeDamage( 30, self.Owner, self.Owner )
 					ent:SetPos(pos)
+					--Laugh at them when they get TP'd ;)
+					ent:SendLua([[surface.PlaySound('/106laugh.ogg')]])
+					ent:SendLua([[surface.PlaySound('/106laugh.ogg')]])
+					if scp106_laughCooldown < CurTime() then
+						scp106_laughCooldown = CurTime() + 3
+						self.Owner:SendLua([[surface.PlaySound('/106laugh.ogg')]]) --:)
+					end
 				end
 			else
 				if ent:GetClass() == "func_breakable" then
