@@ -63,7 +63,7 @@ function ShowScoreBoard()
 		color2 = color_white
 	})
 	table.ForceInsert(playerlist,{
-		name = "Class D Personell",
+		name = "Class D Personnel",
 		list = role_GetPlayers(ROLE_CLASSD),
 		--color = team.GetColor( TEAM_CLASSD ),
 		color = Color(128,128,128),
@@ -253,7 +253,7 @@ function ShowScoreBoard()
 					if not v.GetNClass then
 						player_manager.RunClass( v, "SetupDataTables" )
 					elseif v:GetNClass() == ROLE_RES or v:GetNClass() == ROLE_CLASSD then
-						txt = "Personell"
+						txt = "Personnel"
 					else
 						txt = GetLangRole(v:GetNClass())
 					end
