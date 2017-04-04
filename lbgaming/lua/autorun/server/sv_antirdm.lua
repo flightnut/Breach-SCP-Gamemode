@@ -243,6 +243,14 @@ end)
 -- br_friendlyfire:GetBool() ~= true
 hook.Add("PlayerShouldTakeDamage","AntiRDM_NoDamage",function(victim,attacker)
     --Force Friendly Fire OFF when round hasn't started
+    if roundtype then
+        if roundtype.name == "Zombie Plague" then
+            if victim:Team() ~= attacker:Team() then
+                return true --Always allow damage SCP <-> HUMANS in Zombie Plague
+            end 
+        end
+    end
+
     if preparing then
         return false --Stops the players from doing ANY damage during preparing round
     end
