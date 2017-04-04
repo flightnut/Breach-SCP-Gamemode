@@ -152,7 +152,12 @@ function SWEP:PrimaryAttack()
 				//roundstats.zombies = roundstats.zombies + 1
 			else
 				if ent:GetClass() == "func_breakable" then
-					ent:TakeDamage( 1000, self.Owner, self.Owner )
+					ent:TakeDamage( 100, self.Owner, self.Owner )
+				elseif ent:GetClass() == 'prop_dynamic' then
+					if string.lower(ent:GetModel()) == 'models/foundation/containment/door01.mdl' then
+						ent:TakeDamage( 25, self.Owner, self.Owner )
+						ent:EmitSound(Sound('MetalGrate.BulletImpact'))
+					end
 				end
 			end
 		end
