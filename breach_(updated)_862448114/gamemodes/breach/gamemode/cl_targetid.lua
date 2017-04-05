@@ -23,7 +23,7 @@ function GM:HUDDrawTargetID()
 		if ply:GetPos():Distance(LocalPlayer():GetPos()) > 1400 then return end --Don't show Gate Health after 1400 units
 		if string.lower(ply:GetModel()) == 'models/foundation/containment/door01.mdl' then
 			if ply:Health() >= 1 then
-				targetIDtxt = "Gate Health: "..ply:Health()
+				targetIDtxt = "Gate door health: "..ply:Health()
 			end
 		else
 			return --Don't render anything

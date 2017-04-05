@@ -5,7 +5,7 @@ AddCSLuaFile()
 ENT.Base 				=	"base_nextbot"
 ENT.Spawnable			=	false
 
-CreateConVar( "087b1_chatmassage", 1, FCVAR_NOTIFY, FCVAR_ARCHIVE, "Enable or disable the chatbox massages when killed by SCP-087-B-1! [Default '0']" )
+CreateConVar( "087b1_chatmassage", 0, FCVAR_NOTIFY, FCVAR_ARCHIVE, "Enable or disable the chatbox massages when killed by SCP-087-B-1! [Default '0']" )
 CreateConVar( "087b1_doorprops", 1, FCVAR_NOTIFY, FCVAR_ARCHIVE, "If set to 1 doors will create props after beeing destroyed. If set to 0 they just get removed by SCP-087-B-1! [Default '1']" )
 CreateConVar( "087b1_tp", 1, FCVAR_NOTIFY, FCVAR_ARCHIVE, "Enable or disable SCP-087-B-1's teleporting. [Default '1']" )
 CreateConVar( "087b1_health", 8000, FCVAR_NOTIFY, FCVAR_ARCHIVE, "SCP-087-B-1's health. [Default '8000']" )
