@@ -1,4 +1,4 @@
-gateHealth = CreateConVar('br_gatehealth','7000',{FCVAR_SERVER_CAN_EXECUTE,FCVAR_REPLICATED},"Sets Gate A/B's Health")
+gateHealth = CreateConVar('br_gatehealth','10000',{FCVAR_SERVER_CAN_EXECUTE,FCVAR_REPLICATED},"Sets Gate A/B's Health")
 
 function GateHealth_Init()
     for k,prop in pairs(ents.GetAll()) do
