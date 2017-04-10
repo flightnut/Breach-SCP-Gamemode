@@ -90,6 +90,11 @@ function Link2006_IsSpec(spec) --Made this so i can replace every checks at once
 	end
 
 	if (spec:Team() == TEAM_SPEC or (spec:GetNClass() == "Spectator")) and (spec.ActivePlayer ~= false) then
+		--SpecDM Support here
+		if spec:IsGhost() then
+			--They're in SpecDM, Move them away!
+			spec:ManageGhost( false, true )
+		end
 		return true
 	elseif	spec:Team() ~= TEAM_SPEC and spec:GetNClass() == "Spectator" and spec.ActivePlayer == false then
 		--They have br_spectate on
@@ -313,6 +318,11 @@ hook.Add( "PlayerSay", "Link2006_SpecSpawn", function( ply, text)
 								ULib.tsayError(ply,plySpawn:Nick().." has br_spectate set to true, add 'force' after role to override",true)
 							end
 						else
+							--SpecDM Support here
+							if plySpawn:IsGhost() then
+								--They're in SpecDM, Move them away!
+								plySpawn:ManageGhost( false, true )
+							end
 							if string.lower(spec_chatArgs[3]) == "classd" then --Class D
 								plySpawn:SetClassD()
 								--plySpawn:SetPos(table.Random(Link2006_GetSpawns(SPAWN_CLASSD)))
@@ -420,6 +430,11 @@ hook.Add( "PlayerSay", "Link2006_SpecSpawn", function( ply, text)
 				--TODO: Maybe check if the target is a spectator or not
 				if plySpawn then
 					if plySpawn.ActivePlayer ~= false then
+						--SpecDM Support here
+						if plySpawn:IsGhost() then
+							--They're in SpecDM, Move them away!
+							plySpawn:ManageGhost( false, true )
+						end 
 						plySpawn:SetClassD()
 						--plySpawn:SetPos(table.Random(Link2006_GetSpawns(SPAWN_CLASSD)))
 						plySpawn:SetPos(table.Random(SPAWN_CLASSD))
