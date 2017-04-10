@@ -1,7 +1,12 @@
 
 local mply = FindMetaTable( "Player" )
 
-// just for finding a bad spawns :p
+--For SpecDM
+function mply:IsActive()
+	return self:Team() ~= TEAM_SCP
+end
+
+-- just for finding a bad spawns :p
 function mply:FindClosest(tab, num)
 	local allradiuses = {}
 	for k,v in pairs(tab) do

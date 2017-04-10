@@ -5,7 +5,7 @@ local hide = {
 	CHudAmmo = true,
 	CHudSecondaryAmmo = true,
 	//CHudWeaponSelection = true,
-	CHudDeathNotice = true
+	CHudDeathNotice = true --Only if alive!
 	//CHudWeapon = true
 }
 
@@ -38,6 +38,9 @@ function GM:DrawDeathNotice( x,  y )
 end
 
 hook.Add( "HUDShouldDraw", "HideHUD", function( name )
+	--Draw the Deathnotice for spectators 
+	if name == "CHudDeathNotice" and LocalPlayer():Team() == TEAM_SPEC then return true end
+
 	if ( hide[ name ] ) then return false end
 end )
 
@@ -146,7 +149,7 @@ hook.Add( "HUDPaint", "Breach_DrawHUD", function()
 			yalign = TEXT_ALIGN_CENTER,
 		}, 2, 255 )
 		return
-	
+
 	elseif gamestarted == false then
 		draw.TextShadow( {
 			text = "Game is starting",
@@ -167,7 +170,7 @@ hook.Add( "HUDPaint", "Breach_DrawHUD", function()
 		return
 	end
 	*/
-	
+
 	if shoulddrawinfo == true then
 		local getrl = Getrl()
 		local align = 32
@@ -276,7 +279,7 @@ hook.Add( "HUDPaint", "Breach_DrawHUD", function()
 	end
 	local ply = LocalPlayer()
 	if ply:Alive() == false then return end
-	
+
 	if ply:Team() == TEAM_SPEC then
 		local ent = ply:GetObserverTarget()
 		if IsValid(ent) then
@@ -297,21 +300,21 @@ hook.Add( "HUDPaint", "Breach_DrawHUD", function()
 			end
 		end
 		//return
-	end 
+	end
 	local wep = nil
 	local ammo = -1
 	local ammo2 = -1
-	
+
 	local width = 350
 	local height = 120
 	local role_width = width - 25
-	
+
 	local x,y
 	x = 10
 	y = ScrH() - height - 10
 	local hl = math.Clamp(LocalPlayer():Health(), 1, LocalPlayer():GetMaxHealth()) / LocalPlayer():GetMaxHealth()
 	if hl < 0.06 then hl = 0.06 end
-	
+
 	local name = "None"
 	if not ply.GetNClass then
 		player_manager.RunClass( ply, "SetupDataTables" )
@@ -342,7 +345,7 @@ hook.Add( "HUDPaint", "Breach_DrawHUD", function()
 	end
 	draw.RoundedBox(0, x, y, width, height, Color(0,0,10,200))
 	draw.RoundedBox(0, x, y, role_width - 70, 30, color )
-	
+
 	draw.TextShadow( {
 		text = name,
 		pos = { role_width / 2 - 30, y + 12.5 },
@@ -351,7 +354,7 @@ hook.Add( "HUDPaint", "Breach_DrawHUD", function()
 		xalign = TEXT_ALIGN_CENTER,
 		yalign = TEXT_ALIGN_CENTER,
 	}, 2, 255 )
-	
+
 	local tclr = Color(255,255,255)
 	draw.TextShadow( {
 		text = tostring(string.ToMinutesSeconds( cltime )),
@@ -361,7 +364,7 @@ hook.Add( "HUDPaint", "Breach_DrawHUD", function()
 		xalign = TEXT_ALIGN_TOP,
 		yalign = TEXT_ALIGN_TOP,
 	}, 2, 255 )
-	
+
 	// Health bar
 	draw.RoundedBox(0, 25, y + 40, width - 30, 27, Color(50,0,0,255))
 	draw.RoundedBox(0, 25, y + 40, (width - 30) * hl, 27, Color(255,0,0,255))
@@ -373,11 +376,11 @@ hook.Add( "HUDPaint", "Breach_DrawHUD", function()
 		xalign = TEXT_ALIGN_RIGHT,
 		yalign = TEXT_ALIGN_RIGHT,
 	}, 2, 255 )
-	
+
 	local ammotext = nil
 	local wep = nil
-	
-	
+
+
 	if ply:GetActiveWeapon() != nil and #ply:GetWeapons() > 0 then
 		wep = ply:GetActiveWeapon()
 		if wep then
@@ -389,10 +392,10 @@ hook.Add( "HUDPaint", "Breach_DrawHUD", function()
 			end
 		end
 	end
-	
+
 	if not ammotext then return end
 	local am = math.Clamp(wep:Clip1(), 0, wep:GetMaxClip1()) / wep:GetMaxClip1()
-	
+
 	// Ammo
 	draw.RoundedBox(0, 25, y + 75, width - 30, 27, Color(20,20,5,222))
 	draw.RoundedBox(0, 25, y + 75, (width - 30) * am, 27, Color(205, 155, 0, 255))
@@ -404,6 +407,5 @@ hook.Add( "HUDPaint", "Breach_DrawHUD", function()
 		xalign = TEXT_ALIGN_RIGHT,
 		yalign = TEXT_ALIGN_RIGHT,
 	}, 2, 255 )
-	
-end )
 
+end )

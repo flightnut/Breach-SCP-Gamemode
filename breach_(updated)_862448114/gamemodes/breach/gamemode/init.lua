@@ -492,6 +492,9 @@ function SpawnNTFS()
 	end
 	for i=1, num do
 		local pl = table.Random(allspecs)
+		if pl:IsGhost() then
+			pl:ManageGhost( false, true )
+		end
 		if spawnci then
 			pl:SetChaosInsurgency(3)
 			pl:SetPos(SPAWN_OUTSIDE[i])

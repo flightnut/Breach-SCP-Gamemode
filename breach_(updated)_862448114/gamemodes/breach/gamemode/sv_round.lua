@@ -1,6 +1,22 @@
 nextspecialround = nil
 
+ROUND_STATE = 1
+
+ROUND_WAIT = 1
+ROUND_PREP = 2 
+ROUND_ACTIVE = 3
+ROUND_POST = 4
+
+function GetRoundState()
+	return ROUND_STATE
+end
+
+function SetRoundState( state )
+	ROUND_STATE = state
+end
+
 function RoundRestart()
+	hook.Call( "BreachEndRound", nil, nil )
 	print("round: starting")
 	timer.Destroy("PreparingTime")
 	timer.Destroy("RoundTime")
@@ -39,6 +55,7 @@ function RoundRestart()
 	print("round: playersconfigured")
 	//PrintMessage(HUD_PRINTTALK, "Prepare, round will start in ".. GetPrepTime() .." seconds")
 	preparing = true
+	SetRoundState( ROUND_PREP )
 	postround = false
 	--Link2006 SPECIAL ROUNDS START
 	nextspecialround = nil
@@ -152,10 +169,13 @@ function RoundRestart()
 			net.WriteInt(GetRoundTime(), 12)
 		net.Broadcast()
 		print("round: prepgood")
+		SetRoundState( ROUND_ACTIVE )
 		timer.Create("RoundTime", GetRoundTime(), 1, function()
 			//PrintMessage(HUD_PRINTTALK, "Time is over, Class Ds and SCPs didn't escape the facility in time. MTF wins!")
 			postround = false
 			postround = true
+			hook.Call( "BreachEndRound", nil, nil )
+			SetRoundState( ROUND_POST )
 			// send all round info
 			net.Start("SendRoundInfo")
 				net.WriteTable(roundstats)
