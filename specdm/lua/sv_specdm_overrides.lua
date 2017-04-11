@@ -56,10 +56,10 @@ hook.Add("PlayerTraceAttack", "PlayerTraceAttack_SpecDM", function(ply, dmginfo,
 			if IsValid(wep) then
 				--local s = wep:GetHeadshotMultiplier(ply, _dmginfo) or 2
                 local s = 2 --Fixed
-				if wep.GetHeadshotMultiplier then 
+				if wep.GetHeadshotMultiplier then
 					s = wep:GetHeadshotMultiplier(ply, _dmginfo) or 2
-				end 
-				
+				end
+
 				if s < 1 then s = 1 end
 				if hit then s = s-0.2 end
 				_dmginfo:ScaleDamage(s)
@@ -113,6 +113,22 @@ hook.Add("PlayerDeath", "PlayerDeath_SpecDM", function(victim, inflictor, attack
 		if SpecDM.GivePointshopPoints and IsValid(attacker) and attacker:IsPlayer() and attacker:IsGhost() and attacker != victim then
 			attacker:PS_GivePoints(SpecDM.PointshopPoints)
 		end
+        if IsValid(attacker) and attacker:IsPlayer() and attacker:IsGhost() and attacker != victim then
+            --TODO: Tell every SpecDM players that attacker:Nick() killed victim:Nick() with (attacker's weapon)
+            --      Pretty much like a deathhud notice thing :)
+
+            --For now let's jsut do a basic ChatPrint and assume we use a <color> compatible chat...
+
+            if ULib then
+                ULib.tsayColor(attacker,true,Color(255,255,255),'[',Color(142,187,162),'Spec',Color(255,0,0),'DM',Color(255,255,255),'] You killed ',Color(142,187,162),tostring(victim:Nick()))
+                ULib.tsayColor(victim,true,Color(255,255,255),'[',Color(142,187,162),'Spec',Color(255,0,0),'DM',Color(255,255,255),'] You were killed by ',Color(142,187,162),tostring(attacker:Nick()))
+            else
+                --UNSUPPORTED, WE D O NOT HAVE ULIB!!!
+                attacker:ChatPrint('[SpecDM] You killed '..tostring(victim:Nick()))
+                victim:ChatPrint('[SpecDM] You were killed by '..tostring(attacker:Nick()))
+            end
+
+        end
 		if SpecDM.RespawnTime == 0 then
             SpecDM_Respawn(victim)
             --[[
@@ -264,7 +280,8 @@ hook.Add("Initialize", "Initialize_SpecDM", function()
 				if (attacker:IsGhost() and not ent:IsGhost()) or (not attacker:IsGhost() and ent:IsGhost()) then
 					dmginfo:ScaleDamage(0)
 				elseif not attacker:IsGhost() and math.floor(dmginfo:GetDamage()) > 0 and GetRoundState() == ROUND_ACTIVE then
-					Damagelog_New(Format("DMG: \t %s [%s] damaged %s [%s] for %d dmg", attacker:Nick(), attacker:GetRoleString(), ent:Nick(), ent:GetRoleString(), math.Round(dmginfo:GetDamage())))
+					--Damagelog_New(Format("DMG: \t %s [%s] damaged %s [%s] for %d dmg", attacker:Nick(), attacker:GetRoleString(), ent:Nick(), ent:GetRoleString(), math.Round(dmginfo:GetDamage())))
+                    print(Format("DMG: \t %s [%s] damaged %s [%s] for %d dmg", attacker:Nick(), attacker:GetNClass(), ent:Nick(), ent:GetNClass(), math.Round(dmginfo:GetDamage())))
 				end
 			end
 

@@ -15,7 +15,16 @@ function GM:HUDDrawTargetID()
 
 	if ply:IsPlayer() then --Player
 		if ply:Alive() == false then return end
-		if ply:Team() == TEAM_SPEC then return end
+		if ply.IsGhost then
+			if ply:Team() == TEAM_SPEC and !ply:IsGhost() then 
+				return
+			end --Target is NOT a ghost (in SpecDM) But is a spectator, Return.
+			if (LocalPlayer():Team() == TEAM_SPEC and !LocalPlayer():IsGhost()) and (ply:Team() == TEAM_SPEC and ply:IsGhost()) then
+				return --LocalPlayer is NOT a ghost (not in SpecDM) but Target was, Return
+			end
+		else
+			if ply:Team() == TEAM_SPEC then return end -- i was scared ok?
+		end
 		if ply:GetPos():Distance(LocalPlayer():GetPos()) > 700 then return end
 		targetIDtxt = ply:Nick()
 		--text = ply:Nick()

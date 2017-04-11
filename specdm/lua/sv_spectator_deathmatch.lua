@@ -72,9 +72,9 @@ function meta:GiveGhostWeapons()
 	--Fixed by Link2006
 	local SpecDM_PrimaryWep = table.Random(SpecDM.Ghost_weapons.primary)
 	local SpecDM_SecondaryWep = table.Random(SpecDM.Ghost_weapons.secondary)
-	print("[SpecDM] Giving "..tostring(SpecDM_PrimaryWep).." to "..self:Nick())
+	--print("[SpecDM] Giving "..tostring(SpecDM_PrimaryWep).." to "..self:Nick())
 	self:Give(SpecDM_PrimaryWep)
-	print("[SpecDM] Giving "..tostring(SpecDM_SecondaryWep).." to "..self:Nick())
+	--print("[SpecDM] Giving "..tostring(SpecDM_SecondaryWep).." to "..self:Nick())
 	self:Give(SpecDM_SecondaryWep)
 
 	--[[
