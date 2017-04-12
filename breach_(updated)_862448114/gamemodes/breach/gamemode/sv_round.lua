@@ -174,9 +174,9 @@ function RoundRestart()
 			//PrintMessage(HUD_PRINTTALK, "Time is over, Class Ds and SCPs didn't escape the facility in time. MTF wins!")
 			postround = false
 			postround = true
-			hook.Call( "BreachEndRound", nil, nil )
-			--Don't make SpecDM end when time is over. ;)
-			--SetRoundState( ROUND_POST )
+			--Do not tell SpecDM the round just ended. 
+			--hook.Call( "BreachEndRound", nil, nil )
+			SetRoundState( ROUND_POST )
 			// send all round info
 			net.Start("SendRoundInfo")
 				net.WriteTable(roundstats)
