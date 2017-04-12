@@ -6,7 +6,7 @@ SWEP.Purpose		= ""
 SWEP.Instructions	= ""
 
 SWEP.ViewModelFOV	= 60
-SWEP.ViewModelFlip	= false
+SWEP.ViewModelFlip	= true --false
 SWEP.HoldType		= "smg"
 SWEP.ViewModel		= "models/weapons/cstrike/c_smg_p90.mdl"
 SWEP.WorldModel		= "models/weapons/w_smg_p90.mdl"
@@ -24,7 +24,8 @@ SWEP.Primary.DefaultClip	= 50
 SWEP.Primary.Sound			= Sound("Weapon_P90.Single")
 SWEP.Primary.Automatic		= true
 SWEP.Primary.Ammo			= "Pistol"
-SWEP.Primary.NumShots		= 1
+SWEP.Primary.NumShots		= 1 --How many bullets to spawn ?
+SWEP.Primary.AmmoCost		= 1 --How many bullets does it cost to fire ? 
 SWEP.Primary.Recoil			= 1.5
 SWEP.Primary.Cone			= 0.025
 SWEP.Primary.Delay			= 0.07
@@ -78,6 +79,10 @@ function SWEP:Equip()
 			self:SetClip1(self.Owner.gettingammo)
 			self.Owner.gettingammo = 0
 		end
+		--It's still 0!!! Fix it!
+		if self:Clip1() == 0 then
+			self:SetClip1(self:GetMaxClip1())
+		end
 	end
 end
 
@@ -126,7 +131,8 @@ function SWEP:PrimaryAttack()
 		cone = self.Primary.Cone
 	end
 	self.Owner:ViewPunch( Angle( math.Rand(-0.2,-0.1) * self.Primary.Recoil, math.Rand(-0.1,0.1) *self.Primary.Recoil, 0 ) )
-	self:TakePrimaryAmmo( self.Primary.NumShots )
+	--self:TakePrimaryAmmo( self.Primary.NumShots )
+	self:TakePrimaryAmmo( self.Primary.AmmoCost ) --THIS
 	self:ShootBullet( self.Primary.Damage, self.Primary.Recoil, self.Primary.NumShots, cone )
 end
 

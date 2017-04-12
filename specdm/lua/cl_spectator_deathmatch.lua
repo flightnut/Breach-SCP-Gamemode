@@ -97,6 +97,13 @@ hook.Add("PrePlayerDraw", "PrePlayerDraw_SpecDM", function(ply)
             ply:SetColor(gray)
             ply:DrawShadow(true)
         end
+
+		--Fixes the problem where a player would still be "invisible" to the client (ie. On Reload) 
+		if ply:IsGhost() then
+			if ply:GetNoDraw() then
+				ply:SetNoDraw(false)
+			end
+		end
     else
         if ply:IsGhost() then
             ply:DrawShadow(false)

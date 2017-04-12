@@ -92,9 +92,19 @@ local function SpecDM_Respawn(ply)
 	ply:SetNWFloat("SpecDM_AbleToRespawnIn", -2)
 	if ply:IsGhost() then
         print("[SpecDM] Respawning "..ply:Nick())
+        --Setting their blink state to Never blink...
+        ply.canblink = false
         timer.Simple(0.1,function()
             ply:UnSpectate()
             ply:Spawn()
+            --Fix WalkSpeed
+            ply:SetWalkSpeed(200)
+            --Fix RunSpeed
+            ply:SetRunSpeed(350)
+            --Fix CrouchSpeed
+            ply:SetCrouchedWalkSpeed(0.6)
+            --Fix JumpPower
+            ply:SetJumpPower(200)
         end)
         timer.Simple(0.11,function()
             print("[SpecDM] SetPos on "..ply:Nick())

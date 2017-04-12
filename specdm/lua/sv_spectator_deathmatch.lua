@@ -103,10 +103,20 @@ function meta:ManageGhost(spawn, silent)
 	local silent = silent or false
 	self:SetGhost(spawn)
 	if spawn then
+
 		self:Spawn()
 		self:SetBloodColor(-1)
 		self:GiveGhostWeapons()
 		SpecDM:RelationShip(self)
+
+		--Fix WalkSpeed
+		self:SetWalkSpeed(200)
+		--Fix RunSpeed
+		self:SetRunSpeed(350)
+		--Fix CrouchSpeed
+		self:SetCrouchedWalkSpeed(0.6)
+		--Fix JumpPower
+		self:SetJumpPower(200)
 	else
 		self:KillSilent()
 		self:Spectate(OBS_MODE_ROAMING)

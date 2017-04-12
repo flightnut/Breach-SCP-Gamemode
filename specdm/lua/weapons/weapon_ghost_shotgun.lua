@@ -24,7 +24,7 @@ SWEP.Primary.Delay = 0.8
 SWEP.Primary.ClipSize = 8
 SWEP.Primary.ClipMax = 32
 SWEP.Primary.DefaultClip = 32
-SWEP.Primary.Automatic = true
+SWEP.Primary.Automatic = false
 SWEP.Primary.NumShots = 8
 SWEP.AutoSpawnable = false
 SWEP.NoAmmoEnt = "item_box_buckshot_ttt"
@@ -43,7 +43,11 @@ SWEP.reloadtimer = 0
 function SWEP:SetupDataTables()
    self:DTVar("Bool", 0, "reloading")
 
-   return self.BaseClass.SetupDataTables(self)
+	if self.BaseClass then
+		if self.BaseClass.SetupDataTables then
+			return self.BaseClass.SetupDataTables(self)
+		end
+	end
 end
 
 function SWEP:Reload()
@@ -133,9 +137,12 @@ function SWEP:CanPrimaryAttack()
             net.WriteUInt(45, 19)
             net.Send(filter)
         end
-      self:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
-      return false
+	    --Attempt to fix?
+		self:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
+		return false
    end
+   --Attempt to fix?
+   self:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
    return true
 end
 

@@ -52,15 +52,15 @@ SpecDM.Ghost_weapons['secondary'] = {
 }
 SpecDM.Ghost_weapons['primary'] ={
 	"weapon_ghost_ak47",
-	--"weapon_ghost_augbar",
-	--"weapon_ghost_awp",
+	"weapon_ghost_augbar",
 	"weapon_ghost_galil",
 	"weapon_ghost_sledge",
 	"weapon_ghost_mac10",
 	"weapon_ghost_hl2smg",
 	"weapon_ghost_mp5",
-	--"weapon_ghost_shotgun",
-	--"weapon_ghost_rifle"
+	"weapon_ghost_shotgun",
+	--"weapon_ghost_rifle",
+	--"weapon_ghost_awp",
 }
 --[[
 SpecDM.Ghost_weapons = {

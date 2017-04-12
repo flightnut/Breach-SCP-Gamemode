@@ -3,7 +3,7 @@ nextspecialround = nil
 ROUND_STATE = 1
 
 ROUND_WAIT = 1
-ROUND_PREP = 2 
+ROUND_PREP = 2
 ROUND_ACTIVE = 3
 ROUND_POST = 4
 
@@ -175,7 +175,8 @@ function RoundRestart()
 			postround = false
 			postround = true
 			hook.Call( "BreachEndRound", nil, nil )
-			SetRoundState( ROUND_POST )
+			--Don't make SpecDM end when time is over. ;)
+			--SetRoundState( ROUND_POST )
 			// send all round info
 			net.Start("SendRoundInfo")
 				net.WriteTable(roundstats)

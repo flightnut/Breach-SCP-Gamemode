@@ -38,6 +38,8 @@ SWEP.Primary.Automatic		= true
 SWEP.Primary.Ammo			= "AirboatGun"
 SWEP.HeadshotMultiplier = 2.5
 
+
+SWEP.Secondary.Sound = Sound("Default.Zoom")
 SWEP.Secondary.Automatic	= false
 SWEP.UseHands				= true
 SWEP.Secondary.Ammo			= "none"
@@ -64,20 +66,26 @@ end
 
 -- Add some zoom to ironsights for this gun
 function SWEP:SecondaryAttack()
-    if not self.IronSightsPos then return end
+    --if not self.IronSightsPos then return end
     if self.Weapon:GetNextSecondaryFire() > CurTime() then return end
 
-    local bIronsights = not self:GetIronsights()
+	if bScopedIn == nil then
+		local bScopedIn = false
+	end
+    --local bIronsights = not self:GetIronsights()
 
-    self:SetIronsights( bIronsights )
+    --self:SetIronsights( bIronsights )
 
     if SERVER then
-        self:SetZoom(bIronsights)
+        self:SetZoom(bScopedIn)
+		bScopedIn = not bScopedIn
      else
+        self:EmitSound(self.Secondary.Sound)
     end
 
     self.Weapon:SetNextSecondaryFire( CurTime() + 0.3)
 end
+
 
 function SWEP:PreDrop()
     self:SetZoom(false)

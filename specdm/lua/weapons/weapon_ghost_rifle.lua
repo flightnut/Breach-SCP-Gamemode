@@ -21,7 +21,7 @@ SWEP.Primary.Delay          = 1.5
 SWEP.Primary.Recoil         = 7
 SWEP.Primary.Automatic = true
 SWEP.Primary.Ammo = "357"
-SWEP.Primary.Damage = 50
+SWEP.Primary.Damage = 200 --50
 SWEP.Primary.Cone = 0.005
 SWEP.Primary.ClipSize = 10
 SWEP.Primary.ClipMax = 20
@@ -57,21 +57,26 @@ end
 
 -- Add some zoom to ironsights for this gun
 function SWEP:SecondaryAttack()
-    if not self.IronSightsPos then return end
+    --if not self.IronSightsPos then return end
     if self.Weapon:GetNextSecondaryFire() > CurTime() then return end
 
+	if bScopedIn == nil then
+		local bScopedIn = true
+	end
     --local bIronsights = not self:GetIronsights()
 
     --self:SetIronsights( bIronsights )
 
     if SERVER then
-    --    self:SetZoom(bIronsights)
+        self:SetZoom(bScopedIn)
+		bScopedIn = not bScopedIn
      else
         self:EmitSound(self.Secondary.Sound)
     end
 
     self.Weapon:SetNextSecondaryFire( CurTime() + 0.3)
 end
+
 
 function SWEP:PreDrop()
     self:SetZoom(false)
