@@ -720,7 +720,8 @@ function mply:SetSCP0082()
 	elseif self:GetModel() == "models/player/kerry/ntf.mdl" then
 		--NTF
 		print("NTF Into zombie")
-		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
+		--self:SetModel("models/player/kerry/class_securety_zombie.mdl")
+		self:SetModel('models/player/kerry/ntf_z.mdl') --New Zombie model for NTF :)
 	elseif self:GetModel() == "models/mw2/skin_04/mw2_soldier_04.mdl" then
 		--Chaos!
 		print("Chaos into zombie")
@@ -799,7 +800,8 @@ function mply:SetSCP0492()
 	elseif self:GetModel() == "models/player/kerry/ntf.mdl" then
 		--NTF
 		print("NTF Into zombie")
-		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
+		--self:SetModel("models/player/kerry/class_securety_zombie.mdl")
+		self:SetModel('models/player/kerry/ntf_z.mdl') --New Zombie model for NTF :) 
 	elseif self:GetModel() == "models/mw2/skin_05/mw2_soldier_04.mdl" then
 		--Chaos!
 		print("Chaos into zombie")
