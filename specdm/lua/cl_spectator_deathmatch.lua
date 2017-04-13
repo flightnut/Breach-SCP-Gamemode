@@ -98,7 +98,7 @@ hook.Add("PrePlayerDraw", "PrePlayerDraw_SpecDM", function(ply)
             ply:DrawShadow(true)
         end
 
-		--Fixes the problem where a player would still be "invisible" to the client (ie. On Reload) 
+		--Fixes the problem where a player would still be "invisible" to the client (ie. On Reload)
 		if ply:IsGhost() then
 			if ply:GetNoDraw() then
 				ply:SetNoDraw(false)
@@ -431,7 +431,9 @@ end)
 
 net.Receive("SpecDM_Autoswitch", function()
 	local spawned = false
-	if ((SpecDM.ForceDeathmatch and force_deathmatch:GetBool()) or (not SpecDM.ForceDeathmatch and autoswitch:GetBool())) and GetRoundState() == ROUND_ACTIVE and not LocalPlayer():IsGhost() then
+	--This was near the end, removed due to GetRoundState() not in Shared()
+	--	[...] and GetRoundState() == ROUND_ACTIVE and [...]
+	if ((SpecDM.ForceDeathmatch and force_deathmatch:GetBool()) or (not SpecDM.ForceDeathmatch and autoswitch:GetBool())) and not LocalPlayer():IsGhost() then
 		spawned = true
 		RunConsoleCommand("say_team", SpecDM.Commands[1])
 	elseif not SpecDM.ForceDeathmatch and SpecDM.PopUp then

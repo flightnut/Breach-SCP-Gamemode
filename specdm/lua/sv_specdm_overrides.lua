@@ -1,3 +1,4 @@
+
 --Used later here
 function GetWeaponFromDamage(dmg)
    local inf = dmg:GetInflictor()
@@ -184,9 +185,9 @@ hook.Add("TTTBeginRound", "TTTBeginRound_Ghost", function()
 			end
 		elseif GetRoundState() == ROUND_ACTIVE then
 			if IsValid(attacker) and attacker:IsPlayer() then
-				Damagelog_New(Format("KILL:\t %s [%s] killed %s [%s]", attacker:Nick(), attacker:GetRoleString(), ply:Nick(), ply:GetRoleString()))
+				--Damagelog_New(Format("KILL:\t %s [%s] killed %s [%s]", attacker:Nick(), attacker:GetRoleString(), ply:Nick(), ply:GetRoleString()))
 			else
-				Damagelog_New(Format("KILL:\t <something/world> killed %s [%s]", ply:Nick(), ply:GetRoleString()))
+				--Damagelog_New(Format("KILL:\t <something/world> killed %s [%s]", ply:Nick(), ply:GetRoleString()))
 			end
 		end
 		old_PlayerDeath(self, ply, infl, attacker)
@@ -291,7 +292,7 @@ hook.Add("Initialize", "Initialize_SpecDM", function()
 					dmginfo:ScaleDamage(0)
 				elseif not attacker:IsGhost() and math.floor(dmginfo:GetDamage()) > 0 and GetRoundState() == ROUND_ACTIVE then
 					--Damagelog_New(Format("DMG: \t %s [%s] damaged %s [%s] for %d dmg", attacker:Nick(), attacker:GetRoleString(), ent:Nick(), ent:GetRoleString(), math.Round(dmginfo:GetDamage())))
-                    print(Format("DMG: \t %s [%s] damaged %s [%s] for %d dmg", attacker:Nick(), attacker:GetNClass(), ent:Nick(), ent:GetNClass(), math.Round(dmginfo:GetDamage())))
+                    --print(Format("DMG: \t %s [%s] damaged %s [%s] for %d dmg", attacker:Nick(), attacker:GetNClass(), ent:Nick(), ent:GetNClass(), math.Round(dmginfo:GetDamage())))
 				end
 			end
 
@@ -420,3 +421,5 @@ hook.Add("EntityEmitSound", "EntityEmitSound_SpecDM", function(t)
 		return
 	end
 end)
+
+print("[SpecDM] Overrides loaded")

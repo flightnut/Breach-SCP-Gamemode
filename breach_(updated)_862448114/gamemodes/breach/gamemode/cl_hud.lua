@@ -38,9 +38,21 @@ function GM:DrawDeathNotice( x,  y )
 end
 
 hook.Add( "HUDShouldDraw", "HideHUD", function( name )
-	--Draw the Deathnotice for spectators 
-	if name == "CHudDeathNotice" and LocalPlayer():Team() == TEAM_SPEC then return true end
-
+	--Draw the Deathnotice for spectators (DOES NOT WORK?)
+	if name == "CHudDeathNotice"  then --Is it a HudDeathNotice? 
+		if IsValid(LocalPlayer()) then --Are we a player. 
+			if LocalPlayer().Team then --Check By Team 
+				if LocalPlayer():Team() == TEAM_SPEC then --Are we spectator? 
+					return true --Show the death 
+				end 
+			elseif LocalPlayer().IsGhost then --TEAMCHECK FAILED, SpecDm check 
+				if LocalPlayer():IsGhost() then --We're in SpecDM 
+					return true --Show the death
+				end
+			end 
+		end
+	end 
+	
 	if ( hide[ name ] ) then return false end
 end )
 
