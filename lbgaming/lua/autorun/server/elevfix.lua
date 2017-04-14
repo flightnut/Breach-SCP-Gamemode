@@ -194,6 +194,9 @@ function Link2006_AddFiles(name,remLength)
 	end
 end
 
+--lbgaming's SCP-682
+Link2006_AddFiles("addons/lbgaming/models",string.len("addons/lbgaming/")) -- string Folder, string (length) to remove
+Link2006_AddFiles("addons/lbgaming/materials",string.len("addons/lbgaming/")) -- string Folder, string (length) to remove
 --lbgaming's sounds
 Link2006_AddFiles("addons/lbgaming/sound",string.len("addons/lbgaming/")) -- string Folder, string (length) to remove
 --SCP294's stuff
