@@ -1,0 +1,27 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/939/PinkyTeethDissuseA"
+	"$bumpmap" "models/939/PinkyTeethDissuseA_local"	
+	"$nocull" "1"
+	"$phongexponenttexture" 	"models/939/pinkyteeth_s"
+	$PhongAlbedoTint 1
+	"$ambientocclusion"	"1"
+
+	 $model "1"
+	"$halflambert" "0"
+	$diffuseexp 1.5
+	"$phong" "1"
+	$phongboost 0.1
+	$phongtint "[.85 .85 1]"
+	$phongfresnelranges "[.4 .9 0.1]"
+
+	"$rimlight" "1"												// To enable rim lighting (requires phong)
+	"$rimlightexponent" "100"										// Exponent for phong component of rim lighting	
+	"$rimlightboost" "0.2"									// Boost for ambient cube component of rim lighting
+	$rimmask 1
+
+	"$alphatest" "1"
+
+	"$detail" "models/939/pinkyteeth_h"
+	"$detailscale" 1
+}

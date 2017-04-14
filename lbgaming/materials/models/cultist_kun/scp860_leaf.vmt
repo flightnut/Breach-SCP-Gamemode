@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/cultist_kun/SCP860_leaf"
+	$translucent 1 
+}
