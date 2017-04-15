@@ -12,6 +12,9 @@ util.AddNetworkString("Sound_Searching")
 util.AddNetworkString("Sound_Classd")
 util.AddNetworkString("Sound_Stop")
 util.AddNetworkString("Sound_Lost")
+util.AddNetworkString("Sound_049")
+util.AddNetworkString("Sound_106")
+util.AddNetworkString("Sound_173")
 util.AddNetworkString("UpdateRoundType")
 util.AddNetworkString("ForcePlaySound")
 util.AddNetworkString("OnEscaped")
@@ -47,7 +50,7 @@ net.Receive( "RoundRestart", function( len, ply )
 end)
 
 net.Receive( "Sound_Random", function( len, ply )
-	PlayerNTFSound("Random"..math.random(1,4)..".ogg", ply)
+	PlayerNTFSound("Random"..math.random(1,5)..".ogg", ply)
 end)
 
 net.Receive( "Sound_Searching", function( len, ply )
@@ -55,7 +58,7 @@ net.Receive( "Sound_Searching", function( len, ply )
 end)
 
 net.Receive( "Sound_Classd", function( len, ply )
-	PlayerNTFSound("ClassD"..math.random(1,4)..".ogg", ply)
+	PlayerNTFSound("ClassD"..math.random(1,10)..".ogg", ply)
 end)
 
 net.Receive( "Sound_Stop", function( len, ply )
@@ -64,6 +67,18 @@ end)
 
 net.Receive( "Sound_Lost", function( len, ply )
 	PlayerNTFSound("TargetLost"..math.random(1,3)..".ogg", ply)
+end)
+
+net.Receive( "Sound_106", function( len, ply )
+	PlayerNTFSound("106spotted"..math.random(1,4)..".ogg", ply)
+end)
+
+net.Receive( "Sound_049", function( len, ply )
+	PlayerNTFSound("049spotted"..math.random(1,5)..".ogg", ply)
+end)
+
+net.Receive( "Sound_173", function( len, ply )
+	PlayerNTFSound("173spotted"..math.random(1,4)..".ogg", ply)
 end)
 
 net.Receive( "DropCurrentVest", function( len, ply )

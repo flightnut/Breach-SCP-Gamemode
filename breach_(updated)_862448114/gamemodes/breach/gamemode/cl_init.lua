@@ -456,6 +456,27 @@ concommand.Add("br_sound_lost", function()
 		net.SendToServer()
 	end
 end)
+
+concommand.Add("br_oneosix_found", function()
+	if (LocalPlayer():Team() == TEAM_GUARD or LocalPlayer():Team() == TEAM_CHAOS) and LocalPlayer():Alive() then
+		net.Start("Sound_106")
+		net.SendToServer()
+	end
+end)
+
+concommand.Add("br_fournine_found", function()
+	if (LocalPlayer():Team() == TEAM_GUARD or LocalPlayer():Team() == TEAM_CHAOS) and LocalPlayer():Alive() then
+		net.Start("Sound_049")
+		net.SendToServer()
+	end
+end)
+
+concommand.Add("br_oneseven_found", function()
+	if (LocalPlayer():Team() == TEAM_GUARD or LocalPlayer():Team() == TEAM_CHAOS) and LocalPlayer():Alive() then
+		net.Start("Sound_173")
+		net.SendToServer()
+	end
+end)
 /*
 function CalcView3DPerson( ply, pos, angles, fov )
 	local view = {}
