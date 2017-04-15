@@ -311,6 +311,8 @@ function GM:PlayerCanPickupWeapon( ply, wep )
 			return !(wep:GetClass() == "item_medkit")
 		elseif ply:GetNClass() == ROLE_SCP1048A then
 			return wep:GetClass() == "weapon_scp_1048a"
+		elseif ply:GetNClass() == ROLE_SCP682 then
+			return wep:GetClass() == "weapon_scp_682"
 		else
 			return false
 		end
@@ -337,6 +339,11 @@ function GM:PlayerCanPickupWeapon( ply, wep )
 	end
 	if ply:GetNClass() != ROLE_SCP1048A then
 		if wep:GetClass() == "weapon_scp_1048a" then
+			return false
+		end
+	end
+	if ply:GetNClass() != ROLE_SCP682 then
+		if wep:GetClass() == "weapon_scp_682" then
 			return false
 		end
 	end

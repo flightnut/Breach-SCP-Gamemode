@@ -92,6 +92,11 @@ SPCS = {
 	func = function(pl)
 		pl:SetSCP457()
 	end},
+	{name = "SCP 682",
+	func = function(pl)
+		pl:SetSCP682()
+	end},
+
 }
 
 /*
@@ -672,6 +677,12 @@ function OpenSCPDoors()
 		end
 		if v:GetPos() == POS_049BUTTON then
 			ForceUse(v, 1, 1)
+		end
+	end
+	--Force opens 682's gate
+	for k,v in pairs( ents.FindByClass( "func_rot_button")) do
+		if v:GetPos() == POS_682BUTTON then
+			ForceUse(v, 1, 1 )
 		end
 	end
 end

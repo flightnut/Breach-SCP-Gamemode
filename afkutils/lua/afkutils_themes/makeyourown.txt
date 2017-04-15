@@ -1,0 +1,8 @@
+To make your own theme just copy and paste the template below into a new file called "themename.lua". You can change "themename" to whatever you want to call the theme.
+
+Copy "template.lua" to the same directory
+Rename "template.lua" to whatever you want to call your theme (Example: cooltheme.lua)
+Open that file and read the comments
+Done
+
+I will be realeasing a theme pack on scriptfodder some day, so stay tuned for that.

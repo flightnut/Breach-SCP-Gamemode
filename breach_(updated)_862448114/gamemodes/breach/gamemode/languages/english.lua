@@ -129,6 +129,12 @@ english.starttexts = {
 		"Left click to hurt others",
 		"Right click to scream and hurt others around you"}
 	},
+	{
+		"You are the SCP-682",
+		{"Your objective is to escape the facility",
+		"Left click to bite others",
+		"Right click to charge"}
+	}
 }
 
 english.lang_end1 = "The game ends here"
@@ -167,6 +173,7 @@ english.escapemessages = {
 --Link2006's edit
 english.ROLE_SCP035 = "SCP-035"
 english.ROLE_SCP1048A = "SCP-1048A"
+english.ROLE_SCP682 = "SCP-682"
 ---End of link2006
 english.ROLE_SCP173 = "SCP-173"
 english.ROLE_SCP106 = "SCP-106"

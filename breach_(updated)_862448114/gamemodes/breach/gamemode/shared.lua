@@ -40,6 +40,7 @@ function GetLangRole(rl)
 	if rl == ROLE_SCP049 then return clang.ROLE_SCP049 end
 	if rl == ROLE_SCP457 then return clang.ROLE_SCP457 end
 	if rl == ROLE_SCP0492 then return clang.ROLE_SCP0492 end
+	if rl == ROLE_SCP682 then return clang.ROLE_SCP682 end
 	if rl == ROLE_MTFGUARD then return clang.ROLE_MTFGUARD end
 	if rl == ROLE_MTFCOM then return clang.ROLE_MTFCOM end
 	if rl == ROLE_MTFNTF then return clang.ROLE_MTFNTF end
@@ -52,6 +53,7 @@ end
 --Link2006 fix Start (originally was just SCP173 three times)
 ROLE_SCP035 = "SCP-035"
 ROLE_SCP1048A = "SCP-1048A"
+ROLE_SCP682 = "SCP-682"
 --link2006 fix end
 ROLE_SCP173 = "SCP-173"
 ROLE_SCP106 = "SCP-106"
