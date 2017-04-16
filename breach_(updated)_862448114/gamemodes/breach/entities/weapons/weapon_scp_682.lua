@@ -34,7 +34,7 @@ SWEP.NextAttackH = 2
 SWEP.NextAttackW = 30
 SWEP.NextLunge = 30
 SWEP.AttackDelay1 = 2
-SWEP.AttackDelay2 = 45
+SWEP.AttackDelay2 = 30
 SWEP.IsFaster = false
 SWEP.BoostEnd = 0
 SWEP.OrigWalk = 200
@@ -160,7 +160,7 @@ function SWEP:SecondaryAttack()
 	ply:SetJumpPower(0)
 
 	--This should fix an issue where having more than 1 SCP-682 would break the ability's reset timer.
-	timer.Simple(7,function()
+	timer.Simple(10,function()
 		ply:SetWalkSpeed(60)
 		ply:SetRunSpeed(60)
 		ply:SetMaxSpeed(60)

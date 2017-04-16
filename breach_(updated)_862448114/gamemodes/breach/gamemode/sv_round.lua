@@ -174,7 +174,7 @@ function RoundRestart()
 			//PrintMessage(HUD_PRINTTALK, "Time is over, Class Ds and SCPs didn't escape the facility in time. MTF wins!")
 			postround = false
 			postround = true
-			--Do not tell SpecDM the round just ended. 
+			--Do not tell SpecDM the round just ended.
 			--hook.Call( "BreachEndRound", nil, nil )
 			SetRoundState( ROUND_POST )
 			// send all round info
@@ -196,7 +196,8 @@ end
 canescortds = true
 canescortrs = true
 function CheckEscape()
-	for k,v in pairs(ents.FindInSphere(POS_GATEA, 250)) do
+	--for k,v in pairs(ents.FindInSphere(POS_GATEA, 250)) do
+	for k,v in pairs(ents.FindInBox(POS_ESCAPEBOXMIN,POS_ESCAPEBOXMAX)) do 
 		if v:IsPlayer() == true then
 			if v.isescaping == true then return end
 			if v:Team() == TEAM_CLASSD or v:Team() == TEAM_SCI or v:Team() == TEAM_SCP then

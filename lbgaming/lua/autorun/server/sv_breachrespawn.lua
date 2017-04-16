@@ -494,6 +494,9 @@ hook.Add("PostCleanupMap","Link2006_AutoSpawn",function() --On New Round
 
             if (roundtype.name == normalround.name) or (roundtype.name == "Multiple breaches") then --HARDCODED, Checks if it's a round with Class Ds...
                 print("[BreachRespawn] Round is "..roundtype.name..", Respawning specs in 12 seconds...")
+				if (roundtype.name == "Multiple breaches") then
+					ULib.tsayColor(nil,true,team.GetColor(TEAM_SCP),"SCP-035",Color(255,255,255)," can kill ",team.GetColor(TEAM_CLASSD),"ClassDs",Color(255,255,255)," in this round!") --We have FriendlyFire Enabled when it's TTT
+				end
                 timer.Create("BreachRespawn_Spectators", 12, 1, function()   Link2006_RespawnSpecs(nil,"classd",nil) end)
 			elseif (roundtype.name == "Trouble in SCP Town") then
                 print("[BreachRespawn] Round is "..roundtype.name..", Respawning specs in 12 seconds...")

@@ -176,6 +176,10 @@ function SWEP:SecondaryAttack()
 		self.scp457_Burn = true
 	end
 	scp457_cooldown = CurTime() + 1
+
+	if CLIENT then
+		surface.PlaySound(Sound('button.ogg'))
+	end
 end
 
 function SWEP:CanPrimaryAttack()

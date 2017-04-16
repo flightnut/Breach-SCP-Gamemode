@@ -112,8 +112,15 @@ net.Receive( "DropWeapon", function( len, ply )
 				wep.SavedAmmo = wep:Clip1()
 			end
 		end
-
 		if wep:GetClass() == nil then return end
+		--Nightvision support here
+		if wep:GetClass() == "nightvision" then
+			wep.Nightvision = false
+			net.Start( "RASKO_NightvisionOff" )
+			net.WriteEntity( ply )
+			net.Send( ply )
+		end
+		--End of Nightvision support
 		if wep.droppable != nil then
 			if wep.droppable == false then return end
 		end

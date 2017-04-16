@@ -166,6 +166,12 @@ local function antirdm(victim, inflictor, attacker)
                 or (attacker:GetNClass() == ROLE_SCP035 and victim:Team() == TEAM_CLASSD) --OR SCP-035 killed a Class D
                 or (victim:GetNClass() == ROLE_SCP035 and attacker:Team() == TEAM_CLASSD) then --OR Class D killed SCP-035
                     --AWARN ATTACKER
+                    --MULTIPLE BREACH SPECIAL CASE WHERE WE NEED 035 ABLE TO KILL CLASSDS
+                    if (attacker:GetNClass() == ROLE_SCP035 and victim:Team() == TEAM_CLASSD) or (victim:GetNClass() == ROLE_SCP035 and attacker:Team() == TEAM_CLASSD) then
+                        if roundtype.name == "Multiple breaches" then
+                            return
+                        end
+                    end
                     print("[AntiRDM] Warning \""..attacker:Nick().."\" for RDM")
                     if antirdm_enabled and (tostring(roundtype.name) ~= "Trouble in SCP Town") then --As long it's not TTT lol ...
                         ULib.tsayColor(nil,true,Color(255,0,0),"[AntiRDM]",Color(255,255,255)," \"",team.GetColor(attacker:Team()),attacker:Nick(),Color(255,255,255),"\" was warned for killing \"",team.GetColor(victim:Team()),victim:Nick(),Color(255,255,255),"\"")
@@ -247,7 +253,13 @@ hook.Add("PlayerShouldTakeDamage","AntiRDM_NoDamage",function(victim,attacker)
         if roundtype.name == "Zombie Plague" then
             if victim:Team() ~= attacker:Team() then
                 return true --Always allow damage SCP <-> HUMANS in Zombie Plague
-            end 
+            end
+        elseif roundtype.name == "Multiple breaches" then
+            if IsValid(victim) and IsValid(attacker) then
+                if victim:Team() ~= attacker:Team() then
+                    return true
+                end
+            end
         end
     end
 
@@ -256,8 +268,10 @@ hook.Add("PlayerShouldTakeDamage","AntiRDM_NoDamage",function(victim,attacker)
     end
     if noChaosHurt then
         --Prevent Finding chaos between 13:00 and 12:30 ... oops
-        if (victim:Team() == TEAM_GUARD and attacker:Team() == TEAM_GUARD) or (victim:Team() == TEAM_GUARD and attacker:Team() == TEAM_CHAOS) or (attacker:Team() == TEAM_GUARD and victim:Team() == TEAM_CHAOS) then
-            return false
+        if IsValid(victim) and IsValid(attacker) then
+            if (victim:Team() == TEAM_GUARD and attacker:Team() == TEAM_GUARD) or (victim:Team() == TEAM_GUARD and attacker:Team() == TEAM_CHAOS) or (attacker:Team() == TEAM_GUARD and victim:Team() == TEAM_CHAOS) then
+                return false
+            end
         end
     end
     --Force Friendly Fire ON when Round is "spies"
