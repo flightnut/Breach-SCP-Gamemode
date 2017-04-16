@@ -8,8 +8,8 @@ SWEP.AdminSpawnable = true
 SWEP.Category = "Rasko"
 
 SWEP.HoldType = "normal"
-SWEP.ViewModel = ""
-SWEP.WorldModel = ""
+SWEP.ViewModel		= "models/props_junk/cardboard_box004a.mdl"
+SWEP.WorldModel		= "models/props_junk/cardboard_box004a.mdl"
 SWEP.DrawCrosshair = false
 
 SWEP.HitDistance = 50
@@ -32,7 +32,8 @@ SWEP.NextReload = CurTime()
 SWEP.Slot				= 0
 SWEP.SlotPos			= 0
 --Link2006's fix for Nightvision;
-SWEP.droppable = false
+SWEP.droppable				= true
+SWEP.teams					= {2,3,4,6}
 
 if CLIENT then
 	SWEP.WepSelectIcon 	= surface.GetTextureID("breach/wep_nvg")
@@ -52,6 +53,8 @@ function SWEP:Initialize()
 	if ( SERVER ) then
 		self.NvOwner = self:GetOwner() --Just in case ;)
 	end
+
+	self:SetHoldType("normal")
 end
 
 
@@ -92,11 +95,16 @@ function SWEP:Reload()
 end
 
 function SWEP:Deploy()
+	self.Owner:DrawViewModel( false )
 	if ( SERVER ) then
 		self.NvOwner = self:GetOwner()
 	end
 end
-
+function SWEP:DrawWorldModel()
+	if !IsValid(self.Owner) then
+		self:DrawModel()
+	end
+end
 
 --[[
 function SWEP:Holster()
@@ -154,6 +162,7 @@ end
 --When someone gets this 'weapon'
 function SWEP:Equip(ply)
 	net.Start( "Link2006_NightVisionTuto" )
+	self.Owner:DrawViewModel( false )
 	net.Send( ply ) --Owner
 end
 if( CLIENT ) then
