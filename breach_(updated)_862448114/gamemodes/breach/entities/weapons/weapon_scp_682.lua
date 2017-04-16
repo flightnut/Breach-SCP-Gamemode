@@ -158,6 +158,15 @@ function SWEP:SecondaryAttack()
 	ply:SetRunSpeed(350)
 	ply:SetMaxSpeed(350)
 	ply:SetJumpPower(0)
+
+	--This should fix an issue where having more than 1 SCP-682 would break the ability's reset timer.
+	timer.Simple(7,function()
+		ply:SetWalkSpeed(60)
+		ply:SetRunSpeed(60)
+		ply:SetMaxSpeed(60)
+		ply:SetJumpPower(0)
+	end)
+	--[[
 	local function RemoveBuff()
 		ply:SetWalkSpeed(60)
 		ply:SetRunSpeed(60)
@@ -165,6 +174,7 @@ function SWEP:SecondaryAttack()
 		ply:SetJumpPower(0)
 	end
 	timer.Create("SCP_PLAYER_WILL_LOSE_BUFF", 7, 1, RemoveBuff)
+	]]--
 	ply:EmitSound('roar.ogg')
 end
 
