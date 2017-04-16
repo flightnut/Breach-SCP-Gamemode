@@ -256,8 +256,10 @@ hook.Add("PlayerShouldTakeDamage","AntiRDM_NoDamage",function(victim,attacker)
             end
         elseif roundtype.name == "Multiple breaches" then
             if IsValid(victim) and IsValid(attacker) then
-                if victim:Team() ~= attacker:Team() then
-                    return true
+                if victim:IsPlayer() and attacker:IsPlayer() then
+                    if (victim:Team() ~= attacker:Team()) and victim ~= attacker then
+                        return true
+                    end
                 end
             end
         end
