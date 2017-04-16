@@ -7,7 +7,7 @@ include("cl_scoreboard.lua")
 include( "cl_sounds.lua" )
 include( "cl_targetid.lua" )
 
-								  
+
 surface.CreateFont( "173font", {
 	font = "TargetID",
 	extended = false,
@@ -155,7 +155,7 @@ function CalcViewTest( ply, pos, angles, fov )
 		view.drawviewer = false
 		return view
 	end
-	
+
 	view.origin = pos
 	view.angles = angles
 	if usingview == 0 then
@@ -245,6 +245,7 @@ net.Receive( "SendRoundInfo", function( len )
 end)
 
 net.Receive( "RolesSelected", function( len )
+	print("Roles are selected, Finishing touches...")
 	drawinfodelete = CurTime() + 25
 	shoulddrawinfo = true
 end)
@@ -270,6 +271,7 @@ net.Receive( "PrepStart", function( len )
 	timer.Create("SoundsOnRoundStart", 1, 1, SoundsOnRoundStart)
 	timefromround = CurTime() + 10
 	RADIO4SOUNDS = table.Copy(RADIO4SOUNDSHC)
+
 end)
 
 net.Receive( "RoundStart", function( len )
@@ -364,13 +366,24 @@ function Blink(time)
 	//print("blink start")
 end
 
+last996attack = 0
+
 local mat_color = Material( "pp/colour" ) -- used outside of the hook for performance
 hook.Add( "RenderScreenspaceEffects", "blinkeffects", function()
 	//if f_started == false then return end
-	
+
 	local contrast = 1
 	local colour = 1
-	
+
+	last996attack = last996attack - 0.002
+	if last996attack < 0 then
+		last996attack = 0
+	else
+		DrawMotionBlur( 1 - last996attack, 1, 0.05 )
+		DrawSharpen( last996attack,2 )
+		contrast = last996attack
+	end
+
 	if livecolors then
 		contrast = 1.1
 		colour = 1.5
@@ -380,9 +393,9 @@ hook.Add( "RenderScreenspaceEffects", "blinkeffects", function()
 	end
 	render.UpdateScreenEffectTexture()
 
-	
+
 	mat_color:SetTexture( "$fbtexture", render.GetScreenEffectTexture() )
-	
+
 	mat_color:SetFloat( "$pp_colour_brightness", brightness )
 	mat_color:SetFloat( "$pp_colour_contrast", contrast)
 	mat_color:SetFloat( "$pp_colour_colour", colour )
@@ -506,4 +519,3 @@ end
 hook.Add( "CalcView", "CalcView3DPerson", CalcView3DPerson )
 */
 print("cl_init loads")
-

@@ -96,6 +96,10 @@ SPCS = {
 	func = function(pl)
 		pl:SetSCP682()
 	end},
+	{name = "SCP 966",
+	func = function(pl)
+		pl:SetSCP966()
+	end},
 
 }
 

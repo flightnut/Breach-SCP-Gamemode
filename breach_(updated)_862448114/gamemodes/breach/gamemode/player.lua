@@ -65,6 +65,7 @@ function GM:PlayerSpawn( ply )
 	if not ply.GetNClass then
 		player_manager.RunClass( ply, "SetupDataTables" )
 	end
+
 end
 
 function GM:PlayerSetHandsModel( ply, ent )
@@ -313,6 +314,8 @@ function GM:PlayerCanPickupWeapon( ply, wep )
 			return wep:GetClass() == "weapon_scp_1048a"
 		elseif ply:GetNClass() == ROLE_SCP682 then
 			return wep:GetClass() == "weapon_scp_682"
+		elseif ply:GetNClass() == ROLE_SCP966 then
+			return wep:GetClass() == "weapon_scp_966"
 		else
 			return false
 		end
@@ -344,6 +347,11 @@ function GM:PlayerCanPickupWeapon( ply, wep )
 	end
 	if ply:GetNClass() != ROLE_SCP682 then
 		if wep:GetClass() == "weapon_scp_682" then
+			return false
+		end
+	end
+	if ply:GetNClass() != ROLE_SCP966 then
+		if wep:GetClass() == "weapon_scp_966" then
 			return false
 		end
 	end

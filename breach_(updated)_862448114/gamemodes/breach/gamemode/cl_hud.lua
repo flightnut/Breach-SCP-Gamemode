@@ -37,6 +37,36 @@ surface.CreateFont( "RadioFont", {
 function GM:DrawDeathNotice( x,  y )
 end
 
+hook.Add( "Tick", "966check", function()
+	local hide = true
+	if LocalPlayer().Team == nil then return end
+	if LocalPlayer():Team() == TEAM_SCP or LocalPlayer():Team() == TEAM_SPEC then
+		hide = false
+	end
+
+	--TODO: REPLACE WITH CUSTOM NV CODE
+
+	if LocalPlayer().CanSee966 then
+		hide = false
+	end
+	--[[
+	if IsValid(LocalPlayer():GetActiveWeapon()) then
+		if LocalPlayer():GetActiveWeapon():GetClass() == "item_nvg" then
+			hide = false
+		end
+	end
+	]]--
+	for k,v in pairs(player.GetAll()) do
+		if not v.GetNClass then
+			player_manager.RunClass( v, "SetupDataTables" )
+		end
+		if v.GetNClass == nil then return end
+		if v:GetNClass() == ROLE_SCP966 then
+			v:SetNoDraw(hide)
+		end
+	end
+end )
+
 hook.Add( "HUDShouldDraw", "HideHUD", function( name )
 	--Draw the Deathnotice for spectators (DOES NOT WORK?)
 	if name == "CHudDeathNotice"  then --Is it a HudDeathNotice?
@@ -74,6 +104,7 @@ function Getrl()
 	if rl == ROLE_SCP035 then return 18 end
 	if rl == ROLE_SCP1048A then return 19 end
 	if rl == ROLE_SCP682 then return 20 end
+	if rl == ROLE_SCP966 then return 21 end
 	if rl == ROLE_MTFGUARD then
 		if roundtype == "Trouble in SCP Town" then
 			return 5

@@ -82,7 +82,7 @@ english.starttexts = {
 	{
 		"You are the Chaos Insurgency Soldier",
 		{"Your objective is to capture as much Class Ds as it is possible",
-		"Escort them to the helipad outisde of the facility",
+		"Escort them to the helipad outside of the facility",
 		"You have to kill anyone who will stop you"}
 	},
 	{
@@ -134,7 +134,12 @@ english.starttexts = {
 		{"Your objective is to escape the facility",
 		"Left click to bite others",
 		"Right click to charge"}
-	}
+	},
+	{
+		"You are the SCP-966",
+		{"Your objective is to escape then facility",
+		"You are invisible, humans can only see you using nightvision"}
+	},
 }
 
 english.lang_end1 = "The game ends here"
@@ -174,6 +179,7 @@ english.escapemessages = {
 english.ROLE_SCP035 = "SCP-035"
 english.ROLE_SCP1048A = "SCP-1048A"
 english.ROLE_SCP682 = "SCP-682"
+english.ROLE_SCP966 = "SCP-966"
 ---End of link2006
 english.ROLE_SCP173 = "SCP-173"
 english.ROLE_SCP106 = "SCP-106"
@@ -184,7 +190,7 @@ english.ROLE_MTFGUARD = "MTF Guard"
 english.ROLE_MTFCOM = "MTF Commander"
 english.ROLE_MTFNTF = "MTF Nine Tailed Fox"
 english.ROLE_CHAOS = "Chaos Insurgency"
-english.ROLE_CLASSD = "Class D Personell"
+english.ROLE_CLASSD = "Class D Personnel"
 english.ROLE_RES = "Researcher"
 english.ROLE_SPEC = "Spectator"
 

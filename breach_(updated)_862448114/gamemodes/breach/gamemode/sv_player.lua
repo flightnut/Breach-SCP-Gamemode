@@ -963,6 +963,45 @@ function mply:SetSCP0492()
 	self:SetModelScale(1.0,0)
 end
 
+function mply:SetSCP966()
+	self:Flashlight( false )
+	self.handsmodel = nil
+	self:UnSpectate()
+	self:GodDisable()
+	self:Spawn()
+	self:SetPos(SPAWN_966)
+	self:StripWeapons()
+	self:RemoveAllAmmo()
+	--self:SetGTeam(TEAM_SCP)
+	self:SetTeam(TEAM_SCP)
+	self:SetNClass(ROLE_SCP966)
+	--self:SetModel("models/immigrant/outlast/walrider_pm.mdl") --TODO: Get a better playermodel ...
+	self:SetModel('models/scp/966.mdl')
+	//self:SetMaterial("966black/966black", false)
+	self:SetHealth(500)
+	self:SetMaxHealth(500)
+	self:SetArmor(0)
+	self:SetWalkSpeed(150)
+	self:SetRunSpeed(150)
+	self:SetMaxSpeed(150)
+	self:SetJumpPower(190)
+	self:SetNoDraw(false) --DO NOT CHANGE THIS VARIABLE HERE, YOU WILL HAVE ISSUES
+	self.Active = true
+	self:SetupHands()
+	self.canblink = false
+	self:AllowFlashlight( false )
+	self.WasTeam = TEAM_SCP
+	self:SetNoTarget( true )
+	self:Give("weapon_scp_966")
+	self:SelectWeapon("weapon_scp_966")
+	self.BaseStats = nil
+	self.UsingArmor = nil
+	--Link2006
+	self:SetModelScale(1.0,0)
+	net.Start("RolesSelected")
+	net.Send(self)
+end
+
 function mply:IsActivePlayer()
 	return self.Active
 end

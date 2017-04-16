@@ -31,8 +31,13 @@ SWEP.NextReload = CurTime()
 
 SWEP.Slot				= 0
 SWEP.SlotPos			= 0
---Link2006's Temporary fix for Nightvision;
+--Link2006's fix for Nightvision;
 SWEP.droppable = false
+
+if CLIENT then
+	SWEP.WepSelectIcon 	= surface.GetTextureID("breach/wep_nvg")
+	SWEP.BounceWeaponIcon = false
+end
 
 if ( SERVER ) then
 	util.AddNetworkString( "RASKO_NightvisionOn" )
@@ -154,7 +159,14 @@ end
 if( CLIENT ) then
 
 	net.Receive( "RASKO_NightvisionOn", function ( len, ply )
+		--SetNoDraw on 966 to false ;)
+		for k,v in pairs(player.GetAll()) do
+			if v:GetNClass() == ROLE_SCP966 then
+				v:SetNoDraw(false)
+			end
+		end
 		local ply = net.ReadEntity()
+		ply.CanSee966 = true
 		am_nightvision = DynamicLight( 0 )
 		if ( am_nightvision ) then
 			am_nightvision.Pos = ply:GetPos()
@@ -172,7 +184,14 @@ if( CLIENT ) then
 	end)
 
 	net.Receive( "RASKO_NightvisionOff", function ( len, ply )
+		for k,v in pairs(player.GetAll()) do
+			if v:GetNClass() == ROLE_SCP966 then
+				v:SetNoDraw(true)
+			end
+		end
+		--SetNoDraw on 966 to true
 		local ply = net.ReadEntity()
+		ply.CanSee966 = false
 		timer.Destroy( "RASKO_LightTimer" )
 		if am_nightvision then
 			am_nightvision.DieTime = CurTime()+0.1
