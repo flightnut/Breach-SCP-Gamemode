@@ -180,6 +180,8 @@ function mply:SetSpectator()
 	self.UsingArmor = nil
 	//self:Spectate(OBS_MODE_IN_EYE)
 	self:SetNoCollideWithTeammates(true)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
 end
 
 function mply:SetSCP1048a()
@@ -212,6 +214,11 @@ function mply:SetSCP1048a()
 	self.BaseStats = nil
 	self.UsingArmor = nil
 	self:SetNoCollideWithTeammates(false)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
+	--ForceShow the objectives for the current player. (Link2006)
+	net.Start("RolesSelected")
+	net.Send(self)
 end
 
 function mply:SetSCP035()
@@ -256,6 +263,11 @@ function mply:SetSCP035()
 	self.BaseStats = nil
 	self.UsingArmor = nil
 	self:SetNoCollideWithTeammates(false)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
+	--ForceShow the objectives for the current player. (Link2006)
+	net.Start("RolesSelected")
+	net.Send(self)
 end
 
 function mply:SetClassD()
@@ -285,6 +297,11 @@ function mply:SetClassD()
 	self.BaseStats = nil
 	self.UsingArmor = nil
 	self:SetNoCollideWithTeammates(true)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
+	--ForceShow the objectives for the current player. (Link2006)
+	net.Start("RolesSelected")
+	net.Send(self)
 end
 
 function mply:SetScientist()
@@ -315,6 +332,11 @@ function mply:SetScientist()
 	self.BaseStats = nil
 	self.UsingArmor = nil
 	self:SetNoCollideWithTeammates(true)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
+	--ForceShow the objectives for the current player. (Link2006)
+	net.Start("RolesSelected")
+	net.Send(self)
 end
 
 function mply:SetCommander()
@@ -351,6 +373,11 @@ function mply:SetCommander()
 	self:SetNoTarget( false )
 	self:MTFComArmor()
 	self:SetNoCollideWithTeammates(false)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
+	--ForceShow the objectives for the current player. (Link2006)
+	net.Start("RolesSelected")
+	net.Send(self)
 end
 
 function mply:SetGuard()
@@ -383,6 +410,11 @@ function mply:SetGuard()
 	self:SetNoTarget( false )
 	self:MTFArmor()
 	self:SetNoCollideWithTeammates(false)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
+	--ForceShow the objectives for the current player. (Link2006)
+	net.Start("RolesSelected")
+	net.Send(self)
 end
 
 function mply:SetChaosInsurgency(stealth)
@@ -417,7 +449,7 @@ function mply:SetChaosInsurgency(stealth)
 		self:GiveMTFwep()
 		self:SetNClass(ROLE_MTFGUARD)
 	elseif stealth == 2 then
-		//self:SetModel("models/player/urban.mdl")
+		//self:SetModel("models/player/kerry/ntf.mdl")
 		self:NTFArmor()
 		self:Give("keycard_level4")
 		self:GiveNTFwep()
@@ -439,6 +471,11 @@ function mply:SetChaosInsurgency(stealth)
 	self.WasTeam = TEAM_CHAOS
 	self:SetNoTarget( false )
 	self:SetNoCollideWithTeammates(false)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
+	--ForceShow the objectives for the current player. (Link2006)
+	net.Start("RolesSelected")
+	net.Send(self)
 end
 
 function mply:SetChaosInsCom(spawn)
@@ -482,6 +519,11 @@ function mply:SetChaosInsCom(spawn)
 	self:SetNClass(ROLE_CHAOSCOM)
 	self:SetNoTarget( false )
 	self:SetNoCollideWithTeammates(false)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
+	--ForceShow the objectives for the current player. (Link2006)
+	net.Start("RolesSelected")
+	net.Send(self)
 end
 
 function mply:SetSiteDirector(spawn)
@@ -518,6 +560,11 @@ function mply:SetSiteDirector(spawn)
 	self:SetNClass(ROLE_SITEDIRECTOR)
 	self:SetNoTarget( false )
 	self:SetNoCollideWithTeammates(false)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
+	--ForceShow the objectives for the current player. (Link2006)
+	net.Start("RolesSelected")
+	net.Send(self)
 end
 
 function mply:SetNTF()
@@ -528,7 +575,7 @@ function mply:SetNTF()
 	self:StripWeapons()
 	self:RemoveAllAmmo()
 	self:SetTeam(TEAM_GUARD)
-	self:SetModel("models/player/urban.mdl")
+	self:SetModel("models/player/kerry/ntf.mdl")
 	self:SetHealth(100)
 	self:SetMaxHealth(100)
 	self:SetArmor(25)
@@ -553,6 +600,8 @@ function mply:SetNTF()
 	net.Send(self)
 	self:NTFArmor()
 	self:SetNoCollideWithTeammates(false)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
 end
 
 function mply:SetSCP173()
@@ -586,6 +635,11 @@ function mply:SetSCP173()
 	self.BaseStats = nil
 	self.UsingArmor = nil
 	self:SetNoCollideWithTeammates(false)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
+	--ForceShow the objectives for the current player. (Link2006)
+	net.Start("RolesSelected")
+	net.Send(self)
 end
 
 function mply:SetSCP106()
@@ -618,6 +672,11 @@ function mply:SetSCP106()
 	self.BaseStats = nil
 	self.UsingArmor = nil
 	self:SetNoCollideWithTeammates(false)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
+	--ForceShow the objectives for the current player. (Link2006)
+	net.Start("RolesSelected")
+	net.Send(self)
 end
 
 function mply:SetSCP049()
@@ -650,6 +709,51 @@ function mply:SetSCP049()
 	self.BaseStats = nil
 	self.UsingArmor = nil
 	self:SetNoCollideWithTeammates(false)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
+	--ForceShow the objectives for the current player. (Link2006)
+	net.Start("RolesSelected")
+	net.Send(self)
+end
+
+--New SCP: 682
+
+function mply:SetSCP682()
+	self.handsmodel = nil
+	self:UnSpectate()
+	self:GodDisable()
+	self:Spawn()
+	self:SetPos(SPAWN_682) --TODO: Add Spawn position (MapConfig )
+	self:StripWeapons()
+	self:RemoveAllAmmo()
+	self:SetTeam(TEAM_SCP)
+	self:SetNClass(ROLE_SCP682) --TODO: Add Role682 (Roles )
+	self:SetModel("models/cultist_kun/scp_crock.mdl")
+	self:SetHealth(10000)
+	self:SetMaxHealth(10000)
+	self:SetArmor(0)
+	--Weapon overrides this.
+	self:SetWalkSpeed(60)
+	self:SetRunSpeed(60)
+	self:SetMaxSpeed(60)
+	self:SetJumpPower(0)
+	self:SetNoDraw(false)
+	self.Active = true
+	self:SetupHands()
+	self.canblink = false
+	self:AllowFlashlight( false )
+	self.WasTeam = TEAM_SCP
+	self:SetNoTarget( true )
+	self:Give("weapon_scp_682")
+	self:SelectWeapon("weapon_scp_682")
+	self.BaseStats = nil
+	self.UsingArmor = nil
+	self:SetNoCollideWithTeammates(false)
+	--Set player's model to scale
+	self:SetModelScale(0.75,0)
+	--ForceShow the objectives for the current player. (Link2006)
+	net.Start("RolesSelected")
+	net.Send(self)
 end
 
 function mply:SetSCP457()
@@ -683,6 +787,11 @@ function mply:SetSCP457()
 	self.BaseStats = nil
 	self.UsingArmor = nil
 	self:SetNoCollideWithTeammates(false)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
+	--ForceShow the objectives for the current player. (Link2006)
+	net.Start("RolesSelected")
+	net.Send(self)
 end
 
 function mply:DropWep(class, clip)
@@ -720,7 +829,8 @@ function mply:SetSCP0082()
 	elseif self:GetModel() == "models/player/kerry/ntf.mdl" then
 		--NTF
 		print("NTF Into zombie")
-		self:SetModel("models/player/kerry/ntf_z.mdl")
+		--self:SetModel("models/player/kerry/class_securety_zombie.mdl")
+		self:SetModel('models/player/kerry/ntf_z.mdl') --New Zombie model for NTF :)
 	elseif self:GetModel() == "models/mw2/skin_04/mw2_soldier_04.mdl" then
 		--Chaos!
 		print("Chaos into zombie")
@@ -767,6 +877,8 @@ function mply:SetSCP0082()
 	self.BaseStats = nil
 	self.UsingArmor = nil
 	self:SetNoCollideWithTeammates(true)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
 end
 
 function mply:SetSCP0492()
@@ -799,7 +911,8 @@ function mply:SetSCP0492()
 	elseif self:GetModel() == "models/player/kerry/ntf.mdl" then
 		--NTF
 		print("NTF Into zombie")
-		self:SetModel("models/player/kerry/ntf_z.mdl")
+		--self:SetModel("models/player/kerry/class_securety_zombie.mdl")
+		self:SetModel('models/player/kerry/ntf_z.mdl') --New Zombie model for NTF :)
 	elseif self:GetModel() == "models/mw2/skin_05/mw2_soldier_04.mdl" then
 		--Chaos!
 		print("Chaos into zombie")
@@ -846,6 +959,47 @@ function mply:SetSCP0492()
 	self.BaseStats = nil
 	self.UsingArmor = nil
 	self:SetNoCollideWithTeammates(false)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
+end
+
+function mply:SetSCP966()
+	self:Flashlight( false )
+	self.handsmodel = nil
+	self:UnSpectate()
+	self:GodDisable()
+	self:Spawn()
+	self:SetPos(SPAWN_966)
+	self:StripWeapons()
+	self:RemoveAllAmmo()
+	--self:SetGTeam(TEAM_SCP)
+	self:SetTeam(TEAM_SCP)
+	self:SetNClass(ROLE_SCP966)
+	--self:SetModel("models/immigrant/outlast/walrider_pm.mdl") --TODO: Get a better playermodel ...
+	self:SetModel('models/scp/966.mdl')
+	//self:SetMaterial("966black/966black", false)
+	self:SetHealth(1000)
+	self:SetMaxHealth(1000)
+	self:SetArmor(0)
+	self:SetWalkSpeed(150)
+	self:SetRunSpeed(150)
+	self:SetMaxSpeed(150)
+	self:SetJumpPower(190)
+	self:SetNoDraw(false) --DO NOT CHANGE THIS VARIABLE HERE, YOU WILL HAVE ISSUES
+	self.Active = true
+	self:SetupHands()
+	self.canblink = false
+	self:AllowFlashlight( false )
+	self.WasTeam = TEAM_SCP
+	self:SetNoTarget( true )
+	self:Give("weapon_scp_966")
+	self:SelectWeapon("weapon_scp_966")
+	self.BaseStats = nil
+	self.UsingArmor = nil
+	--Link2006
+	self:SetModelScale(1.0,0)
+	net.Start("RolesSelected")
+	net.Send(self)
 end
 
 function mply:IsActivePlayer()
