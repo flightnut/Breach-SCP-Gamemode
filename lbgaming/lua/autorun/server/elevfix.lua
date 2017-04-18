@@ -199,6 +199,10 @@ Link2006_AddFiles("addons/lbgaming/models",string.len("addons/lbgaming/")) -- st
 Link2006_AddFiles("addons/lbgaming/materials",string.len("addons/lbgaming/")) -- string Folder, string (length) to remove
 --lbgaming's sounds
 Link2006_AddFiles("addons/lbgaming/sound",string.len("addons/lbgaming/")) -- string Folder, string (length) to remove
+Link2006_AddFiles("addons/lbgaming/sound/shaklin",string.len("addons/lbgaming/")) -- string Folder, string (length) to remove
+Link2006_AddFiles("addons/lbgaming/sound/radio",string.len("addons/lbgaming/")) -- string Folder, string (length) to remove
+Link2006_AddFiles("addons/lbgaming/sound/nukes",string.len("addons/lbgaming/")) -- string Folder, string (length) to remove
+Link2006_AddFiles("addons/lbgaming/sound/footsteps",string.len("addons/lbgaming/")) -- string Folder, string (length) to remove
 --SCP294's stuff
 Link2006_AddFiles("addons/scp-294_entity_774064122/materials",string.len("addons/scp-294_entity_774064122/"))
 Link2006_AddFiles("addons/scp-294_entity_774064122/models",string.len("addons/scp-294_entity_774064122/"))
