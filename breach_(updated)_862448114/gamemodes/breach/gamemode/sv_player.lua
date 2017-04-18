@@ -1077,13 +1077,13 @@ function mply:ChangeSpecMode()
 		self:Spectate(OBS_MODE_ROAMING)
 		return
 	end
-	/*
+	--[[
 	if m == OBS_MODE_CHASE then
 		self:Spectate(OBS_MODE_IN_EYE)
 	else
 		self:Spectate(OBS_MODE_CHASE)
 	end
-	*/
+	--]]
 
 	if m == OBS_MODE_IN_EYE then
 		self:Spectate(OBS_MODE_CHASE)
