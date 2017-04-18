@@ -123,6 +123,41 @@ function mply:SetNTF()
 	self:SetModelScale(1.0,0)
 end
 
+function mply:SetScientist()
+	self.handsmodel = nil
+	self:UnSpectate()
+	self:GodDisable()
+	self:Spawn()
+	self:StripWeapons()
+	self:RemoveAllAmmo()
+	self:SetTeam(TEAM_SCI)
+	self:SetModel("models/player/kerry/class_scientist_"..math.random(1,7)..".mdl")
+	self:SetHealth(100)
+	self:SetMaxHealth(100)
+	self:SetArmor(0)
+	self:SetWalkSpeed(120)
+	self:SetRunSpeed(240)
+	self:SetMaxSpeed(240)
+	self:SetJumpPower(200)
+	self:SetNoDraw(false)
+	self:SetNClass(ROLE_RES)
+	self.Active = true
+	self:SetupHands()
+	self.canblink = true
+	self:AllowFlashlight( true )
+	self.WasTeam = TEAM_SCI
+	self:SetNoTarget( false )
+	self:Give("keycard_level2")
+	self.BaseStats = nil
+	self.UsingArmor = nil
+	self:SetNoCollideWithTeammates(true)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
+	--ForceShow the objectives for the current player. (Link2006)
+	net.Start("RolesSelected")
+	net.Send(self)
+end
+
 --MTF
 --MTF Weapons
 function mply:GiveMTFwep()
@@ -911,41 +946,6 @@ function mply:SetClassD()
 	self:AllowFlashlight( false )
 	self.WasTeam = TEAM_CLASSD
 	self:SetNoTarget( false )
-	self.BaseStats = nil
-	self.UsingArmor = nil
-	self:SetNoCollideWithTeammates(true)
-	--Set player's model to scale
-	self:SetModelScale(1.0,0)
-	--ForceShow the objectives for the current player. (Link2006)
-	net.Start("RolesSelected")
-	net.Send(self)
-end
-
-function mply:SetScientist()
-	self.handsmodel = nil
-	self:UnSpectate()
-	self:GodDisable()
-	self:Spawn()
-	self:StripWeapons()
-	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_SCI)
-	self:SetModel("models/player/kerry/class_scientist_"..math.random(1,7)..".mdl")
-	self:SetHealth(100)
-	self:SetMaxHealth(100)
-	self:SetArmor(0)
-	self:SetWalkSpeed(120)
-	self:SetRunSpeed(240)
-	self:SetMaxSpeed(240)
-	self:SetJumpPower(200)
-	self:SetNoDraw(false)
-	self:SetNClass(ROLE_RES)
-	self.Active = true
-	self:SetupHands()
-	self.canblink = true
-	self:AllowFlashlight( true )
-	self.WasTeam = TEAM_SCI
-	self:SetNoTarget( false )
-	self:Give("keycard_level2")
 	self.BaseStats = nil
 	self.UsingArmor = nil
 	self:SetNoCollideWithTeammates(true)
