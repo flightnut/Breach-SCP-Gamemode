@@ -25,7 +25,7 @@ SWEP.Primary.Sound			= Sound("Weapon_P90.Single")
 SWEP.Primary.Automatic		= true
 SWEP.Primary.Ammo			= "Pistol"
 SWEP.Primary.NumShots		= 1 --How many bullets to spawn ?
-SWEP.Primary.AmmoCost		= 1 --How many bullets does it cost to fire ? 
+SWEP.Primary.AmmoCost		= 1 --How many bullets does it cost to fire ?
 SWEP.Primary.Recoil			= 1.5
 SWEP.Primary.Cone			= 0.025
 SWEP.Primary.Delay			= 0.07
@@ -351,8 +351,10 @@ function SWEP:DoImpactEffect()
 end
 
 function SWEP:FireAnimationEvent(pos, ang, ev)
-	if not LocalPlayer():IsGhost() then
-		return true
+	if CLIENT then
+		if not LocalPlayer():IsGhost() then
+			return true
+		end
 	end
 end
 
