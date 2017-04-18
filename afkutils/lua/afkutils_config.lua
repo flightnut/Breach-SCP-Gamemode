@@ -74,12 +74,12 @@ afkutil.config.action = "kick"
 
 -- AFK warn time
 -- The seconds until the afk warning comes up
-afkutil.config.warntime = 30
+afkutil.config.warntime = 120
 
 -- Kick time
 -- The seconds until the player is kicked after the warning message is shown
 -- Only works if kick is enabled
-afkutil.config.kicktime = 60
+afkutil.config.kicktime = 240
 
 -- Time correction
 -- Sometimes the timing isn't always perfect
