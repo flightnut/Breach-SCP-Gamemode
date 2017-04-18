@@ -1,6 +1,0 @@
-"AddonInfo"
-{
-	"name"         "Away from Keyboard Utilities Version 1.2.2"
-	"author_name"  "Red"
-	"author_email" "link@thebigredforest.com"
-}
