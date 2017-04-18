@@ -189,7 +189,7 @@ end
 
 function GM:PlayerDisconnected( ply )
 	 ply:SetTeam(TEAM_SPEC)
-	 if #player.GetAll() < MINPLAYERS then
+	 if player.GetCount() < MINPLAYERS then
 		BroadcastLua('gamestarted = false')
 		gamestarted = false
 	 end

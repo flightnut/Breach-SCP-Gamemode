@@ -248,8 +248,8 @@ function SetupPlayers(pltab)
 	for k,v in pairs(player.GetAll()) do
 		v:SetSpectator() --I dont know anymore :^l
 	end
-	//local pltab = PLAYER_SETUP[#player.GetAll() - 2]
-	//local pltab = GetRoleTable(#player.GetAll())
+	//local pltab = PLAYER_SETUP[player.GetCount() - 2]
+	//local pltab = GetRoleTable(player.GetCount())
 	local allply = GetActivePlayers()
 	-- SCP, MTF, Class D, Researchers, Chaos Insurgency --
 

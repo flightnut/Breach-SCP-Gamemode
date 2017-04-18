@@ -148,7 +148,7 @@ usingview = 0
 viewstatus = 0
 function CalcViewTest( ply, pos, angles, fov )
 	local view = {}
-	if #player.GetAll() > 2 then
+	if player.GetCount() > 2 then
 		view.origin = pos
 		view.angles = angles
 		view.fov = fov

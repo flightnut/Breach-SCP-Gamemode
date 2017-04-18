@@ -708,7 +708,7 @@ function GM:GetFallDamage( ply, speed )
 end
 
 function PlayerCount()
-	return #player.GetAll()
+	return player.GetCount()
 end
 
 function CheckPLAYER_SETUP()

@@ -13,7 +13,7 @@ function AssaultGamemode()
 	local chaosSpawns = {}
 	table.Add(chaosSpawns, SPAWN_OUTSIDE)
 
-	for i=1, math.Round(#player.GetAll() / 2) do
+	for i=1, math.Round(player.GetCount() / 2) do
 		local pl = table.Random(all)
 		if pl == nil then break end  --WE'RE OUT OF USERS???
 		pl:SetNTF()
@@ -27,7 +27,7 @@ function AssaultGamemode()
 	end
 
 	--This here is useless now that we're nocolliding people when in the assault gamemode
-	for i=1, math.Round(#player.GetAll() / 2) do
+	for i=1, math.Round(player.GetCount() / 2) do
 		local pl = table.Random(all)
 		if pl == nil then break end --WE'RE OUT OF USERS ???
 		pl:SetChaosInsurgency(4)

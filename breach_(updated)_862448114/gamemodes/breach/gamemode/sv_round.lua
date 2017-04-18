@@ -338,7 +338,7 @@ function CheckEscortChaos(pl)
 end
 
 function WinCheck()
-	if #player.GetAll() < 2 then return end
+	if player.GetCount() < 2 then return end
 	if postround then return end
 
 	local endround = false

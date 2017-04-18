@@ -1,10 +1,10 @@
 --Anti RDM using AWarn
 --  Original by DMX
 --  Modified by Link2006
---Version 1.7
+-- 2.0 just means fuck this versioning lol ;)
 
 print("[AntiRDM] Loading AntiRDM...")
-local AntiRDMVersion = "1.7" --I should have an habit of updating this :|
+local AntiRDMVersion = "2.0" --I should have an habit of updating this :|
 antirdm_enabled = true --Global so we can have it everywhere, also put it here so it's easy to find
 br_friendlyfire = CreateConVar("br_friendlyfire","0",{FCVAR_SERVER_CAN_EXECUTE,FCVAR_NOTIFY},"0 = Disable FriendlyFire, 1 = Enable FriendlyFire") --Self Explained :)
 local rdmTable = {} -- Normal Table
@@ -251,8 +251,12 @@ hook.Add("PlayerShouldTakeDamage","AntiRDM_NoDamage",function(victim,attacker)
     --Force Friendly Fire OFF when round hasn't started
     if roundtype then
         if roundtype.name == "Zombie Plague" then
-            if victim:Team() ~= attacker:Team() then
-                return true --Always allow damage SCP <-> HUMANS in Zombie Plague
+            if IsValid(victim) and IsValid(attacker) then
+                if victim:IsPlayer() and attacker:IsPlayer() then
+                    if victim:Team() ~= attacker:Team() then
+                        return true --Always allow damage SCP <-> HUMANS in Zombie Plague
+                    end
+                end
             end
         elseif roundtype.name == "Multiple breaches" then
             if IsValid(victim) and IsValid(attacker) then
@@ -271,11 +275,11 @@ hook.Add("PlayerShouldTakeDamage","AntiRDM_NoDamage",function(victim,attacker)
     if noChaosHurt then
         --Prevent Finding chaos between 13:00 and 12:30 ... oops
         if IsValid(victim) and IsValid(attacker) then
-			if victim:IsPlayer() and attacker:IsPlayer() then 
+			if victim:IsPlayer() and attacker:IsPlayer() then
 				if (victim:Team() == TEAM_GUARD and attacker:Team() == TEAM_GUARD) or (victim:Team() == TEAM_GUARD and attacker:Team() == TEAM_CHAOS) or (attacker:Team() == TEAM_GUARD and victim:Team() == TEAM_CHAOS) then
 					return false
 				end
-			end 
+			end
         end
     end
     --Force Friendly Fire ON when Round is "spies"

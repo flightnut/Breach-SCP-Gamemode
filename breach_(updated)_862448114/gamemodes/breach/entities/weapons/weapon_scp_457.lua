@@ -122,6 +122,8 @@ function SWEP:Think() --Predicted Hook.
 					end
 					--END--
 				end
+			elseif (v:GetClass() == 'prop_dynamic' and v:GetModel() == 'models/foundation/containment/door01.mdl') then
+				v:Ignite(0.3,100) --Burn the doors down, do not heal the player though!
 			end
 		end
 	end

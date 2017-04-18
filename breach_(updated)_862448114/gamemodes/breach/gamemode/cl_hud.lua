@@ -175,7 +175,7 @@ hook.Add( "HUDPaint", "Breach_DrawHUD", function()
 	end
 	*/
 	/*
-	if #player.GetAll() < MINPLAYERS then
+	if player.GetCount() < MINPLAYERS then
 		draw.TextShadow( {
 			text = "Not enough players to start the round",
 			pos = { ScrW() / 2, ScrH() / 15 },
