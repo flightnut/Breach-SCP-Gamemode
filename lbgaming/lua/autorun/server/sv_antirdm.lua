@@ -271,9 +271,11 @@ hook.Add("PlayerShouldTakeDamage","AntiRDM_NoDamage",function(victim,attacker)
     if noChaosHurt then
         --Prevent Finding chaos between 13:00 and 12:30 ... oops
         if IsValid(victim) and IsValid(attacker) then
-            if (victim:Team() == TEAM_GUARD and attacker:Team() == TEAM_GUARD) or (victim:Team() == TEAM_GUARD and attacker:Team() == TEAM_CHAOS) or (attacker:Team() == TEAM_GUARD and victim:Team() == TEAM_CHAOS) then
-                return false
-            end
+			if victim:IsPlayer() and attacker:IsPlayer() then 
+				if (victim:Team() == TEAM_GUARD and attacker:Team() == TEAM_GUARD) or (victim:Team() == TEAM_GUARD and attacker:Team() == TEAM_CHAOS) or (attacker:Team() == TEAM_GUARD and victim:Team() == TEAM_CHAOS) then
+					return false
+				end
+			end 
         end
     end
     --Force Friendly Fire ON when Round is "spies"
