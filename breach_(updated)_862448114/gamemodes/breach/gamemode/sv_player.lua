@@ -36,6 +36,7 @@ function mply:GiveRandomWep(tab)
 	self:GiveAmmo((getwep.Primary.ClipSize * 4), getwep.Primary.Ammo, false)
 end
 
+--Karma--
 function mply:ReduceKarma(amount)
 	if KarmaEnabled() == false then return end
 	self.Karma = math.Clamp((self.Karma - amount), 1, MaxKarma())
@@ -64,57 +65,12 @@ function mply:SaveKarma()
 	self:SetPData( "breach_karma", self.Karma )
 end
 
+--NTF
+--NTF Weapons
 function mply:GiveNTFwep()
 	self:GiveRandomWep({"weapon_chaos_famas", "weapon_mtf_ump45"})
 end
-
-function mply:GiveMTFwep()
-	self:GiveRandomWep({"weapon_mtf_tmp", "weapon_mtf_ump45", "weapon_mtf_p90"})
-end
-
-function mply:GiveCIwep()
-	self:GiveRandomWep({"weapon_chaos_famas", "weapon_chaos_ak47", "weapon_chaos_m249"})
-end
-
-function mply:DeleteItems()
-	for k,v in pairs(ents.FindInSphere( self:GetPos(), 150 )) do
-		if v:IsWeapon() then
-			if !IsValid(v.Owner) then
-				v:Remove()
-			end
-		end
-	end
-end
-
-function mply:MTFArmor()
-	self.BaseStats = {
-		wspeed = self:GetWalkSpeed(),
-		rspeed = self:GetRunSpeed(),
-		jpower = self:GetJumpPower(),
-		 model = "models/player/kerry/class_scientist_"..math.random(1,7)..".mdl"
-	}
-	self:SetWalkSpeed(self.BaseStats.wspeed * 0.85)
-	self:SetRunSpeed(self.BaseStats.rspeed * 0.85)
-	self:SetJumpPower(self.BaseStats.jpower * 0.85)
-	self:SetModel("models/player/kerry/class_securety.mdl")
-	self.UsingArmor = "armor_mtfguard"
-end
-
-function mply:MTFComArmor()
-	self.BaseStats = {
-		wspeed = self:GetWalkSpeed(),
-		rspeed = self:GetRunSpeed(),
-		jpower = self:GetJumpPower(),
-		 model = "models/player/kerry/class_scientist_"..math.random(1,7)..".mdl"
-	}
-	self:SetWalkSpeed(self.BaseStats.wspeed * 0.90)
-	self:SetRunSpeed(self.BaseStats.rspeed * 0.90)
-	self:SetJumpPower(self.BaseStats.jpower * 0.90)
-	--self:SetModel("models/player/riot.mdl")
-	self:SetModel("models/player/kerry/class_securety_2.mdl")
-	self.UsingArmor = "armor_mtfcom"
-end
-
+--NTF Armor
 function mply:NTFArmor()
 	self.BaseStats = {
 		wspeed = self:GetWalkSpeed(),
@@ -129,179 +85,42 @@ function mply:NTFArmor()
 	self:SetModel("models/player/kerry/ntf.mdl")
 	self.UsingArmor = "armor_ntf"
 end
-
-function mply:ChaosInsArmor()
-	self.BaseStats = {
-		wspeed = self:GetWalkSpeed(),
-		rspeed = self:GetRunSpeed(),
-		jpower = self:GetJumpPower(),
-		 model = "models/player/kerry/class_scientist_"..math.random(1,7)..".mdl"
-	}
-	self:SetWalkSpeed(self.BaseStats.wspeed * 0.86)
-	self:SetRunSpeed(self.BaseStats.rspeed * 0.86)
-	self:SetJumpPower(self.BaseStats.jpower * 0.86)
-	--self:SetModel("models/mw2/skin_04/mw2_soldier_04.mdl")
-	self:SetModel("models/mw2/skin_05/mw2_soldier_04.mdl")
-	self.UsingArmor = "armor_chaosins"
-end
-
-function mply:UnUseArmor()
-	if self.UsingArmor == nil then return end
-	self:SetWalkSpeed(self.BaseStats.wspeed)
-	self:SetRunSpeed(self.BaseStats.rspeed)
-	self:SetJumpPower(self.BaseStats.jpower)
-	self:SetModel(self.BaseStats.model)
-	local item = ents.Create( self.UsingArmor )
-	if IsValid( item ) then
-		item:Spawn()
-		item:SetPos( self:GetPos() )
-		self:EmitSound( Sound("npc/combine_soldier/zipline_clothing".. math.random(1, 2).. ".wav") )
-	end
-	self.UsingArmor = nil
-end
-
-function mply:SetSpectator()
-	self.handsmodel = nil
-	self:DropObject() --Drop the object they're holding (i.e. The stupidly OP melon), Link2006's fix.
-	self:Spectate(6)
-	self:StripWeapons()
-	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_SPEC)
-	self:SetNoDraw(true)
-	if self.SetNClass then
-		self:SetNClass(ROLE_SPEC)
-	end
-	self.Active = true
-	print("adding " .. self:Nick() .. " to spectators")
-	self.canblink = false
-	self:AllowFlashlight( false )
-	self:SetNoTarget( true )
-	self.BaseStats = nil
-	self.UsingArmor = nil
-	//self:Spectate(OBS_MODE_IN_EYE)
-	self:SetNoCollideWithTeammates(true)
-	--Set player's model to scale
-	self:SetModelScale(1.0,0)
-end
-
-function mply:SetSCP1048a()
-	self.handsmodel = nil
-	self:UnSpectate()
-	self:GodDisable()
-	self:Spawn()
-	self:SetPos(SPAWN_173 + Vector(0, 30, 0))
-	self:StripWeapons()
-	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_SCP)
-	self:SetNClass(ROLE_SCP1048A)
-	self:SetModel("models/player/mrsilver/SCP-1048-A.mdl")
-	self:SetHealth(500)
-	self:SetMaxHealth(500)
-	self:SetArmor(0)
-	self:SetWalkSpeed(100)
-	self:SetRunSpeed(180)
-	self:SetMaxSpeed(180)
-	self:SetJumpPower(250)
-	self:SetNoDraw(false)
-	self.Active = true
-	self:SetupHands()
-	self.canblink = false
-	self:AllowFlashlight( false )
-	self.WasTeam = TEAM_SCP
-	self:SetNoTarget( true )
-	self:Give("weapon_scp_1048a")
-	self:SelectWeapon("weapon_scp_1048a")
-	self.BaseStats = nil
-	self.UsingArmor = nil
-	self:SetNoCollideWithTeammates(false)
-	--Set player's model to scale
-	self:SetModelScale(1.0,0)
-	--ForceShow the objectives for the current player. (Link2006)
-	net.Start("RolesSelected")
-	net.Send(self)
-end
-
-function mply:SetSCP035()
-	self.handsmodel = nil
-	self:UnSpectate()
-	self:GodDisable()
-	self:Spawn()
-	self:SetPos(SPAWN_035)
-	self:StripWeapons()
-	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_SCP)
-	self:SetNClass(ROLE_SCP035)
-	self:SetModel("models/vinrax/player/035_player.mdl")
-	self:SetHealth(350)
-	self:SetMaxHealth(350)
-	self:SetArmor(0)
-	self:SetWalkSpeed(140)
-	self:SetRunSpeed(235)
-	self:SetMaxSpeed(235)
-	self:SetJumpPower(200)
-	self:SetNoDraw(false)
-	self.Active = true
-	self.canblink = false
-	self:AllowFlashlight( true )
-	self.WasTeam = TEAM_SCP
-	self:SetNoTarget( true )
-	timer.Create( "035weps", 5, 1, function()
-	if self:GetNClass() == ROLE_SCP035 then
-	--self:GiveNTFwep()
-	self:Give("weapon_mtf_deagle") --YOU GET A DEAGLE INSTEAD. >:(
-	--self:GiveAmmo(450, "SMG1", true) --No.
-	--self:GiveAmmo(450, "AR2", true) -- Nope.
-	self:GiveAmmo(1000, "Pistol") --Yes.
-	self:Give("weapon_crowbar")
-	self:Give("keycard_level3")
-	self:Give("item_radio")
-	self:Give("nightvision") --Give Nightvision to 035 :)
-	self:SelectWeapon("weapon_mtf_deagle")
-	end
-	end)
-	self:SetupHands()
-	self.BaseStats = nil
-	self.UsingArmor = nil
-	self:SetNoCollideWithTeammates(false)
-	--Set player's model to scale
-	self:SetModelScale(1.0,0)
-	--ForceShow the objectives for the current player. (Link2006)
-	net.Start("RolesSelected")
-	net.Send(self)
-end
-
-function mply:SetClassD()
+--NTF Roles
+function mply:SetNTF()
 	self.handsmodel = nil
 	self:UnSpectate()
 	self:GodDisable()
 	self:Spawn()
 	self:StripWeapons()
 	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_CLASSD)
-	self:SetModel("models/player/kerry/class_d_"..math.random(1,7)..".mdl")
+	self:SetTeam(TEAM_GUARD)
+	self:SetModel("models/player/kerry/ntf.mdl")
 	self:SetHealth(100)
 	self:SetMaxHealth(100)
-	self:SetArmor(0)
+	self:SetArmor(25)
 	self:SetWalkSpeed(120)
 	self:SetRunSpeed(240)
 	self:SetMaxSpeed(240)
 	self:SetJumpPower(200)
 	self:SetNoDraw(false)
-	self:SetNClass(ROLE_CLASSD)
+	self:SetNClass(ROLE_MTFNTF)
 	self.Active = true
+	self:Give("keycard_level4")
+	self:Give("weapon_stunstick")
+	self:Give("item_radio")
+	self:Give("nightvision")
+	self:GiveNTFwep()
 	self:SetupHands()
 	self.canblink = true
-	self:AllowFlashlight( false )
-	self.WasTeam = TEAM_CLASSD
+	self:AllowFlashlight( true )
+	self.WasTeam = TEAM_GUARD
 	self:SetNoTarget( false )
-	self.BaseStats = nil
-	self.UsingArmor = nil
-	self:SetNoCollideWithTeammates(true)
-	--Set player's model to scale
-	self:SetModelScale(1.0,0)
-	--ForceShow the objectives for the current player. (Link2006)
 	net.Start("RolesSelected")
 	net.Send(self)
+	self:NTFArmor()
+	self:SetNoCollideWithTeammates(false)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
 end
 
 function mply:SetScientist()
@@ -339,6 +158,41 @@ function mply:SetScientist()
 	net.Send(self)
 end
 
+--MTF
+--MTF Weapons
+function mply:GiveMTFwep()
+	self:GiveRandomWep({"weapon_mtf_tmp", "weapon_mtf_ump45", "weapon_mtf_p90"})
+end
+--MTF Armor
+function mply:MTFArmor()
+	self.BaseStats = {
+		wspeed = self:GetWalkSpeed(),
+		rspeed = self:GetRunSpeed(),
+		jpower = self:GetJumpPower(),
+		 model = "models/player/kerry/class_scientist_"..math.random(1,7)..".mdl"
+	}
+	self:SetWalkSpeed(self.BaseStats.wspeed * 0.85)
+	self:SetRunSpeed(self.BaseStats.rspeed * 0.85)
+	self:SetJumpPower(self.BaseStats.jpower * 0.85)
+	self:SetModel("models/player/kerry/class_securety.mdl")
+	self.UsingArmor = "armor_mtfguard"
+end
+
+function mply:MTFComArmor()
+	self.BaseStats = {
+		wspeed = self:GetWalkSpeed(),
+		rspeed = self:GetRunSpeed(),
+		jpower = self:GetJumpPower(),
+		 model = "models/player/kerry/class_scientist_"..math.random(1,7)..".mdl"
+	}
+	self:SetWalkSpeed(self.BaseStats.wspeed * 0.90)
+	self:SetRunSpeed(self.BaseStats.rspeed * 0.90)
+	self:SetJumpPower(self.BaseStats.jpower * 0.90)
+	--self:SetModel("models/player/riot.mdl")
+	self:SetModel("models/player/kerry/class_securety_2.mdl")
+	self.UsingArmor = "armor_mtfcom"
+end
+--MTF Roles
 function mply:SetCommander()
 	self.handsmodel = nil
 	self:UnSpectate()
@@ -347,7 +201,7 @@ function mply:SetCommander()
 	self:StripWeapons()
 	self:RemoveAllAmmo()
 	self:SetTeam(TEAM_GUARD)
-	//self:SetModel("models/player/riot.mdl")
+	--self:SetModel("models/player/riot.mdl")
 	self:SetHealth(100)
 	self:SetMaxHealth(100)
 	self:SetWalkSpeed(120)
@@ -388,7 +242,7 @@ function mply:SetGuard()
 	self:StripWeapons()
 	self:RemoveAllAmmo()
 	self:SetTeam(TEAM_GUARD)
-	//self:SetModel("models/player/swat.mdl")
+	--self:SetModel("models/player/swat.mdl")
 	self:SetHealth(100)
 	self:SetMaxHealth(100)
 	self:SetWalkSpeed(120)
@@ -403,7 +257,7 @@ function mply:SetGuard()
 	self:Give("item_radio")
 	self:GiveMTFwep()
 	self:SetupHands()
-	//PrintTable(debug.getinfo( self.SetupHands ))
+	--PrintTable(debug.getinfo( self.SetupHands ))
 	self.canblink = true
 	self:AllowFlashlight( true )
 	self.WasTeam = TEAM_GUARD
@@ -417,6 +271,37 @@ function mply:SetGuard()
 	net.Send(self)
 end
 
+--Chaos
+--Chaos Weapons
+function mply:GiveCIwep()
+	self:GiveRandomWep({"weapon_chaos_famas", "weapon_chaos_ak47", "weapon_chaos_m249"})
+end
+--
+function mply:DeleteItems()
+	for k,v in pairs(ents.FindInSphere( self:GetPos(), 150 )) do
+		if v:IsWeapon() then
+			if !IsValid(v.Owner) then
+				v:Remove()
+			end
+		end
+	end
+end
+--Chaos Armor
+function mply:ChaosInsArmor()
+	self.BaseStats = {
+		wspeed = self:GetWalkSpeed(),
+		rspeed = self:GetRunSpeed(),
+		jpower = self:GetJumpPower(),
+		 model = "models/player/kerry/class_scientist_"..math.random(1,7)..".mdl"
+	}
+	self:SetWalkSpeed(self.BaseStats.wspeed * 0.86)
+	self:SetRunSpeed(self.BaseStats.rspeed * 0.86)
+	self:SetJumpPower(self.BaseStats.jpower * 0.86)
+	--self:SetModel("models/mw2/skin_04/mw2_soldier_04.mdl")
+	self:SetModel("models/mw2/skin_05/mw2_soldier_04.mdl")
+	self.UsingArmor = "armor_chaosins"
+end
+--Chaos Roletype
 function mply:SetChaosInsurgency(stealth)
 	self.handsmodel = {
 		model = "models/weapons/c_arms_cstrike.mdl",
@@ -443,13 +328,13 @@ function mply:SetChaosInsurgency(stealth)
 	self:Give("item_radio")
 	self:Give("nightvision")
 	if stealth == 1 then
-		//self:SetModel("models/player/swat.mdl")
+		--self:SetModel("models/player/swat.mdl")
 		self:MTFArmor()
 		self:Give("keycard_level3")
 		self:GiveMTFwep()
 		self:SetNClass(ROLE_MTFGUARD)
 	elseif stealth == 2 then
-		//self:SetModel("models/player/kerry/ntf.mdl")
+		--self:SetModel("models/player/kerry/ntf.mdl")
 		self:NTFArmor()
 		self:Give("keycard_level4")
 		self:GiveNTFwep()
@@ -457,7 +342,7 @@ function mply:SetChaosInsurgency(stealth)
 	else
 		self:GiveCIwep()
 		self:Give("keycard_omni")
-		//self:SetModel("models/mw2/skin_04/mw2_soldier_04.mdl")
+		--self:SetModel("models/mw2/skin_04/mw2_soldier_04.mdl")
 		self:ChaosInsArmor()
 		if stealth == 3 then
 			self:SetNClass(ROLE_MTFNTF)
@@ -526,39 +411,75 @@ function mply:SetChaosInsCom(spawn)
 	net.Send(self)
 end
 
-function mply:SetSiteDirector(spawn)
-	self:UnSpectate()
-	self:GodDisable()
-	local lpos = self:GetPos()
-	if spawn == true then
-		self:Spawn()
-		self:SetPos(lpos)
-	else
-		self:Spawn()
+function mply:UnUseArmor()
+	if self.UsingArmor == nil then return end
+	self:SetWalkSpeed(self.BaseStats.wspeed)
+	self:SetRunSpeed(self.BaseStats.rspeed)
+	self:SetJumpPower(self.BaseStats.jpower)
+	self:SetModel(self.BaseStats.model)
+	local item = ents.Create( self.UsingArmor )
+	if IsValid( item ) then
+		item:Spawn()
+		item:SetPos( self:GetPos() )
+		self:EmitSound( Sound("npc/combine_soldier/zipline_clothing".. math.random(1, 2).. ".wav") )
 	end
+	self.UsingArmor = nil
+end
+
+function mply:SetSpectator()
+	self.handsmodel = nil
+	self:DropObject() --Drop the object they're holding (i.e. The stupidly OP melon), Link2006's fix.
+	self:Spectate(6)
 	self:StripWeapons()
 	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_GUARD)
-	self:SetHealth(100)
-	self:SetMaxHealth(100)
-	self:SetWalkSpeed(135)
-	self:SetRunSpeed(255)
-	self:SetMaxSpeed(255)
-	self:SetJumpPower(200)
+	self:SetTeam(TEAM_SPEC)
+	self:SetNoDraw(true)
+	if self.SetNClass then
+		self:SetNClass(ROLE_SPEC)
+	end
+	self.Active = true
+	print("adding " .. self:Nick() .. " to spectators")
+	self.canblink = false
+	self:AllowFlashlight( false )
+	self:SetNoTarget( true )
+	self.BaseStats = nil
+	self.UsingArmor = nil
+	--self:Spectate(OBS_MODE_IN_EYE)
+	self:SetNoCollideWithTeammates(true)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
+end
+--SCP Roles
+--SCP-1048-A
+function mply:SetSCP1048a()
+	self.handsmodel = nil
+	self:UnSpectate()
+	self:GodDisable()
+	self:Spawn()
+	self:SetPos(SPAWN_173 + Vector(0, 30, 0))
+	self:StripWeapons()
+	self:RemoveAllAmmo()
+	self:SetTeam(TEAM_SCP)
+	self:SetNClass(ROLE_SCP1048A)
+	self:SetModel("models/player/mrsilver/SCP-1048-A.mdl")
+	self:SetHealth(500)
+	self:SetMaxHealth(500)
+	self:SetArmor(0)
+	self:SetWalkSpeed(100)
+	self:SetRunSpeed(180)
+	self:SetMaxSpeed(180)
+	self:SetJumpPower(250)
 	self:SetNoDraw(false)
 	self.Active = true
-	self:Give("item_radio")
-	self:Give("keycard_level5")
-	self:Give("weapon_mtf_deagle")
-	self:GiveAmmo(35, "Pistol", false)
-	self:SetModel("models/player/breen.mdl")
-	self:SetPlayerColor( Vector(0,0,0) )
 	self:SetupHands()
-	self.canblink = true
-	self:AllowFlashlight( true )
-	self.WasTeam = TEAM_GUARD
-	self:SetNClass(ROLE_SITEDIRECTOR)
-	self:SetNoTarget( false )
+	self.canblink = false
+	self:AllowFlashlight( false )
+	self.WasTeam = TEAM_SCP
+	self:SetNoTarget( true )
+	self:Give("weapon_scp_1048a")
+	self:SelectWeapon("weapon_scp_1048a")
+	self.BaseStats = nil
+	self.UsingArmor = nil
 	self:SetNoCollideWithTeammates(false)
 	--Set player's model to scale
 	self:SetModelScale(1.0,0)
@@ -566,44 +487,56 @@ function mply:SetSiteDirector(spawn)
 	net.Start("RolesSelected")
 	net.Send(self)
 end
-
-function mply:SetNTF()
+--SCP-035
+function mply:SetSCP035()
 	self.handsmodel = nil
 	self:UnSpectate()
 	self:GodDisable()
 	self:Spawn()
+	self:SetPos(SPAWN_035)
 	self:StripWeapons()
 	self:RemoveAllAmmo()
-	self:SetTeam(TEAM_GUARD)
-	self:SetModel("models/player/kerry/ntf.mdl")
-	self:SetHealth(100)
-	self:SetMaxHealth(100)
-	self:SetArmor(25)
-	self:SetWalkSpeed(120)
-	self:SetRunSpeed(240)
-	self:SetMaxSpeed(240)
+	self:SetTeam(TEAM_SCP)
+	self:SetNClass(ROLE_SCP035)
+	self:SetModel("models/vinrax/player/035_player.mdl")
+	self:SetHealth(350)
+	self:SetMaxHealth(350)
+	self:SetArmor(0)
+	self:SetWalkSpeed(140)
+	self:SetRunSpeed(235)
+	self:SetMaxSpeed(235)
 	self:SetJumpPower(200)
 	self:SetNoDraw(false)
-	self:SetNClass(ROLE_MTFNTF)
 	self.Active = true
-	self:Give("keycard_level4")
-	self:Give("weapon_stunstick")
-	self:Give("item_radio")
-	self:Give("nightvision")
-	self:GiveNTFwep()
-	self:SetupHands()
-	self.canblink = true
+	self.canblink = false
 	self:AllowFlashlight( true )
-	self.WasTeam = TEAM_GUARD
-	self:SetNoTarget( false )
-	net.Start("RolesSelected")
-	net.Send(self)
-	self:NTFArmor()
+	self.WasTeam = TEAM_SCP
+	self:SetNoTarget( true )
+	timer.Create( "035weps", 5, 1, function()
+	if self:GetNClass() == ROLE_SCP035 then
+	--self:GiveNTFwep()
+	self:Give("weapon_mtf_deagle") --YOU GET A DEAGLE INSTEAD. >:(
+	--self:GiveAmmo(450, "SMG1", true) --No.
+	--self:GiveAmmo(450, "AR2", true) -- Nope.
+	self:GiveAmmo(1000, "Pistol") --Yes.
+	self:Give("weapon_crowbar")
+	self:Give("keycard_level3")
+	self:Give("item_radio")
+	self:Give("nightvision") --Give Nightvision to 035 :)
+	self:SelectWeapon("weapon_mtf_deagle")
+	end
+	end)
+	self:SetupHands()
+	self.BaseStats = nil
+	self.UsingArmor = nil
 	self:SetNoCollideWithTeammates(false)
 	--Set player's model to scale
 	self:SetModelScale(1.0,0)
+	--ForceShow the objectives for the current player. (Link2006)
+	net.Start("RolesSelected")
+	net.Send(self)
 end
-
+--SCP-173
 function mply:SetSCP173()
 	self.handsmodel = nil
 	self:UnSpectate()
@@ -641,7 +574,7 @@ function mply:SetSCP173()
 	net.Start("RolesSelected")
 	net.Send(self)
 end
-
+--SCP-106
 function mply:SetSCP106()
 	self.handsmodel = nil
 	self:UnSpectate()
@@ -678,7 +611,7 @@ function mply:SetSCP106()
 	net.Start("RolesSelected")
 	net.Send(self)
 end
-
+--SCP-049
 function mply:SetSCP049()
 	self.handsmodel = nil
 	self:UnSpectate()
@@ -715,9 +648,7 @@ function mply:SetSCP049()
 	net.Start("RolesSelected")
 	net.Send(self)
 end
-
---New SCP: 682
-
+--SCP-682
 function mply:SetSCP682()
 	self.handsmodel = nil
 	self:UnSpectate()
@@ -755,7 +686,7 @@ function mply:SetSCP682()
 	net.Start("RolesSelected")
 	net.Send(self)
 end
-
+--SCP-457
 function mply:SetSCP457()
 	self.handsmodel = nil
 	self:UnSpectate()
@@ -767,7 +698,7 @@ function mply:SetSCP457()
 	self:SetTeam(TEAM_SCP)
 	self:SetNClass(ROLE_SCP457)
 	self:SetModel("models/player/corpse1.mdl")
-	//self:SetMaterial( "models/flesh", false )
+	--self:SetMaterial( "models/flesh", false )
 	self:SetHealth(2000)
 	self:SetMaxHealth(2000)
 	self:SetArmor(0)
@@ -793,18 +724,7 @@ function mply:SetSCP457()
 	net.Start("RolesSelected")
 	net.Send(self)
 end
-
-function mply:DropWep(class, clip)
-	local wep = ents.Create( class )
-	if IsValid( wep ) then
-		wep:SetPos( self:GetPos() )
-		wep:Spawn()
-		if isnumber(clip) then
-			wep:SetClip1(clip)
-		end
-	end
-end
-
+--SCP-0-082
 function mply:SetSCP0082()
 	self.handsmodel = nil
 	self:UnSpectate()
@@ -820,20 +740,20 @@ function mply:SetSCP0082()
 		print(newModel)
 		self:SetModel(newModel)
 	elseif self:GetModel() == "models/player/kerry/class_securety_2.mdl" then
-		print("Commander Into Zombie!")
+		print("A commander has been turned into SCP-008-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
 	elseif self:GetModel() == "models/player/kerry/class_securety.mdl" then
 		--MTF
-		print("MTF Into zombie")
+		print("A MTF has been turned into SCP-008-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
 	elseif self:GetModel() == "models/player/kerry/ntf.mdl" then
 		--NTF
-		print("NTF Into zombie")
+		print("A NTF has been turned into SCP-008-2!")
 		--self:SetModel("models/player/kerry/class_securety_zombie.mdl")
 		self:SetModel('models/player/kerry/ntf_z.mdl') --New Zombie model for NTF :)
 	elseif self:GetModel() == "models/mw2/skin_04/mw2_soldier_04.mdl" then
 		--Chaos!
-		print("Chaos into zombie")
+		print("A member of Chaos has been turned into SCP-008-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
 	else
 		print("UNKNOWN MODEL, Setting to zombie_classic!")
@@ -880,7 +800,7 @@ function mply:SetSCP0082()
 	--Set player's model to scale
 	self:SetModelScale(1.0,0)
 end
-
+--SCP-0-492 Baby Zombie
 function mply:SetSCP0492()
 	self.handsmodel = nil
 	self:UnSpectate()
@@ -902,20 +822,20 @@ function mply:SetSCP0492()
 		print(newModel)
 		self:SetModel(newModel)
 	elseif self:GetModel() == "models/player/kerry/class_securety_2.mdl" then
-		print("Commander Into Zombie!")
+		print("A commander has been turned into SCP-049-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
 	elseif self:GetModel() == "models/player/kerry/class_securety.mdl" then
 		--MTF
-		print("MTF Into zombie")
+		print("A MTF has been turned into SCP-049-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
 	elseif self:GetModel() == "models/player/kerry/ntf.mdl" then
 		--NTF
-		print("NTF Into zombie")
+		print("A NTF has been turned into SCP-049-2!")
 		--self:SetModel("models/player/kerry/class_securety_zombie.mdl")
 		self:SetModel('models/player/kerry/ntf_z.mdl') --New Zombie model for NTF :)
 	elseif self:GetModel() == "models/mw2/skin_05/mw2_soldier_04.mdl" then
 		--Chaos!
-		print("Chaos into zombie")
+		print("A member of Chaos has been turned into SCP-049-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
 	else
 		print("UNKNOWN MODEL, Setting to zombie_classic!")
@@ -962,7 +882,7 @@ function mply:SetSCP0492()
 	--Set player's model to scale
 	self:SetModelScale(1.0,0)
 end
-
+--SCP-966
 function mply:SetSCP966()
 	self:Flashlight( false )
 	self.handsmodel = nil
@@ -977,7 +897,7 @@ function mply:SetSCP966()
 	self:SetNClass(ROLE_SCP966)
 	--self:SetModel("models/immigrant/outlast/walrider_pm.mdl") --TODO: Get a better playermodel ...
 	self:SetModel('models/scp/966.mdl')
-	//self:SetMaterial("966black/966black", false)
+	--self:SetMaterial("966black/966black", false)
 	self:SetHealth(1000)
 	self:SetMaxHealth(1000)
 	self:SetArmor(0)
@@ -1000,6 +920,92 @@ function mply:SetSCP966()
 	self:SetModelScale(1.0,0)
 	net.Start("RolesSelected")
 	net.Send(self)
+end
+
+function mply:SetClassD()
+	self.handsmodel = nil
+	self:UnSpectate()
+	self:GodDisable()
+	self:Spawn()
+	self:StripWeapons()
+	self:RemoveAllAmmo()
+	self:SetTeam(TEAM_CLASSD)
+	self:SetModel("models/player/kerry/class_d_"..math.random(1,7)..".mdl")
+	self:SetHealth(100)
+	self:SetMaxHealth(100)
+	self:SetArmor(0)
+	self:SetWalkSpeed(120)
+	self:SetRunSpeed(240)
+	self:SetMaxSpeed(240)
+	self:SetJumpPower(200)
+	self:SetNoDraw(false)
+	self:SetNClass(ROLE_CLASSD)
+	self.Active = true
+	self:SetupHands()
+	self.canblink = true
+	self:AllowFlashlight( false )
+	self.WasTeam = TEAM_CLASSD
+	self:SetNoTarget( false )
+	self.BaseStats = nil
+	self.UsingArmor = nil
+	self:SetNoCollideWithTeammates(true)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
+	--ForceShow the objectives for the current player. (Link2006)
+	net.Start("RolesSelected")
+	net.Send(self)
+end
+
+function mply:SetSiteDirector(spawn)
+	self:UnSpectate()
+	self:GodDisable()
+	local lpos = self:GetPos()
+	if spawn == true then
+		self:Spawn()
+		self:SetPos(lpos)
+	else
+		self:Spawn()
+	end
+	self:StripWeapons()
+	self:RemoveAllAmmo()
+	self:SetTeam(TEAM_GUARD)
+	self:SetHealth(100)
+	self:SetMaxHealth(100)
+	self:SetWalkSpeed(135)
+	self:SetRunSpeed(255)
+	self:SetMaxSpeed(255)
+	self:SetJumpPower(200)
+	self:SetNoDraw(false)
+	self.Active = true
+	self:Give("item_radio")
+	self:Give("keycard_level5")
+	self:Give("weapon_mtf_deagle")
+	self:GiveAmmo(35, "Pistol", false)
+	self:SetModel("models/player/breen.mdl")
+	self:SetPlayerColor( Vector(0,0,0) )
+	self:SetupHands()
+	self.canblink = true
+	self:AllowFlashlight( true )
+	self.WasTeam = TEAM_GUARD
+	self:SetNClass(ROLE_SITEDIRECTOR)
+	self:SetNoTarget( false )
+	self:SetNoCollideWithTeammates(false)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
+	--ForceShow the objectives for the current player. (Link2006)
+	net.Start("RolesSelected")
+	net.Send(self)
+end
+
+function mply:DropWep(class, clip)
+	local wep = ents.Create( class )
+	if IsValid( wep ) then
+		wep:SetPos( self:GetPos() )
+		wep:Spawn()
+		if isnumber(clip) then
+			wep:SetClip1(clip)
+		end
+	end
 end
 
 function mply:IsActivePlayer()
@@ -1071,13 +1077,13 @@ function mply:ChangeSpecMode()
 		self:Spectate(OBS_MODE_ROAMING)
 		return
 	end
-	/*
+	--[[
 	if m == OBS_MODE_CHASE then
 		self:Spectate(OBS_MODE_IN_EYE)
 	else
 		self:Spectate(OBS_MODE_CHASE)
 	end
-	*/
+	--]]
 
 	if m == OBS_MODE_IN_EYE then
 		self:Spectate(OBS_MODE_CHASE)
@@ -1165,7 +1171,6 @@ end
 net.Receive( "spawnas", function( len, ply )
 	local num = net.ReadInt( 32 )
 	Link2006_RespawnPlayer(ply,num,ply) --Admin respawns themselves
-
 end)
 
 net.Receive( "spawnthemas", function( len, ply )
