@@ -178,7 +178,7 @@ function mply:SetSpectator()
 	self:SetNoTarget( true )
 	self.BaseStats = nil
 	self.UsingArmor = nil
-	//self:Spectate(OBS_MODE_IN_EYE)
+	--self:Spectate(OBS_MODE_IN_EYE)
 	self:SetNoCollideWithTeammates(true)
 	--Set player's model to scale
 	self:SetModelScale(1.0,0)
@@ -347,7 +347,7 @@ function mply:SetCommander()
 	self:StripWeapons()
 	self:RemoveAllAmmo()
 	self:SetTeam(TEAM_GUARD)
-	//self:SetModel("models/player/riot.mdl")
+	--self:SetModel("models/player/riot.mdl")
 	self:SetHealth(100)
 	self:SetMaxHealth(100)
 	self:SetWalkSpeed(120)
@@ -388,7 +388,7 @@ function mply:SetGuard()
 	self:StripWeapons()
 	self:RemoveAllAmmo()
 	self:SetTeam(TEAM_GUARD)
-	//self:SetModel("models/player/swat.mdl")
+	--self:SetModel("models/player/swat.mdl")
 	self:SetHealth(100)
 	self:SetMaxHealth(100)
 	self:SetWalkSpeed(120)
@@ -403,7 +403,7 @@ function mply:SetGuard()
 	self:Give("item_radio")
 	self:GiveMTFwep()
 	self:SetupHands()
-	//PrintTable(debug.getinfo( self.SetupHands ))
+	--PrintTable(debug.getinfo( self.SetupHands ))
 	self.canblink = true
 	self:AllowFlashlight( true )
 	self.WasTeam = TEAM_GUARD
@@ -443,13 +443,13 @@ function mply:SetChaosInsurgency(stealth)
 	self:Give("item_radio")
 	self:Give("nightvision")
 	if stealth == 1 then
-		//self:SetModel("models/player/swat.mdl")
+		--self:SetModel("models/player/swat.mdl")
 		self:MTFArmor()
 		self:Give("keycard_level3")
 		self:GiveMTFwep()
 		self:SetNClass(ROLE_MTFGUARD)
 	elseif stealth == 2 then
-		//self:SetModel("models/player/kerry/ntf.mdl")
+		--self:SetModel("models/player/kerry/ntf.mdl")
 		self:NTFArmor()
 		self:Give("keycard_level4")
 		self:GiveNTFwep()
@@ -457,7 +457,7 @@ function mply:SetChaosInsurgency(stealth)
 	else
 		self:GiveCIwep()
 		self:Give("keycard_omni")
-		//self:SetModel("models/mw2/skin_04/mw2_soldier_04.mdl")
+		--self:SetModel("models/mw2/skin_04/mw2_soldier_04.mdl")
 		self:ChaosInsArmor()
 		if stealth == 3 then
 			self:SetNClass(ROLE_MTFNTF)
@@ -767,7 +767,7 @@ function mply:SetSCP457()
 	self:SetTeam(TEAM_SCP)
 	self:SetNClass(ROLE_SCP457)
 	self:SetModel("models/player/corpse1.mdl")
-	//self:SetMaterial( "models/flesh", false )
+	--self:SetMaterial( "models/flesh", false )
 	self:SetHealth(2000)
 	self:SetMaxHealth(2000)
 	self:SetArmor(0)
@@ -820,20 +820,20 @@ function mply:SetSCP0082()
 		print(newModel)
 		self:SetModel(newModel)
 	elseif self:GetModel() == "models/player/kerry/class_securety_2.mdl" then
-		print("Commander Into Zombie!")
+		print("A commander has been turned into SCP-008-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
 	elseif self:GetModel() == "models/player/kerry/class_securety.mdl" then
 		--MTF
-		print("MTF Into zombie")
+		print("A MTF has been turned into SCP-008-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
 	elseif self:GetModel() == "models/player/kerry/ntf.mdl" then
 		--NTF
-		print("NTF Into zombie")
+		print("A NTF has been turned into SCP-008-2!")
 		--self:SetModel("models/player/kerry/class_securety_zombie.mdl")
 		self:SetModel('models/player/kerry/ntf_z.mdl') --New Zombie model for NTF :)
 	elseif self:GetModel() == "models/mw2/skin_04/mw2_soldier_04.mdl" then
 		--Chaos!
-		print("Chaos into zombie")
+		print("A member of Chaos has been turned into SCP-008-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
 	else
 		print("UNKNOWN MODEL, Setting to zombie_classic!")
@@ -902,20 +902,20 @@ function mply:SetSCP0492()
 		print(newModel)
 		self:SetModel(newModel)
 	elseif self:GetModel() == "models/player/kerry/class_securety_2.mdl" then
-		print("Commander Into Zombie!")
+		print("A commander has been turned into SCP-049-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
 	elseif self:GetModel() == "models/player/kerry/class_securety.mdl" then
 		--MTF
-		print("MTF Into zombie")
+		print("A MTF has been turned into SCP-049-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
 	elseif self:GetModel() == "models/player/kerry/ntf.mdl" then
 		--NTF
-		print("NTF Into zombie")
+		print("A NTF has been turned into SCP-049-2!")
 		--self:SetModel("models/player/kerry/class_securety_zombie.mdl")
 		self:SetModel('models/player/kerry/ntf_z.mdl') --New Zombie model for NTF :)
 	elseif self:GetModel() == "models/mw2/skin_05/mw2_soldier_04.mdl" then
 		--Chaos!
-		print("Chaos into zombie")
+		print("A member of Chaos has been turned into SCP-049-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
 	else
 		print("UNKNOWN MODEL, Setting to zombie_classic!")
@@ -977,7 +977,7 @@ function mply:SetSCP966()
 	self:SetNClass(ROLE_SCP966)
 	--self:SetModel("models/immigrant/outlast/walrider_pm.mdl") --TODO: Get a better playermodel ...
 	self:SetModel('models/scp/966.mdl')
-	//self:SetMaterial("966black/966black", false)
+	--self:SetMaterial("966black/966black", false)
 	self:SetHealth(1000)
 	self:SetMaxHealth(1000)
 	self:SetArmor(0)
