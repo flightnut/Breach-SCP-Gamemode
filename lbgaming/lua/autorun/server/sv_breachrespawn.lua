@@ -492,13 +492,13 @@ hook.Add("PostCleanupMap","Link2006_AutoSpawn",function() --On New Round
                 ULib.tsayColor(nil,true,Color(255,255,255),"Special Round! ",team.GetColor(TEAM_CLASSD),roundtype.name)
             end
 
-            if (roundtype.name == normalround.name) or (roundtype.name == "Multiple breaches") then --HARDCODED, Checks if it's a round with Class Ds...
+            if (roundtype.name == normalround.name) or (roundtype.name == ROUNDS.multiplebreaches.name) then --HARDCODED, Checks if it's a round with Class Ds...
                 print("[BreachRespawn] Round is "..roundtype.name..", Respawning specs in 12 seconds...")
-				if (roundtype.name == "Multiple breaches") then
+				if (roundtype.name == ROUNDS.multiplebreaches.name) then
 					ULib.tsayColor(nil,true,team.GetColor(TEAM_SCP),"SCP-035",Color(255,255,255)," can kill ",team.GetColor(TEAM_CLASSD),"ClassDs",Color(255,255,255)," in this round!") --We have FriendlyFire Enabled when it's TTT
 				end
                 timer.Create("BreachRespawn_Spectators", 12, 1, function()   Link2006_RespawnSpecs(nil,"classd",nil) end)
-			elseif (roundtype.name == "Trouble in SCP Town") then
+			elseif (roundtype.name == ROUNDS.spies.name) then
                 print("[BreachRespawn] Round is "..roundtype.name..", Respawning specs in 12 seconds...")
 				ULib.tsayColor(nil,true,Color(255,255,255),"Friendly fire is enabled for this round!") --We have FriendlyFire Enabled when it's TTT
                 timer.Create("BreachRespawn_Spectators", 12, 1, function()   Link2006_RespawnSpecs(nil,"mtf",nil) end) --let's allow them to respawn as MTF anyway...
@@ -534,10 +534,10 @@ hook.Add("PlayerInitialSpawn","br_ForceRespawn_OnJoin",function(ply)
 			if postround then
 				return --Stop.
 			end
-			if (roundtype.name == "Trouble in SCP Town") then --If it's the TTT Gamemode, spawn them as a Guard :^) lmao
+			if (roundtype.name == ROUNDS.spies.name) then --If it's the TTT Gamemode, spawn them as a Guard :^) lmao
 				ply:SetGuard()
 				ply:SetPos(table.Random(Link2006_GetSpawns(SPAWN_GUARD)))
-			elseif (roundtype.name == normalround.name) or (roundtype.name == "Multiple breaches") then
+			elseif (roundtype.name == normalround.name) or (roundtype.name == ROUNDS.multiplebreaches.name) then
 				if ply:IsUserGroup("VIP") then --This feels like Pay2Win but w/e
 					local plySpawnRNG = math.Round ( math.random ( 1,5 ) )  --1,2 = Researcher, 3,4=MTF, 5=Chaos
 					if plySpawnRNG == 1 or plySpawnRNG == 2 then
@@ -557,10 +557,10 @@ hook.Add("PlayerInitialSpawn","br_ForceRespawn_OnJoin",function(ply)
 					ply:SetClassD()
 					ply:SetPos(table.Random(Link2006_GetSpawns(SPAWN_CLASSD)))
 				end
-			elseif roundtype.name == "Zombie Plague" then --Hm
+			elseif roundtype.name == ROUNDS.zombieplague.name then --Hm
 				ply:SetSCP0082()
 				ply:SetPos(table.Random(Link2006_GetSpawns(SPAWN_CLASSD)))
-			elseif roundtype.name == "Assault" then
+			elseif roundtype.name == ROUNDS.assault.name then
 				local plySpawnRNG = math.Round ( math.random ( 1,2 ) )
 				if plySpawnRNG == 2 then
 					ply:SetGuard()
@@ -612,7 +612,7 @@ hook.Add("PlayerDeath","br_ForceRespawn", function(ply)
 		    elseif rl == ROLE_MTFNTF and plyTeam == TEAM_GUARD then -- If they are NTF...
 		        ply:SetNTF() --Respawn as NTF, they were NTF
 		        if roundtype then
-		            if (roundtype.name == "Assault") then --If it's the Assault gamemode
+		            if (roundtype.name == ROUNDS.assault.name) then --If it's the Assault gamemode
 		                ply:SetPos(table.Random(Link2006_GetSpawns(SPAWN_GUARD)))
 		            else
 		                ply:SetPos(table.Random(Link2006_GetSpawns(SPAWN_OUTSIDE)))
@@ -623,7 +623,7 @@ hook.Add("PlayerDeath","br_ForceRespawn", function(ply)
 		    elseif rl == ROLE_MTFNTF and plyTeam == TEAM_CHAOS then --if they are NTF Chaos (Spy)
 		        ply:SetChaosInsurgency(3) --Respawn as NTF Chaos
 		        if roundtype then
-		            if (roundtype.name == "Trouble in SCP Town") then --If it's the TTT Gamemode, respawn them lmao
+		            if (roundtype.name == ROUNDS.spies.name) then --If it's the TTT Gamemode, respawn them lmao
 		                ply:SetPos(table.Random(Link2006_GetSpawns(SPAWN_GUARD)))
 		            else
 		                ply:SetPos(table.Random(Link2006_GetSpawns(SPAWN_OUTSIDE)))
@@ -642,7 +642,7 @@ hook.Add("PlayerDeath","br_ForceRespawn", function(ply)
 		    elseif rl == ROLE_CHAOS then --TDM Chaos (Unused!)
 		        ply:SetChaosInsurgency() --Not the spy version.
 		        if roundtype then
-		            if (roundtype.name == "Assault") then --If it's the Assault gamemode
+		            if (roundtype.name == ROUNDS.assault.name) then --If it's the Assault gamemode
 		                ply:SetPos(table.Random(Link2006_GetSpawns(SPAWN_CLASSD)))
 		            else
 		                ply:SetPos(table.Random(Link2006_GetSpawns(SPAWN_OUTSIDE))) --Idk where to spawn normal CI
@@ -655,7 +655,7 @@ hook.Add("PlayerDeath","br_ForceRespawn", function(ply)
 				--WHY IS ASSAULT SETTING MTFS IN TEAM_SPEC WTF ... Let's respawn them as they should anyway ?
 				ply:SetNTF() --Respawn as NTF, they were NTF
 				if roundtype then
-					if (roundtype.name == "Assault") then --If it's the Assault gamemode
+					if (roundtype.name == ROUNDS.assault.name) then --If it's the Assault gamemode
 						ply:SetPos(table.Random(Link2006_GetSpawns(SPAWN_GUARD)))
 					else
 						ply:SetPos(table.Random(Link2006_GetSpawns(SPAWN_OUTSIDE)))

@@ -82,7 +82,8 @@ function mply:NTFArmor()
 	self:SetRunSpeed(self.BaseStats.rspeed * 0.85)
 	self:SetJumpPower(self.BaseStats.jpower * 0.85)
 	--self:SetModel("models/player/urban.mdl")
-	self:SetModel("models/player/kerry/ntf.mdl")
+	--self:SetModel("models/player/kerry/ntf.mdl")
+	self:SetModel('models/scp/zeal.mdl')
 	self.UsingArmor = "armor_ntf"
 end
 --NTF Roles
@@ -94,7 +95,8 @@ function mply:SetNTF()
 	self:StripWeapons()
 	self:RemoveAllAmmo()
 	self:SetTeam(TEAM_GUARD)
-	self:SetModel("models/player/kerry/ntf.mdl")
+	--self:SetModel("models/player/kerry/ntf.mdl")
+	self:SetModel('models/scp/zeal.mdl')
 	self:SetHealth(100)
 	self:SetMaxHealth(100)
 	self:SetArmor(25)
@@ -298,7 +300,8 @@ function mply:ChaosInsArmor()
 	self:SetRunSpeed(self.BaseStats.rspeed * 0.86)
 	self:SetJumpPower(self.BaseStats.jpower * 0.86)
 	--self:SetModel("models/mw2/skin_04/mw2_soldier_04.mdl")
-	self:SetModel("models/mw2/skin_05/mw2_soldier_04.mdl")
+	--self:SetModel("models/mw2/skin_05/mw2_soldier_04.mdl")
+	self:SetModel('models/scp/chaos.mdl')
 	self.UsingArmor = "armor_chaosins"
 end
 --Chaos Roletype

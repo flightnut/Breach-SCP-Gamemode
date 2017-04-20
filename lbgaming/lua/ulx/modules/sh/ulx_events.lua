@@ -123,6 +123,10 @@ function ulx.nuke (calling_ply)
 			umsg.String( Sound( 'nukes/nuke1.ogg' ) ) --BOOM SOUND
 		umsg.End()
 	end)
+	timer.Simple(14.5,function()
+		net.Start('SCP1123flash_lvl1') --White flash
+		net.Broadcast() -- Send to everyone :)
+	end)
 	timer.Simple(15,function()
 		umsg.Start( "ulib_sound" )
 			umsg.String( Sound( 'nukes/nuke2.ogg' ) ) --BOOM SOUND

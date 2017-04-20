@@ -96,7 +96,7 @@ local function antirdm_respawn(victim,rl,vicTeam)
     elseif rl == ROLE_MTFNTF and vicTeam == TEAM_GUARD then -- If they are NTF...
         victim:SetNTF() --Respawn as NTF, they were NTF
         if roundtype then
-            if (roundtype.name == "Assault") then --If it's the Assault gamemode
+            if (roundtype.name == ROUNDS.assault.name) then --If it's the Assault gamemode
                 victim:SetPos(table.Random(SPAWN_GUARD))
             else
                 victim:SetPos(table.Random(SPAWN_OUTSIDE))
@@ -107,7 +107,7 @@ local function antirdm_respawn(victim,rl,vicTeam)
     elseif rl == ROLE_MTFNTF and vicTeam == TEAM_CHAOS then --if they are NTF Chaos (Spy)
         victim:SetChaosInsurgency(3) --Respawn as NTF Chaos
         if roundtype then
-            if (roundtype.name == "Trouble in SCP Town") then --If it's the TTT Gamemode, respawn them lmao
+            if (roundtype.name == ROUNDS.spies.name) then --If it's the TTT Gamemode, respawn them lmao
                 victim:SetPos(table.Random(SPAWN_GUARD))
             else
                 victim:SetPos(table.Random(SPAWN_OUTSIDE))
@@ -124,7 +124,7 @@ local function antirdm_respawn(victim,rl,vicTeam)
     elseif rl == ROLE_CHAOS then --TDM Chaos (Unused!)
         victim:SetChaosInsurgency() --Not the spy version.
         if roundtype then
-            if (roundtype.name == "Assault") then --If it's the Assault gamemode
+            if (roundtype.name == ROUNDS.assault.name) then --If it's the Assault gamemode
                 victim:SetChaosInsurgency(4) --Reset their class to the assault one, needs to be 4 apparently.
                 victim:SetPos(table.Random(SPAWN_CLASSD))
             else
@@ -168,12 +168,12 @@ local function antirdm(victim, inflictor, attacker)
                     --AWARN ATTACKER
                     --MULTIPLE BREACH SPECIAL CASE WHERE WE NEED 035 ABLE TO KILL CLASSDS
                     if (attacker:GetNClass() == ROLE_SCP035 and victim:Team() == TEAM_CLASSD) or (victim:GetNClass() == ROLE_SCP035 and attacker:Team() == TEAM_CLASSD) then
-                        if roundtype.name == "Multiple breaches" then
+                        if roundtype.name == ROUNDS.multiplebreaches.name then
                             return
                         end
                     end
                     print("[AntiRDM] Warning \""..attacker:Nick().."\" for RDM")
-                    if antirdm_enabled and (tostring(roundtype.name) ~= "Trouble in SCP Town") then --As long it's not TTT lol ...
+                    if antirdm_enabled and (tostring(roundtype.name) ~= ROUNDS.spies.name) then --As long it's not TTT lol ...
                         ULib.tsayColor(nil,true,Color(255,0,0),"[AntiRDM]",Color(255,255,255)," \"",team.GetColor(attacker:Team()),attacker:Nick(),Color(255,255,255),"\" was warned for killing \"",team.GetColor(victim:Team()),victim:Nick(),Color(255,255,255),"\"")
                         RunConsoleCommand("awarn_warn",attacker:SteamID(),"\"RDM Detected by AntiRDM\"")
                     else
@@ -250,7 +250,7 @@ end)
 hook.Add("PlayerShouldTakeDamage","AntiRDM_NoDamage",function(victim,attacker)
     --Force Friendly Fire OFF when round hasn't started
     if roundtype then
-        if roundtype.name == "Zombie Plague" then
+        if roundtype.name == ROUNDS.zombieplague.name then
             if IsValid(victim) and IsValid(attacker) then
                 if victim:IsPlayer() and attacker:IsPlayer() then
                     if victim:Team() ~= attacker:Team() then
@@ -258,7 +258,7 @@ hook.Add("PlayerShouldTakeDamage","AntiRDM_NoDamage",function(victim,attacker)
                     end
                 end
             end
-        elseif roundtype.name == "Multiple breaches" then
+        elseif roundtype.name == ROUNDS.multiplebreaches.name then
             if IsValid(victim) and IsValid(attacker) then
                 if victim:IsPlayer() and attacker:IsPlayer() then
                     if (victim:Team() ~= attacker:Team()) and victim ~= attacker then
@@ -283,7 +283,7 @@ hook.Add("PlayerShouldTakeDamage","AntiRDM_NoDamage",function(victim,attacker)
         end
     end
     --Force Friendly Fire ON when Round is "spies"
-    if roundtype and (roundtype.name == "Trouble in SCP Town") then --If it's the TTT Gamemode, respawn them lmao
+    if roundtype and (roundtype.name == ROUNDS.spies.name) then --If it's the TTT Gamemode, respawn them lmao
         return true
     end
     --Force Friendly Fire ON when round is over, but if it isn't then we do our checks. :)
