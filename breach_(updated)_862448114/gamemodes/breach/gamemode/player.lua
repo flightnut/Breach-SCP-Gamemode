@@ -47,6 +47,9 @@ function GM:PlayerAuthed( ply, steamid, uniqueid )
 end
 
 function GM:PlayerSpawn( ply )
+	--SCP-500 Support (Called when a player uses SCP-500)
+	ply.TurnMeBack = function() ply:ChatPrint('Nothing happened.') end
+	--end of SCP-500 support
 	ply.Leaver = "none"
 	ply:SetupHands()
 	ply:SetNoCollideWithTeammates(true)

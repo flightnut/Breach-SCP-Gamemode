@@ -107,7 +107,15 @@ end)
 
 function ENT:Use(activator,caller)
 	--No SCP; No Spectators.
-	if caller:Team() == TEAM_SCP or caller:Team() == TEAM_SPEC then return end
+	if activator:Team() == TEAM_SPEC then return end
+    if activator:Team() == TEAM_SCP then
+        if self:GetClass() == "durgz_scp420j" then return end --420-J shouldn't be used by ANY of the SCPs ...
+        if self:GetClass() == "durgz_scp500" then --The Cure is allowed but only for 049-2/008-2
+            if activator:GetNClass() ~= ROLE_SCP0492 and activator:GetNClass() ~= ROLE_SCP0082 then
+                return
+            end
+        end
+    end
 
 	umsg.Start("durgz_lose_virginity", activator)
 	umsg.End()

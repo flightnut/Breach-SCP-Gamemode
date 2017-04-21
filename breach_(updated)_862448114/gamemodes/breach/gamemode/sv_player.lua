@@ -738,33 +738,40 @@ function mply:SetSCP0082()
 		local newModel = string.Replace(self:GetModel(),"models/player/kerry/class_d_","models/player/kerry/class_d_zombie_")
 		print(newModel)
 		self:SetModel(newModel)
+		self.TurnMeBack = function() self:SetClassD() end
 	elseif string.match(self:GetModel(),"models/player/kerry/class_scientist_%d.mdl",0) then
 		local newModel = string.Replace(self:GetModel(),"models/player/kerry/class_scientist_","models/player/kerry/class_c_zombie_")
 		print(newModel)
 		self:SetModel(newModel)
+		self.TurnMeBack = function() self:SetScientist() end
 	elseif self:GetModel() == "models/player/kerry/class_securety_2.mdl" then
 		print("A commander has been turned into SCP-008-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
+		self.TurnMeBack = function() self:SetCommander() end
 	elseif self:GetModel() == "models/player/kerry/class_securety.mdl" then
 		--MTF
 		print("A MTF has been turned into SCP-008-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
+		self.TurnMeBack = function() self:SetGuard() end
 	--elseif self:GetModel() == "models/player/kerry/ntf.mdl" then
 	elseif self:GetModel() == "models/scp/zeal.mdl" then
 		--NTF
 		print("A NTF has been turned into SCP-008-2!")
 		--self:SetModel("models/player/kerry/class_securety_zombie.mdl")
 		self:SetModel('models/player/kerry/ntf_z.mdl') --New Zombie model for NTF :)
+		self.TurnMeBack = function() self:SetNTF() end
 	--elseif self:GetModel() == "models/mw2/skin_04/mw2_soldier_04.mdl" then
 	elseif self:GetModel() == "models/scp/chaos.mdl" then
 		--Chaos!
 		print("A member of Chaos has been turned into SCP-008-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
+		self.TurnMeBack = function() self:SetChaosInsurgency(3) end
 	else
 		print("UNKNOWN MODEL, Setting to zombie_classic!")
 		--TODO: maybe actually choose a random model instead of this?
 		--		i'll keep this for now though.
 		self:SetModel("models/player/zombie_classic.mdl")
+		self.TurnMeBack = function() self:SetScientist() end
 	end
 	self:SetHealth(425)
 	self:SetMaxHealth(425)
@@ -822,33 +829,40 @@ function mply:SetSCP0492()
 		local newModel = string.Replace(self:GetModel(),"models/player/kerry/class_d_","models/player/kerry/class_d_zombie_")
 		print(newModel)
 		self:SetModel(newModel)
+		self.TurnMeBack = function() self:SetClassD() end
 	elseif string.match(self:GetModel(),"models/player/kerry/class_scientist_%d.mdl",0) then
 		local newModel = string.Replace(self:GetModel(),"models/player/kerry/class_scientist_","models/player/kerry/class_c_zombie_")
 		print(newModel)
 		self:SetModel(newModel)
+		self.TurnMeBack = function() self:SetScientist() end
 	elseif self:GetModel() == "models/player/kerry/class_securety_2.mdl" then
 		print("A commander has been turned into SCP-049-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
+		self.TurnMeBack = function() self:SetCommander() end
 	elseif self:GetModel() == "models/player/kerry/class_securety.mdl" then
 		--MTF
 		print("A MTF has been turned into SCP-049-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
+		self.TurnMeBack = function() self:SetGuard() end
 	--elseif self:GetModel() == "models/player/kerry/ntf.mdl" then
 	elseif self:GetModel() == "models/scp/zeal.mdl" then
 		--NTF
 		print("A NTF has been turned into SCP-049-2!")
 		--self:SetModel("models/player/kerry/class_securety_zombie.mdl")
 		self:SetModel('models/player/kerry/ntf_z.mdl') --New Zombie model for NTF :)
+		self.TurnMeBack = function() self:SetNTF() end
 	--elseif self:GetModel() == "models/mw2/skin_05/mw2_soldier_04.mdl" then
-	elseif self:GetModel() == "models/scp/chaos.mdl" then 
+	elseif self:GetModel() == "models/scp/chaos.mdl" then
 		--Chaos!
 		print("A member of Chaos has been turned into SCP-049-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
+		self.TurnMeBack = function() self:SetChaosInsurgency(3) end
 	else
 		print("UNKNOWN MODEL, Setting to zombie_classic!")
 		--TODO: maybe actually choose a random model instead of this?
 		--		i'll keep this for now though.
 		self:SetModel("models/player/zombie_classic.mdl")
+		self.TurnMeBack = function() self:SetScientist() end
 	end
 	self:SetHealth(750)
 	self:SetMaxHealth(750)
