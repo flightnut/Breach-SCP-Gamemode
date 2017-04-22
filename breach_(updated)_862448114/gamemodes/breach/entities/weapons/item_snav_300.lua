@@ -69,7 +69,7 @@ function SWEP:OnRemove()
 	if CLIENT then
 		for k,v in pairs(player.GetAll()) do
 			if v:Team() ~= TEAM_SCP then
-				v:SetNoDraw( false )
+				--v:SetNoDraw( false )
 			end
 		end
 	end
@@ -78,7 +78,7 @@ function SWEP:Holster()
 	if CLIENT then
 		for k,v in pairs(player.GetAll()) do
 			if v:Team() ~= TEAM_SCP then
-				v:SetNoDraw( false )
+				--v:SetNoDraw( false )
 			end
 		end
 	end
@@ -91,13 +91,13 @@ function SWEP:SecondaryAttack()
 	if self.Enabled then
 		for k,v in pairs(player.GetAll()) do
 			if v:Team() ~= TEAM_SCP then
-				v:SetNoDraw( true )
+				--v:SetNoDraw( true )
 			end
 		end
 	else
 		for k,v in pairs(player.GetAll()) do
 			if v:Team() ~= TEAM_SCP then
-				v:SetNoDraw( false )
+				--v:SetNoDraw( false )
 			end
 		end
 	end
