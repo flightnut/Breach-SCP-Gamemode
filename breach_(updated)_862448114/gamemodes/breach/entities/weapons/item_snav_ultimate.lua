@@ -65,11 +65,15 @@ function SWEP:Think()
 	if CLIENT then
 		if self.Enabled then
 			for k,v in pairs(player.GetAll()) do
-				v:SetNoDraw( true )
+				if v:Team() ~= TEAM_SCP then
+					v:SetNoDraw( true )
+				end
 			end
 		else
 			for k,v in pairs(player.GetAll()) do
-				v:SetNoDraw( false )
+				if v:Team() ~= TEAM_SCP then
+					v:SetNoDraw( false )
+				end
 			end
 		end
 		if self.ScanDelay > CurTime() then return end
@@ -132,14 +136,18 @@ end
 function SWEP:OnRemove()
 	if CLIENT then
 		for k,v in pairs(player.GetAll()) do
-			v:SetNoDraw( false )
+			if v:Team() ~= TEAM_SCP then
+				v:SetNoDraw( false )
+			end
 		end
 	end
 end
 function SWEP:Holster()
 	if CLIENT then
 		for k,v in pairs(player.GetAll()) do
-			v:SetNoDraw( false )
+			if v:Team() ~= TEAM_SCP then
+				v:SetNoDraw( false )
+			end
 		end
 	end
 	return true
@@ -193,6 +201,3 @@ function SWEP:DrawHUD()
 		end
 	end
 end
-
-
-

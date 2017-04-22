@@ -33,10 +33,18 @@ function ENT:High(ply,caller)
 				ply:GiveAmmo(150, "AR2", false)
 				ply:GiveAmmo(75, "Pistol", false)
 			end
+			ply:ChatPrint('You feel healthy again.')
+			print("[SCP-500] We cured '"..ply:Nick().."'")
 		else
 			ply:ChatPrint('The pill did nothing to you.')
 			print("[SCP-500] WE CANNOT TURN BACK '"..ply:Nick().."'")
 		end
+		--No matter what, do this check, 1 second after they're cleaned.
+		timer.Simple(1,function()
+			if WinCheck then
+				WinCheck() --Do a check to see if we just turned back the last zombie.
+			end
+		end)
 	end
 
 end

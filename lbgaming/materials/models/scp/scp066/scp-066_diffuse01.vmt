@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+	
+	$halflambert 1 
+	$basetexture "models/scp/scp066/scp-066_diffuse01"
+	$bumpmap "models/scp/scp066/scp-066_normal"
+
+
+
+}

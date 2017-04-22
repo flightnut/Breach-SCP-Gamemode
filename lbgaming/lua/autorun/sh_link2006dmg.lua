@@ -1,3 +1,4 @@
+print("[sh_link2006dmg] Starting ScalePlayerDamage hook...")
 hook.Add("ScalePlayerDamage","Link2006_ScaleDamage",function(ply,hitgroup,dmginfo)
     if dmginfo and dmginfo:GetAttacker() and dmginfo:GetAttacker():GetActiveWeapon() and dmginfo:GetAttacker():GetClass() then
         if ply:Team() ~= TEAM_SCP then --
@@ -9,5 +10,9 @@ hook.Add("ScalePlayerDamage","Link2006_ScaleDamage",function(ply,hitgroup,dmginf
 		end
     end
     --Don't block the damage on our hook.
+
+	--Removes knockback on everyone (!)
+    dmginfo:SetDamageForce(Vector(0,0,0)) --Comment this line if you like the knockback on other players via Weapons.
     return false
 end)
+print("[sh_link2006dmg] Ready.")
