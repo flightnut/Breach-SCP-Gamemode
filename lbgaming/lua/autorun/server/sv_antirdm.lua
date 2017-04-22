@@ -253,16 +253,24 @@ hook.Add("PlayerShouldTakeDamage","AntiRDM_NoDamage",function(victim,attacker)
         if roundtype.name == ROUNDS.zombieplague.name then
             if IsValid(victim) and IsValid(attacker) then
                 if victim:IsPlayer() and attacker:IsPlayer() then
-                    if victim:Team() ~= attacker:Team() then
-                        return true --Always allow damage SCP <-> HUMANS in Zombie Plague
+                    if rdmTable[ attacker:Team() ] then --I FORGOT TO CHECK IF THE ATTACKER'S TABLE EXISTED
+                        if (table.HasValue( rdmTable[ attacker:Team() ], victim:Team() ) and (attacker ~= victim)) then--If Attacker and Victim were allies
+                            return false --Do not allow damage
+                        else
+                            return true --Allow damage
+                        end
                     end
                 end
             end
         elseif roundtype.name == ROUNDS.multiplebreaches.name then
             if IsValid(victim) and IsValid(attacker) then
                 if victim:IsPlayer() and attacker:IsPlayer() then
-                    if (victim:Team() ~= attacker:Team()) and victim ~= attacker then
-                        return true
+                    if rdmTable[ attacker:Team() ] then --I FORGOT TO CHECK IF THE ATTACKER'S TABLE EXISTED
+                        if (table.HasValue( rdmTable[ attacker:Team() ], victim:Team() ) and (attacker ~= victim)) then--If Attacker and Victim were allies
+                            return false --Do not allow damage
+                        else
+                            return true --Allow damage
+                        end
                     end
                 end
             end
