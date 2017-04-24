@@ -1,3 +1,31 @@
+function SetTurnMeBack(ply,rl,plyTeam)
+	--Original code: self.TurnMeBack = function() self:SetClassD() end
+	if rl == ROLE_MTFGUARD and plyTeam == TEAM_GUARD then --If they are MTF
+		ply.TurnMeBack = function() ply:SetGuard() end
+	elseif rl == ROLE_MTFGUARD and plyTeam == TEAM_CHAOS then --If they are MTF CI
+		ply.TurnMeBack = function() ply:SetChaosInsurgency(1) end --Normal CI
+	elseif rl == ROLE_MTFCOM then
+		ply.TurnMeBack = function() ply:SetCommander() end
+	elseif rl == ROLE_MTFNTF and plyTeam == TEAM_GUARD then -- If they are NTF...
+		ply.TurnMeBack = function() ply:SetNTF() end --Respawn as NTF, they were NTF
+	elseif rl == ROLE_MTFNTF and plyTeam == TEAM_CHAOS then --if they are NTF Chaos (Spy)
+		ply.TurnMeBack = function() ply:SetChaosInsurgency(3) end --Respawn as NTF Chaos
+	elseif rl == ROLE_CLASSD then
+		ply.TurnMeBack = function() ply:SetClassD() end
+	elseif rl == ROLE_RES then
+		ply.TurnMeBack = function() ply:SetScientist() end
+	elseif rl == ROLE_CHAOS then --TDM Chaos (Unused?)
+		ply.TurnMeBack = function() ply:SetChaosInsurgency() end  --Not the spy version.
+	elseif rl == ROLE_MTFNTF and plyTeam == TEAM_SPEC then
+		--WHY IS ASSAULT SETTING MTFS IN TEAM_SPEC WTF ... Let's respawn them as they should anyway ?
+		ply.TurnMeBack = function() ply:SetNTF() end --Respawn as NTF, they were NTF
+	else
+		ply.TurnMeBack = function()
+			print(ply:Nick().." could not be turned to their original rank, setting to Researcher")
+			ply:SetScientist()
+		end
+	end
+end
 
 local mply = FindMetaTable( "Player" )
 
@@ -732,46 +760,44 @@ function mply:SetSCP0082()
 	self.handsmodel = nil
 	self:UnSpectate()
 	self:GodDisable()
+
+	--Setting TurnMeback, This will setup the function to turn them back to human.
+	SetTurnMeBack(self,self:GetNClass(),self:Team()) --SetTurnMeBack(player,role,team)
+	--end of turnmeback
+
 	self:SetTeam(TEAM_SCP)
 	print("SCP-008-2 on \""..self:Nick().."\" with model \""..self:GetModel().."\"")
 	if string.match(self:GetModel(),"models/player/kerry/class_d_%d.mdl",0) then --Should only replace when
 		local newModel = string.Replace(self:GetModel(),"models/player/kerry/class_d_","models/player/kerry/class_d_zombie_")
 		print(newModel)
 		self:SetModel(newModel)
-		self.TurnMeBack = function() self:SetClassD() end
 	elseif string.match(self:GetModel(),"models/player/kerry/class_scientist_%d.mdl",0) then
 		local newModel = string.Replace(self:GetModel(),"models/player/kerry/class_scientist_","models/player/kerry/class_c_zombie_")
 		print(newModel)
 		self:SetModel(newModel)
-		self.TurnMeBack = function() self:SetScientist() end
 	elseif self:GetModel() == "models/player/kerry/class_securety_2.mdl" then
 		print("A commander has been turned into SCP-008-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
-		self.TurnMeBack = function() self:SetCommander() end
 	elseif self:GetModel() == "models/player/kerry/class_securety.mdl" then
 		--MTF
 		print("A MTF has been turned into SCP-008-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
-		self.TurnMeBack = function() self:SetGuard() end
 	--elseif self:GetModel() == "models/player/kerry/ntf.mdl" then
 	elseif self:GetModel() == "models/scp/zeal.mdl" then
 		--NTF
 		print("A NTF has been turned into SCP-008-2!")
 		--self:SetModel("models/player/kerry/class_securety_zombie.mdl")
 		self:SetModel('models/player/kerry/ntf_z.mdl') --New Zombie model for NTF :)
-		self.TurnMeBack = function() self:SetNTF() end
 	--elseif self:GetModel() == "models/mw2/skin_04/mw2_soldier_04.mdl" then
 	elseif self:GetModel() == "models/scp/chaos.mdl" then
 		--Chaos!
 		print("A member of Chaos has been turned into SCP-008-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
-		self.TurnMeBack = function() self:SetChaosInsurgency(3) end
 	else
 		print("UNKNOWN MODEL, Setting to zombie_classic!")
 		--TODO: maybe actually choose a random model instead of this?
 		--		i'll keep this for now though.
 		self:SetModel("models/player/zombie_classic.mdl")
-		self.TurnMeBack = function() self:SetScientist() end
 	end
 	self:SetHealth(425)
 	self:SetMaxHealth(425)
@@ -817,6 +843,11 @@ function mply:SetSCP0492()
 	self.handsmodel = nil
 	self:UnSpectate()
 	self:GodDisable()
+
+	--Setting TurnMeback, This will setup the function to turn them back to human.
+	SetTurnMeBack(self,self:GetNClass(),self:Team()) --SetTurnMeBack(player,role,team)
+	--end of turnmeback
+
 	self:SetTeam(TEAM_SCP)
 	--TODO: If Model name starts with ClassD's model, then ClassD zombie
 	--		elseif model name starts with Researcher model, then Researcher zombie
@@ -829,40 +860,33 @@ function mply:SetSCP0492()
 		local newModel = string.Replace(self:GetModel(),"models/player/kerry/class_d_","models/player/kerry/class_d_zombie_")
 		print(newModel)
 		self:SetModel(newModel)
-		self.TurnMeBack = function() self:SetClassD() end
 	elseif string.match(self:GetModel(),"models/player/kerry/class_scientist_%d.mdl",0) then
 		local newModel = string.Replace(self:GetModel(),"models/player/kerry/class_scientist_","models/player/kerry/class_c_zombie_")
 		print(newModel)
 		self:SetModel(newModel)
-		self.TurnMeBack = function() self:SetScientist() end
 	elseif self:GetModel() == "models/player/kerry/class_securety_2.mdl" then
 		print("A commander has been turned into SCP-049-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
-		self.TurnMeBack = function() self:SetCommander() end
 	elseif self:GetModel() == "models/player/kerry/class_securety.mdl" then
 		--MTF
 		print("A MTF has been turned into SCP-049-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
-		self.TurnMeBack = function() self:SetGuard() end
 	--elseif self:GetModel() == "models/player/kerry/ntf.mdl" then
 	elseif self:GetModel() == "models/scp/zeal.mdl" then
 		--NTF
 		print("A NTF has been turned into SCP-049-2!")
 		--self:SetModel("models/player/kerry/class_securety_zombie.mdl")
 		self:SetModel('models/player/kerry/ntf_z.mdl') --New Zombie model for NTF :)
-		self.TurnMeBack = function() self:SetNTF() end
 	--elseif self:GetModel() == "models/mw2/skin_05/mw2_soldier_04.mdl" then
 	elseif self:GetModel() == "models/scp/chaos.mdl" then
 		--Chaos!
 		print("A member of Chaos has been turned into SCP-049-2!")
 		self:SetModel("models/player/kerry/class_securety_zombie.mdl")
-		self.TurnMeBack = function() self:SetChaosInsurgency(3) end
 	else
 		print("UNKNOWN MODEL, Setting to zombie_classic!")
 		--TODO: maybe actually choose a random model instead of this?
 		--		i'll keep this for now though.
 		self:SetModel("models/player/zombie_classic.mdl")
-		self.TurnMeBack = function() self:SetScientist() end
 	end
 	self:SetHealth(750)
 	self:SetMaxHealth(750)
@@ -938,6 +962,7 @@ function mply:SetSCP966()
 	self.BaseStats = nil
 	self.UsingArmor = nil
 	--Link2006
+	self:SetNoCollideWithTeammates(false)
 	self:SetModelScale(1.0,0)
 	net.Start("RolesSelected")
 	net.Send(self)
