@@ -1,27 +1,104 @@
 function SetTurnMeBack(ply,rl,plyTeam)
 	--Original code: self.TurnMeBack = function() self:SetClassD() end
+	--This part resets variable JUST IN CASE OK thx 
+	ply.OrigModel = nil 
+	ply.OrigModel_Fallback = nil 
+	
+	if ply.BaseStats then 
+		if ply.BaseStats.model then 
+			ply.OrigModel = ply.BaseStats.model --Model that the player got in their basestats (which is for when they have MTF vest 
+		end
+	end 
+	
+	ply.OrigModel_Fallback = ply:GetModel() -- Just in case ;)
+	
+	--All those spawn with a vest so i can only change basestats...
 	if rl == ROLE_MTFGUARD and plyTeam == TEAM_GUARD then --If they are MTF
-		ply.TurnMeBack = function() ply:SetGuard() end
+		ply.TurnMeBack = function() 
+			ply:SetGuard() 
+			if ply.BaseStats then 
+				if ply.BaseStats.model then 
+					ply.BaseStats.model = ply.OrigModel 
+				end
+			end 
+		end
 	elseif rl == ROLE_MTFGUARD and plyTeam == TEAM_CHAOS then --If they are MTF CI
-		ply.TurnMeBack = function() ply:SetChaosInsurgency(1) end --Normal CI
+		ply.TurnMeBack = function() 
+			ply:SetChaosInsurgency(1) 
+			if ply.BaseStats then 
+				if ply.BaseStats.model then 
+					ply.BaseStats.model = ply.OrigModel 
+				end
+			end 
+		end --Normal CI
 	elseif rl == ROLE_MTFCOM then
-		ply.TurnMeBack = function() ply:SetCommander() end
+		ply.TurnMeBack = function() 
+			ply:SetCommander() 
+			if ply.BaseStats then 
+				if ply.BaseStats.model then 
+					ply.BaseStats.model = ply.OrigModel 
+				end
+			end 
+		end
 	elseif rl == ROLE_MTFNTF and plyTeam == TEAM_GUARD then -- If they are NTF...
-		ply.TurnMeBack = function() ply:SetNTF() end --Respawn as NTF, they were NTF
+		ply.TurnMeBack = function() 
+			ply:SetNTF() 
+			if ply.BaseStats then 
+				if ply.BaseStats.model then 
+					ply.BaseStats.model = ply.OrigModel 
+				end
+			end 
+		end --Respawn as NTF, they were NTF
 	elseif rl == ROLE_MTFNTF and plyTeam == TEAM_CHAOS then --if they are NTF Chaos (Spy)
-		ply.TurnMeBack = function() ply:SetChaosInsurgency(3) end --Respawn as NTF Chaos
+		ply.TurnMeBack = function() 
+			ply:SetChaosInsurgency(3) 
+			if ply.BaseStats then 
+				if ply.BaseStats.model then 
+					ply.BaseStats.model = ply.OrigModel 
+				end
+			end 
+		end --Respawn as NTF Chaos
+	--And all those actually can get a vest but does not spawn with one, requires to change 2 things 
 	elseif rl == ROLE_CLASSD then
-		ply.TurnMeBack = function() ply:SetClassD() end
+		ply.TurnMeBack = function() 
+			ply:SetClassD() 
+			if ply.OrigModel then 
+				ply:SetModel(ply.OrigModel) --They had a vest when they turned 
+			else
+				ply:SetModel(ply.OrigModel_Fallback) --They didn't have a vest.
+			end 
+		end
 	elseif rl == ROLE_RES then
-		ply.TurnMeBack = function() ply:SetScientist() end
+		ply.TurnMeBack = function() 
+			ply:SetScientist() 
+			if ply.OrigModel then 
+				ply:SetModel(ply.OrigModel)
+			else
+				ply:SetModel(ply.OrigModel_Fallback)
+			end 
+		end
 	elseif rl == ROLE_CHAOS then --TDM Chaos (Unused?)
-		ply.TurnMeBack = function() ply:SetChaosInsurgency() end  --Not the spy version.
+		ply.TurnMeBack = function() 
+			ply:SetChaosInsurgency() 
+			if ply.OrigModel then 
+				ply:SetModel(ply.OrigModel)
+			else
+				ply:SetModel(ply.OrigModel_Fallback)
+			end 
+		end  --Not the spy version.
 	elseif rl == ROLE_MTFNTF and plyTeam == TEAM_SPEC then
-		--WHY IS ASSAULT SETTING MTFS IN TEAM_SPEC WTF ... Let's respawn them as they should anyway ?
-		ply.TurnMeBack = function() ply:SetNTF() end --Respawn as NTF, they were NTF
+		--¯\_(ツ)_/¯
+		ply.TurnMeBack = function() 
+			ply:SetNTF() 
+			if ply.OrigModel then 
+				ply:SetModel(ply.OrigModel)
+			else
+				ply:SetModel(ply.OrigModel_Fallback)
+			end 
+		end --Respawn as NTF, they were NTF
 	else
 		ply.TurnMeBack = function()
-			print(ply:Nick().." could not be turned to their original rank, setting to Researcher")
+			print(ply:Nick().." could not be turned to their original rank, setting to a random researcher")
 			ply:SetScientist()
 		end
 	end
@@ -104,7 +181,7 @@ function mply:NTFArmor()
 		wspeed = self:GetWalkSpeed(),
 		rspeed = self:GetRunSpeed(),
 		jpower = self:GetJumpPower(),
-		 model = "models/player/kerry/class_scientist_"..math.random(1,7)..".mdl"
+		 model = "models/player/kerry/class_scientist_"..math.random(1,12)..".mdl"
 	}
 	self:SetWalkSpeed(self.BaseStats.wspeed * 0.85)
 	self:SetRunSpeed(self.BaseStats.rspeed * 0.85)
@@ -161,7 +238,7 @@ function mply:SetScientist()
 	self:StripWeapons()
 	self:RemoveAllAmmo()
 	self:SetTeam(TEAM_SCI)
-	self:SetModel("models/player/kerry/class_scientist_"..math.random(1,7)..".mdl")
+	self:SetModel("models/player/kerry/class_scientist_"..math.random(1,12)..".mdl")
 	self:SetHealth(100)
 	self:SetMaxHealth(100)
 	self:SetArmor(0)
@@ -199,7 +276,7 @@ function mply:MTFArmor()
 		wspeed = self:GetWalkSpeed(),
 		rspeed = self:GetRunSpeed(),
 		jpower = self:GetJumpPower(),
-		 model = "models/player/kerry/class_scientist_"..math.random(1,7)..".mdl"
+		 model = "models/player/kerry/class_scientist_"..math.random(1,12)..".mdl"
 	}
 	self:SetWalkSpeed(self.BaseStats.wspeed * 0.85)
 	self:SetRunSpeed(self.BaseStats.rspeed * 0.85)
@@ -213,7 +290,7 @@ function mply:MTFComArmor()
 		wspeed = self:GetWalkSpeed(),
 		rspeed = self:GetRunSpeed(),
 		jpower = self:GetJumpPower(),
-		 model = "models/player/kerry/class_scientist_"..math.random(1,7)..".mdl"
+		 model = "models/player/kerry/class_scientist_"..math.random(1,12)..".mdl"
 	}
 	self:SetWalkSpeed(self.BaseStats.wspeed * 0.90)
 	self:SetRunSpeed(self.BaseStats.rspeed * 0.90)
@@ -322,7 +399,7 @@ function mply:ChaosInsArmor()
 		wspeed = self:GetWalkSpeed(),
 		rspeed = self:GetRunSpeed(),
 		jpower = self:GetJumpPower(),
-		 model = "models/player/kerry/class_scientist_"..math.random(1,7)..".mdl"
+		 model = "models/player/kerry/class_scientist_"..math.random(1,12)..".mdl"
 	}
 	self:SetWalkSpeed(self.BaseStats.wspeed * 0.86)
 	self:SetRunSpeed(self.BaseStats.rspeed * 0.86)
