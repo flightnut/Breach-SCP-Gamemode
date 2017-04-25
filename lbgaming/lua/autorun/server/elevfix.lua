@@ -194,6 +194,10 @@ function Link2006_AddFiles(name,remLength)
 	end
 end
 
+
+--Zombie-Models
+Link2006_AddFiles("addons/zombied_models/models",string.len("addons/zombied_models/")) -- string Folder, string (length) to remove
+Link2006_AddFiles("addons/zombied_models/materials",string.len("addons/zombied_models/")) -- string Folder, string (length) to remove
 --F1-menu
 Link2006_AddFiles("addons/lbgaming/resource",string.len("addons/lbgaming/")) -- string Folder, string (length) to remove
 Link2006_AddFiles("addons/garrysmod-central_menu-1.4/materials/cm",string.len("addons/garrysmod-central_menu-1.4/")) -- string Folder, string (length) to remove
