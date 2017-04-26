@@ -206,7 +206,7 @@ function ulx.hidenseek(calling_ply)
 			seekSCP:SetNoCollideWithTeammates(true)
 			seekSCP:Freeze(true)
 			timer.Simple(0.25,function()
-				ULib.tsayColor(seekSCP,true,team.GetColor(TEAM_SCP),"[Hide & Seek] You're a seeker, you'll be unfrozen in 45 seconds...")
+				ULib.tsayColor(seekSCP,true,team.GetColor(TEAM_SCP),"[Hide & Seek] You're a seeker, you'll be unfrozen in 90 seconds...")
 			end)
 			--timer.Simple(10,function() --10 seconds after they're spawned.
 			timer.Create("HideNSeek_SetWep_"..i,10,1,function()
@@ -226,7 +226,7 @@ function ulx.hidenseek(calling_ply)
 	    timer.Remove('BreachRespawn_Spectators_Init') --The timer that checks if we can start the Spectator Respawn timer.
 		timer.Remove('HideNSeek_RestartRound')
 
-		timer.Create("HideNSeek_Unfreeze",45,1,function()
+		timer.Create("HideNSeek_Unfreeze",90,1,function()
 			for k,v in pairs(team.GetPlayers(TEAM_SCP)) do
 				v:Freeze(false)
 			end
@@ -237,7 +237,7 @@ function ulx.hidenseek(calling_ply)
 			v:SetScientist()
 			v:SetPos(table.Random(SPAWN_CLASSD))
 			timer.Simple(0.25,function()
-				ULib.tsayColor(v,true,team.GetColor(TEAM_SCI),"[Hide & Seek] Seekers will be unfrozen in 45 seconds, hide!")
+				ULib.tsayColor(v,true,team.GetColor(TEAM_SCI),"[Hide & Seek] Seekers will be unfrozen in 90 seconds, hide!")
 				ULib.tsayColor(v,true,Color(255,0,0),"[Hide & Seek] Please note, you cannot hide in the pocket dimension!")
 			end)
 		end
