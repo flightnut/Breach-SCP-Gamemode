@@ -1,100 +1,100 @@
 function SetTurnMeBack(ply,rl,plyTeam)
 	--Original code: self.TurnMeBack = function() self:SetClassD() end
-	--This part resets variable JUST IN CASE OK thx 
-	ply.OrigModel = nil 
-	ply.OrigModel_Fallback = nil 
-	
-	if ply.BaseStats then 
-		if ply.BaseStats.model then 
-			ply.OrigModel = ply.BaseStats.model --Model that the player got in their basestats (which is for when they have MTF vest 
+	--This part resets variable JUST IN CASE OK thx
+	ply.OrigModel = nil
+	ply.OrigModel_Fallback = nil
+
+	if ply.BaseStats then
+		if ply.BaseStats.model then
+			ply.OrigModel = ply.BaseStats.model --Model that the player got in their basestats (which is for when they have MTF vest
 		end
-	end 
-	
+	end
+
 	ply.OrigModel_Fallback = ply:GetModel() -- Just in case ;)
-	
+
 	--All those spawn with a vest so i can only change basestats...
 	if rl == ROLE_MTFGUARD and plyTeam == TEAM_GUARD then --If they are MTF
-		ply.TurnMeBack = function() 
-			ply:SetGuard() 
-			if ply.BaseStats then 
-				if ply.BaseStats.model then 
-					ply.BaseStats.model = ply.OrigModel 
+		ply.TurnMeBack = function()
+			ply:SetGuard()
+			if ply.BaseStats then
+				if ply.BaseStats.model then
+					ply.BaseStats.model = ply.OrigModel
 				end
-			end 
+			end
 		end
 	elseif rl == ROLE_MTFGUARD and plyTeam == TEAM_CHAOS then --If they are MTF CI
-		ply.TurnMeBack = function() 
-			ply:SetChaosInsurgency(1) 
-			if ply.BaseStats then 
-				if ply.BaseStats.model then 
-					ply.BaseStats.model = ply.OrigModel 
+		ply.TurnMeBack = function()
+			ply:SetChaosInsurgency(1)
+			if ply.BaseStats then
+				if ply.BaseStats.model then
+					ply.BaseStats.model = ply.OrigModel
 				end
-			end 
+			end
 		end --Normal CI
 	elseif rl == ROLE_MTFCOM then
-		ply.TurnMeBack = function() 
-			ply:SetCommander() 
-			if ply.BaseStats then 
-				if ply.BaseStats.model then 
-					ply.BaseStats.model = ply.OrigModel 
+		ply.TurnMeBack = function()
+			ply:SetCommander()
+			if ply.BaseStats then
+				if ply.BaseStats.model then
+					ply.BaseStats.model = ply.OrigModel
 				end
-			end 
+			end
 		end
 	elseif rl == ROLE_MTFNTF and plyTeam == TEAM_GUARD then -- If they are NTF...
-		ply.TurnMeBack = function() 
-			ply:SetNTF() 
-			if ply.BaseStats then 
-				if ply.BaseStats.model then 
-					ply.BaseStats.model = ply.OrigModel 
+		ply.TurnMeBack = function()
+			ply:SetNTF()
+			if ply.BaseStats then
+				if ply.BaseStats.model then
+					ply.BaseStats.model = ply.OrigModel
 				end
-			end 
+			end
 		end --Respawn as NTF, they were NTF
 	elseif rl == ROLE_MTFNTF and plyTeam == TEAM_CHAOS then --if they are NTF Chaos (Spy)
-		ply.TurnMeBack = function() 
-			ply:SetChaosInsurgency(3) 
-			if ply.BaseStats then 
-				if ply.BaseStats.model then 
-					ply.BaseStats.model = ply.OrigModel 
+		ply.TurnMeBack = function()
+			ply:SetChaosInsurgency(3)
+			if ply.BaseStats then
+				if ply.BaseStats.model then
+					ply.BaseStats.model = ply.OrigModel
 				end
-			end 
+			end
 		end --Respawn as NTF Chaos
-	--And all those actually can get a vest but does not spawn with one, requires to change 2 things 
+	--And all those actually can get a vest but does not spawn with one, requires to change 2 things
 	elseif rl == ROLE_CLASSD then
-		ply.TurnMeBack = function() 
-			ply:SetClassD() 
-			if ply.OrigModel then 
-				ply:SetModel(ply.OrigModel) --They had a vest when they turned 
+		ply.TurnMeBack = function()
+			ply:SetClassD()
+			if ply.OrigModel then
+				ply:SetModel(ply.OrigModel) --They had a vest when they turned
 			else
 				ply:SetModel(ply.OrigModel_Fallback) --They didn't have a vest.
-			end 
+			end
 		end
 	elseif rl == ROLE_RES then
-		ply.TurnMeBack = function() 
-			ply:SetScientist() 
-			if ply.OrigModel then 
+		ply.TurnMeBack = function()
+			ply:SetScientist()
+			if ply.OrigModel then
 				ply:SetModel(ply.OrigModel)
 			else
 				ply:SetModel(ply.OrigModel_Fallback)
-			end 
+			end
 		end
 	elseif rl == ROLE_CHAOS then --TDM Chaos (Unused?)
-		ply.TurnMeBack = function() 
-			ply:SetChaosInsurgency() 
-			if ply.OrigModel then 
+		ply.TurnMeBack = function()
+			ply:SetChaosInsurgency()
+			if ply.OrigModel then
 				ply:SetModel(ply.OrigModel)
 			else
 				ply:SetModel(ply.OrigModel_Fallback)
-			end 
+			end
 		end  --Not the spy version.
 	elseif rl == ROLE_MTFNTF and plyTeam == TEAM_SPEC then
 		--¯\_(ツ)_/¯
-		ply.TurnMeBack = function() 
-			ply:SetNTF() 
-			if ply.OrigModel then 
+		ply.TurnMeBack = function()
+			ply:SetNTF()
+			if ply.OrigModel then
 				ply:SetModel(ply.OrigModel)
 			else
 				ply:SetModel(ply.OrigModel_Fallback)
-			end 
+			end
 		end --Respawn as NTF, they were NTF
 	else
 		ply.TurnMeBack = function()
@@ -844,11 +844,11 @@ function mply:SetSCP0082()
 
 	self:SetTeam(TEAM_SCP)
 	print("SCP-008-2 on \""..self:Nick().."\" with model \""..self:GetModel().."\"")
-	if string.match(self:GetModel(),"models/player/kerry/class_d_%d.mdl",0) then --Should only replace when
+	if string.match(self:GetModel(),"models/player/kerry/class_d_%d?%d.mdl",0) then --Should only replace when
 		local newModel = string.Replace(self:GetModel(),"models/player/kerry/class_d_","models/player/kerry/class_d_zombie_")
 		print(newModel)
 		self:SetModel(newModel)
-	elseif string.match(self:GetModel(),"models/player/kerry/class_scientist_%d.mdl",0) then
+	elseif string.match(self:GetModel(),"models/player/kerry/class_scientist_%d?%d.mdl",0) then
 		local newModel = string.Replace(self:GetModel(),"models/player/kerry/class_scientist_","models/player/kerry/class_c_zombie_")
 		print(newModel)
 		self:SetModel(newModel)
@@ -933,11 +933,11 @@ function mply:SetSCP0492()
 	--		elseif model name starts with CHAOS model, then MTF zombies - TEMPORARY ^
 	--		else model sets to zombie_classic (NO MODEL AVAILABLE?)
 	print("SCP-049-2 on \""..self:Nick().."\" with model \""..self:GetModel().."\"")
-	if string.match(self:GetModel(),"models/player/kerry/class_d_%d.mdl",0) then --Should only replace when
+	if string.match(self:GetModel(),"models/player/kerry/class_d_%d?%d.mdl",0) then --Should only replace when
 		local newModel = string.Replace(self:GetModel(),"models/player/kerry/class_d_","models/player/kerry/class_d_zombie_")
 		print(newModel)
 		self:SetModel(newModel)
-	elseif string.match(self:GetModel(),"models/player/kerry/class_scientist_%d.mdl",0) then
+	elseif string.match(self:GetModel(),"models/player/kerry/class_scientist_%d?%d.mdl",0) then
 		local newModel = string.Replace(self:GetModel(),"models/player/kerry/class_scientist_","models/player/kerry/class_c_zombie_")
 		print(newModel)
 		self:SetModel(newModel)

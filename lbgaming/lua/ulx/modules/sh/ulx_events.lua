@@ -326,12 +326,51 @@ end
 local hidenseek = ulx.command("Link2006","ulx hidenseek",ulx.hidenseek,"!hidenseek")
 hidenseek:defaultAccess(ULib.ACCESS_SUPERADMIN)
 hidenseek:help("Hide & Seek event, Must start Multiple Breaches, then !eventstart, then this one! This ignores br_spectate players.")
-hidenseek:addParam{ type=ULib.cmds.NumArg, min=1, default=5, ULib.cmds.optional }
+hidenseek:addParam{ type=ULib.cmds.NumArg, hint="Number of seekers", min=1, default=5, ULib.cmds.optional }
+
+
+function ulx.roundrestart (calling_ply)
+
+	if RoundRestart then --Restart the round, this function is there.
+		if type(RoundRestart) == "function" then
+			RoundRestart()
+			ulx.fancyLogAdmin( calling_ply, "#A restarted the round" )
+		else
+			ULib.tsayError(calling_ply,"Unable to restart round: RoundRestart is "..tostring(RoundRestart))
+		end
+	else --RESTART FAILED
+		ULib.tsayError(calling_ply,"Unable to restart round: RoundRestart is "..tostring(RoundRestart))
+	end
+end
+
+local roundrestart = ulx.command( "Link2006", "ulx roundrestart", ulx.roundrestart, "!roundrestart" )
+roundrestart:defaultAccess( ULib.ACCESS_SUPERADMIN )
+roundrestart:help( "Restarts the round" )
+
+--I don't know if i can do this,i'm not sure if the rounds will be populated then
+local brRounds = { --PLEASE NOTE: IF YOU ADD A ROUND, ADD IT HERE TOO
+	"none",
+	"multiplebreaches",
+	"zombieplague",
+	"spies",
+	"assault",
+}
+
+function ulx.specialround (calling_ply,nextRound)
+	print("Setting round to: "..tostring(nextRound))
+	local specialRoundConVar = GetConVar('br_specialround_forcenext')
+	specialRoundConVar:SetString(nextRound)
+
+	ulx.fancyLogAdmin( calling_ply, "#A set the next round to: "..tostring(nextRound))
+end
+
+local specialround = ulx.command( "Link2006", "ulx specialround", ulx.specialround, "!specialround" )
+specialround:defaultAccess( ULib.ACCESS_SUPERADMIN )
+specialround:addParam{ type=ULib.cmds.StringArg, hint="Select a round", completes=brRounds }
+specialround:help( "Sets the next special round to the specified round" )
 
 --[[
 -- This is all the other commands i have to do
-
-
 --TODO: fgodbring <player-based> which does:
 --		Bring someone, God them and Freezes them.
 
