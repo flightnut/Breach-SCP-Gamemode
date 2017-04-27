@@ -120,7 +120,7 @@ local TeleBlacklist = {
 --Blacklist system up there because some entities SHOULD NOT MOVE.
 
 hook.Add("AcceptInput","Link2006_TeleFix",function(ent,trigger)
-	if table.HasValue(ElevTeles,ent:GetName()) and ent:GetClass() ~= "player" then --NO PLAYER PLEASE. 
+	if table.HasValue(ElevTeles,ent:GetName()) and ent:GetClass() ~= "player" then --NO PLAYER PLEASE.
 		if trigger == "Enable" then --Teleport them.
 			local MinVec,MaxVec = ent:GetCollisionBounds()
 			MinVec = ent:GetPos() + MinVec
@@ -194,6 +194,10 @@ function Link2006_AddFiles(name,remLength)
 	end
 end
 
+--Breach content
+Link2006_AddFiles("addons/breach_(updated)_862448114/sound",string.len("addons/breach_(updated)_862448114/")) -- string Folder, string (length) to remove
+Link2006_AddFiles("addons/breach_(updated)_862448114/models",string.len("addons/breach_(updated)_862448114/")) -- string Folder, string (length) to remove
+Link2006_AddFiles("addons/breach_(updated)_862448114/materials",string.len("addons/breach_(updated)_862448114/")) -- string Folder, string (length) to remove
 
 --Zombie-Models
 Link2006_AddFiles("addons/zombied_models/models",string.len("addons/zombied_models/")) -- string Folder, string (length) to remove

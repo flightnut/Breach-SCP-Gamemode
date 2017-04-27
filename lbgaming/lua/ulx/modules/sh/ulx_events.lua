@@ -1,7 +1,7 @@
 
 Rewards_SCI = (30*1000) --30 K Regular points
 Rewards_SCP = (15*1000) --15 K Regular points
-HNS_MaxSCP = 5 --5 Seekers
+hns_unfreeze_time = 180 -- Time in seconds it take to unfreeze SCPs in Hide&Seek.
 
 ------------------------------------
 ---	Stuff For Events by Link2006 ---
@@ -110,10 +110,10 @@ function ulx.slayteam ( calling_ply, target_team)
 	end
 	--Default rank Admins
 end
-local unpgagteam = ulx.command( "Link2006", "ulx slayteam", ulx.slayteam, "!slayteam" )
-unpgagteam:addParam{ type=ULib.cmds.StringArg, hint="Select a team", completes=br_TeamList }
-unpgagteam:defaultAccess( ULib.ACCESS_ADMIN )
-unpgagteam:help( "TEMP" )
+local slayteam = ulx.command( "Link2006", "ulx slayteam", ulx.slayteam, "!slayteam" )
+slayteam:addParam{ type=ULib.cmds.StringArg, hint="Select a team", completes=br_TeamList }
+slayteam:defaultAccess( ULib.ACCESS_ADMIN )
+slayteam:help( "Slays a team" )
 
 function ulx.nuke (calling_ply)
 	--[LB] Breach support only
@@ -175,9 +175,11 @@ function ulx.eventstart (calling_ply)
 end
 local eventstart = ulx.command( "Link2006", "ulx eventstart", ulx.eventstart, "!eventstart" )
 eventstart:defaultAccess( ULib.ACCESS_SUPERADMIN )
-eventstart:help( "Destroys the timers to let a customround take place (Requires br_roundrestart_cl access)" )
+eventstart:help( "Destroys the timers to help events take place (Requires br_roundrestart_cl access to restart the round)" )
 
-function ulx.hidenseek(calling_ply)
+function ulx.hidenseek(calling_ply, seekCount)
+	--TODO: Pull seekCount as a number, default to 5
+
 	if SERVER then
 		local AllPlayers = {}
 		for k,v in pairs(player.GetAll()) do
@@ -190,26 +192,28 @@ function ulx.hidenseek(calling_ply)
 			AllPlayers = nil
 			return
 		end
-		for i=1,HNS_MaxSCP do
-			timer.Remove("HideNSeek_SetWep_"..i)
+		for i=1,player.GetCount() do
+			print("Removing timer HideNSeek_SetWep_"..tostring(i))
+			timer.Remove("HideNSeek_SetWep_"..tostring(i))
 		end
 		for k,v in pairs(player.GetAll()) do
 			v:Freeze(false)
 			v:GodDisable()
 		end
 
-		for i=1,HNS_MaxSCP do
+		for i=1,seekCount do
 			MsgC(Color(137,207,240),"Setting seeker: "..tostring(i)..'\n')
 			local seekSCP = table.Random(AllPlayers)
 			seekSCP:SetSCP035()
+			seekSCP:SetHealth(1000000)
 			seekSCP:GodEnable()
 			seekSCP:SetNoCollideWithTeammates(true)
 			seekSCP:Freeze(true)
 			timer.Simple(0.25,function()
-				ULib.tsayColor(seekSCP,true,team.GetColor(TEAM_SCP),"[Hide & Seek] You're a seeker, you'll be unfrozen in 90 seconds...")
+				ULib.tsayColor(seekSCP,true,team.GetColor(TEAM_SCP),"[Hide & Seek] You're a seeker, you'll be unfrozen in "..tostring(hns_unfreeze_time).." seconds...")
 			end)
 			--timer.Simple(10,function() --10 seconds after they're spawned.
-			timer.Create("HideNSeek_SetWep_"..i,10,1,function()
+			timer.Create("HideNSeek_SetWep_"..tostring(i),10,1,function()
 				seekSCP:StripWeapons()
 				seekSCP:Give('weapon_mtf_p90')
 				seekSCP:GiveAmmo(100000,'SMG1') --fuck this,100k :P
@@ -226,9 +230,19 @@ function ulx.hidenseek(calling_ply)
 	    timer.Remove('BreachRespawn_Spectators_Init') --The timer that checks if we can start the Spectator Respawn timer.
 		timer.Remove('HideNSeek_RestartRound')
 
-		timer.Create("HideNSeek_Unfreeze",90,1,function()
+		timer.Create("HideNSeek_Unfreeze",hns_unfreeze_time,1,function()
 			for k,v in pairs(team.GetPlayers(TEAM_SCP)) do
-				v:Freeze(false)
+				v:Freeze(false) --Unfreeze SCPs
+			end
+			for k,v in pairs(team.GetPlayers(TEAM_SPEC)) do
+				if v.ActivePlayer then
+					v:SetScientist()
+					v:SetPos(table.Random(SPAWN_CLASSD))
+					timer.Simple(0.25,function()
+						ULib.tsayColor(v,true,team.GetColor(TEAM_SCI),"[Hide & Seek] You were respawned and seekers are unfrozen, You have to hide!")
+						ULib.tsayColor(v,true,Color(255,0,0),"[Hide & Seek] Please note, you cannot hide in the pocket dimension!")
+					end)
+				end
 			end
 			ULib.tsayColor(nil,true,Color(0,255,0),"[Hide & Seek] Seekers are now free!")
 		end)
@@ -237,7 +251,7 @@ function ulx.hidenseek(calling_ply)
 			v:SetScientist()
 			v:SetPos(table.Random(SPAWN_CLASSD))
 			timer.Simple(0.25,function()
-				ULib.tsayColor(v,true,team.GetColor(TEAM_SCI),"[Hide & Seek] Seekers will be unfrozen in 90 seconds, hide!")
+				ULib.tsayColor(v,true,team.GetColor(TEAM_SCI),"[Hide & Seek] Seekers will be unfrozen in "..tostring(hns_unfreeze_time).." seconds, hide!")
 				ULib.tsayColor(v,true,Color(255,0,0),"[Hide & Seek] Please note, you cannot hide in the pocket dimension!")
 			end)
 		end
@@ -245,8 +259,9 @@ function ulx.hidenseek(calling_ply)
 		function HideNSeek_Event(ply)
 			if team.NumPlayers(TEAM_SCI) <= 10 then
 
-				for i=1,HNS_MaxSCP do
-					timer.Remove("HideNSeek_SetWep_"..i)
+				--for i=1,seekCount do
+				for i=1,player.GetCount() do --Just make sure there's no timer that i forgot.
+					timer.Remove("HideNSeek_SetWep_"..tostring(i))
 				end
 				hook.Remove('PlayerDeath','HideNSeek_Counter1')
 				hook.Remove('PlayerDisconnected','HideNSeek_Counter2')
@@ -297,8 +312,8 @@ function ulx.hidenseek(calling_ply)
 		    timer.Remove('BreachRespawn_Spectators') --The Spectator Respawn Timer
 		    timer.Remove('BreachRespawn_Spectators_Init') --The timer that checks if we can start the Spectator Respawn timer.
 			timer.Remove('HideNSeek_RestartRound')
-			for i=1,HNS_MaxSCP do
-				timer.Remove("HideNSeek_SetWep_"..i)
+			for i=1,player.GetCount() do
+				timer.Remove("HideNSeek_SetWep_"..tostring(i))
 			end
 		end )
 		--HideNSeek_Event(nil) --No player entity are needed but w/e, this call only makes sure you can even start that event ;)
@@ -310,7 +325,8 @@ function ulx.hidenseek(calling_ply)
 end
 local hidenseek = ulx.command("Link2006","ulx hidenseek",ulx.hidenseek,"!hidenseek")
 hidenseek:defaultAccess(ULib.ACCESS_SUPERADMIN)
-hidenseek:help("Spawns everyone into an Hide & Seek event (except spectators)")
+hidenseek:help("Hide & Seek event, Must start Multiple Breaches, then !eventstart, then this one! This ignores br_spectate players.")
+hidenseek:addParam{ type=ULib.cmds.NumArg, min=1, default=5, ULib.cmds.optional }
 
 --[[
 -- This is all the other commands i have to do
