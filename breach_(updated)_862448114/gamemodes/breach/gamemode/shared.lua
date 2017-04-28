@@ -158,6 +158,7 @@ function GM:PlayerFootstep( ply, pos, foot, sound, volume, rf )
 	return false
 end
 
+
 function GM:EntityTakeDamage( target, dmginfo )
 
 	local at = dmginfo:GetAttacker()
@@ -280,6 +281,23 @@ if CLIENT then
     	end
     end
 end
+
+if(SERVER)then
+
+	util.AddNetworkString("UpdatePrepareVariable")
+	function UpdatePrepareVariable(b)
+	
+		net.Start("UpdatePrepareVariable")
+		net.WriteBool(b)
+		net.Broadcast()
+		print("Update function has been called value set to " .. tostring(b))
+	end
+	timer.Simple(0.5,UpdatePrepareVariable)
+	
+
+end
+
+
 
 --TEMPORARLY DISABLED TO TRY THINGS DONT MIND ME
 --[[

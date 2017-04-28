@@ -54,7 +54,13 @@ function RoundRestart()
 	end
 	print("round: playersconfigured")
 	//PrintMessage(HUD_PRINTTALK, "Prepare, round will start in ".. GetPrepTime() .." seconds")
+	
 	preparing = true
+
+
+	-- this is to update prepare variable client side
+	UpdatePrepareVariable(true)
+
 	SetRoundState( ROUND_PREP )
 	postround = false
 	--Link2006 SPECIAL ROUNDS START
@@ -143,6 +149,7 @@ function RoundRestart()
 		end
 		preparing = false
 		postround = false
+		UpdatePrepareVariable(false)
 		--Link2006 SPECIAL ROUND OnRoundStart
 		if roundtype != nil then
 			if isfunction(roundtype.onroundstart) then -- why was this doing == true? Just do the call.
@@ -379,6 +386,7 @@ function WinCheck()
 		timer.Destroy("PostTime")
 		preparing = false
 		postround = true
+		UpdatePrepareVariable(false)
 		// send infos
 		net.Start("SendRoundInfo")
 			net.WriteTable(roundstats)

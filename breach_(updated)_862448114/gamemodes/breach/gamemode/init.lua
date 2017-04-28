@@ -135,6 +135,7 @@ postround = false
 roundcount = 0
 MAPBUTTONS = table.Copy(BUTTONS)
 
+
 function GM:PlayerSpray( sprayer )
 	return !sprayer:Team() == TEAM_SPEC
 end
