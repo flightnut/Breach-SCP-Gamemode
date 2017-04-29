@@ -146,6 +146,7 @@ hook.Add( "HUDPaint", "HUDDiabloHealth", function()
 
 	local ply = LocalPlayer()
 	local hp = ply:Health()
+	local maxhp = ply:GetMaxHealth()
 	-- Disable Armor Till We Fix
 	local ar = 0
 	--local ar = ply:Armor()
@@ -155,6 +156,7 @@ hook.Add( "HUDPaint", "HUDDiabloHealth", function()
 		if IsValid(ent) then
 			if ent:IsPlayer() then
 				hp = ent:Health()
+				maxhp = ent:GetMaxHealth()
 				ar = 0
 			end
 		end
@@ -174,7 +176,8 @@ hook.Add( "HUDPaint", "HUDDiabloHealth", function()
 	local z = ScrW() - w
 
 	-- Sets the number to somethine like 0.0433 usually
-	local HPmath = 1 - math.Clamp( hpsmoothing / 100, 0, 1)
+	--local HPmath = 1 - math.Clamp( hpsmoothing / 100, 0, 1)
+	local HPmath = 1 - math.Clamp( hpsmoothing / maxhp, 0, 1)
 
 	local goopW,goopH = 152.5,148
 	local goopX,goopY = 92, y + 93.5
