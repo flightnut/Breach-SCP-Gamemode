@@ -155,7 +155,7 @@ hook.Add( "HUDPaint", "HUDDiabloHealth", function()
 		if IsValid(ent) then
 			if ent:IsPlayer() then
 				hp = ent:Health()
-				ar = ent:Armor()
+				ar = 0
 			end
 		end
 	end
