@@ -196,8 +196,14 @@ function ulx.hidenseek(calling_ply, seekCount)
 			print("Removing timer HideNSeek_SetWep_"..tostring(i))
 			timer.Remove("HideNSeek_SetWep_"..tostring(i))
 		end
+
+		for k,v in pairs(ents.FindByClass('status_sh_cryofrozen')) do
+			print("Found Frozen status id "..k.."! Removing...")
+			v:Remove()
+		end
+
 		for k,v in pairs(player.GetAll()) do
-			v:Freeze(false)
+			v:UnLock()
 			v:GodDisable()
 		end
 
@@ -205,10 +211,11 @@ function ulx.hidenseek(calling_ply, seekCount)
 			MsgC(Color(137,207,240),"Setting seeker: "..tostring(i)..'\n')
 			local seekSCP = table.Random(AllPlayers)
 			seekSCP:SetSCP035()
+			seekSCP:SetPos(SPAWN_035)
 			seekSCP:SetHealth(1000000)
 			seekSCP:GodEnable()
 			seekSCP:SetNoCollideWithTeammates(true)
-			seekSCP:Freeze(true)
+			seekSCP:Lock()
 			timer.Simple(0.25,function()
 				ULib.tsayColor(seekSCP,true,team.GetColor(TEAM_SCP),"[Hide & Seek] You're a seeker, you'll be unfrozen in "..tostring(hns_unfreeze_time).." seconds...")
 			end)
@@ -218,6 +225,7 @@ function ulx.hidenseek(calling_ply, seekCount)
 				seekSCP:Give('weapon_mtf_p90')
 				seekSCP:GiveAmmo(100000,'SMG1') --fuck this,100k :P
 				seekSCP:Give('keycard_level5')
+				seekSCP:SetPos(SPAWN_035)
 			end)
 			MsgC(Color(137,207,240),"New Seeker: "..tostring(seekSCP:Nick())..'\n')
 			table.RemoveByValue(AllPlayers,seekSCP)
@@ -229,10 +237,17 @@ function ulx.hidenseek(calling_ply, seekCount)
 	    timer.Remove('BreachRespawn_Spectators') --The Spectator Respawn Timer
 	    timer.Remove('BreachRespawn_Spectators_Init') --The timer that checks if we can start the Spectator Respawn timer.
 		timer.Remove('HideNSeek_RestartRound')
-
+		--[[
+		timer.Create("HideNSeek_NoCheating",1,hns_unfreeze_time,function() -- Every seconds, until the unfreeze, set their pos
+			for k,v in pairs(team.GetPlayers(TEAM_SCP)) do
+				v:SetPos(SPAWN_035)
+			end
+		end)
+		]]--
 		timer.Create("HideNSeek_Unfreeze",hns_unfreeze_time,1,function()
 			for k,v in pairs(team.GetPlayers(TEAM_SCP)) do
-				v:Freeze(false) --Unfreeze SCPs
+				v:SetPos(SPAWN_035)
+				v:UnLock() --Unfreeze SCPs
 			end
 			for k,v in pairs(team.GetPlayers(TEAM_SPEC)) do
 				if v.ActivePlayer then
