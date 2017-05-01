@@ -21,6 +21,7 @@ This README would normally document whatever steps are necessary to get your app
 * ulx ent durgz_scp420j
 * ulx ent durgz_scp500
 * ulx ent npc_scp_066
+* ulx ent scp_860_2
 * ulx playsound nukes/siren.ogg
 * ulx playsound nukes/nuke1.ogg
 * ulx playsound nukes/nuke2.ogg; ulx explode *
