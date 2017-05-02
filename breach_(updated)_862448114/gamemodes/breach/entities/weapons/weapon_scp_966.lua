@@ -72,7 +72,7 @@ function SWEP:Think() --Predicted Hook.
 	end
 
 	if self.No966Attack == true then return end
-	if preparing then return end 
+	if preparing then return end
 
 	if SERVER then
 		for k,v in pairs(ents.FindInSphere( self.Owner:GetPos(), 300 )) do
@@ -80,7 +80,8 @@ function SWEP:Think() --Predicted Hook.
 				if v:Team() ~= TEAM_SCP and v:Team() ~= TEAM_SPEC then
 					if self.Owner.nextexp == nil then self.Owner.nextexp = 0 end
 					if self.Owner.nextexp < CurTime() then
-						v:TakeDamage(3, self.Owner, self)
+						v:EmitSound('physics/flesh/flesh_impact_bullet'..math.Round(math.random(1,4))..'.wav') --Some hurt sound for 966 :u
+						v:TakeDamage(4, self.Owner, self)
 						v:SendLua('last996attack = 1')
 						--self.Owner:AddExp(1)
 						self.Owner.nextexp = CurTime() + 1

@@ -228,11 +228,14 @@ function HaveRadio(pl1, pl2)
 end
 
 function GM:PlayerCanHearPlayersVoice( listener, talker )
+	--Made it so SCPs can talk to everyone, not just SCPs :)
+	--[[
 	if talker:Team() == TEAM_SCP then
 		if listener:Team() != TEAM_SCP then
 			return false
 		end
 	end
+	--]]
 	if talker:Team() == TEAM_SPEC then
 		if listener:Team() == TEAM_SPEC then
 			return true

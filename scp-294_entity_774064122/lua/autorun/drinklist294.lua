@@ -532,15 +532,6 @@ DrinkList["random drink"] = {
 			end
 		end,
 		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
-DrinkList["ammunition"] = {
-		color 		= Color(240,240,240,150),
-		effect 		= function(meta)
-			for k , v in pairs (meta:GetWeapons()) do
-				local ammo = v:GetPrimaryAmmoType()
-				meta:GiveAmmo( 10, ammo, false )
-			end
-		end,
-		dispense	= function(ent)	ent:EmitSound("scp294/dispense1.ogg") end }
 DrinkList["me"] = {
 		color 		= Color(240,240,240,150),
 		effect 		= function(meta)
