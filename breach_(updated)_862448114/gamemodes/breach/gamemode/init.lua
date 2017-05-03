@@ -680,6 +680,9 @@ function OpenSCPDoors()
 		if v:GetPos() == POS_173BUTTON then
 			ForceUse(v, 1, 1)
 		end
+		if v:GetPos() == POS_966BUTTON then
+			ForceUse(v, 1, 1)
+		end
 		if v:GetPos() == POS_049BUTTON then
 			ForceUse(v, 1, 1)
 		end

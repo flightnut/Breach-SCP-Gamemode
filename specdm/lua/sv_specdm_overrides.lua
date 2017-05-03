@@ -74,12 +74,16 @@ hook.Add("PlayerTraceAttack", "PlayerTraceAttack_SpecDM", function(ply, dmginfo,
 		return true
 	end
 end)
-
 hook.Add("PlayerSpawn", "PlayerSpawn_SpecDM", function(ply)
 	if ply:IsGhost() then
 		ply.has_spawned = true
 		ply:UnSpectate()
-        timer.Simple(0.1, function() if IsValid(ply) and ply:IsGhost() then ply:SetPos(table.Random(SPAWN_OUTSIDE)) end end)
+        if math.Round(math.random(1,10)) > 5 then
+            ply:SetPos(table.Random(SPAWN_SCIENT))
+        else
+            ply:SetPos(table.Random(SPAWN_CLASSD))
+        end
+        --timer.Simple(0.1, function() if IsValid(ply) and ply:IsGhost() then ply:SetPos(table.Random(SPAWN_OUTSIDE)) end end)
 		timer.Simple(0.11, function() if IsValid(ply) and ply:IsGhost() and ply:GetWeapons() == nil then ply:GiveGhostWeapons() end end)
 		hook.Call("PlayerSetModel", GAMEMODE, ply)
 		return
@@ -109,7 +113,12 @@ local function SpecDM_Respawn(ply)
         end)
         timer.Simple(0.11,function()
             print("[SpecDM] SetPos on "..ply:Nick())
-            ply:SetPos(table.Random(SPAWN_OUTSIDE))
+            if math.Round(math.random(1,10)) > 5 then
+                ply:SetPos(table.Random(SPAWN_SCIENT))
+            else
+                ply:SetPos(table.Random(SPAWN_CLASSD))
+            end
+            --ply:SetPos(table.Random(SPAWN_OUTSIDE))
         end)
         --Link2006's fix to a deathmatch
         timer.Simple(0.12,function()
