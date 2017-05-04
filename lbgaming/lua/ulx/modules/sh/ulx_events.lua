@@ -184,6 +184,11 @@ function ulx.hidenseek(calling_ply, seekCount)
 		local AllPlayers = {}
 		for k,v in pairs(player.GetAll()) do
 			if v.ActivePlayer then
+				if v.IsGhost then --Do we have SpecDM installed?
+					if v:IsGhost() then --We do, Are they a ghost?
+						v:ManageGhost( false, true ) --Yes, Let's pull them out of SpecDM.
+					end
+				end
 				table.insert(AllPlayers,v)
 			end
 		end
@@ -192,14 +197,15 @@ function ulx.hidenseek(calling_ply, seekCount)
 			AllPlayers = nil
 			return
 		end
-		for i=1,player.GetCount() do
-			print("Removing timer HideNSeek_SetWep_"..tostring(i))
-			timer.Remove("HideNSeek_SetWep_"..tostring(i))
-		end
-
+		--Trying to make this as early as possible.
 		for k,v in pairs(ents.FindByClass('status_sh_cryofrozen')) do
 			print("Found Frozen status id "..k.."! Removing...")
 			v:Remove()
+		end
+
+		for i=1,player.GetCount() do
+			print("Removing timer HideNSeek_SetWep_"..tostring(i))
+			timer.Remove("HideNSeek_SetWep_"..tostring(i))
 		end
 
 		for k,v in pairs(player.GetAll()) do
