@@ -15,4 +15,5 @@ hook.Add("ScalePlayerDamage","Link2006_ScaleDamage",function(ply,hitgroup,dmginf
     dmginfo:SetDamageForce(Vector(0,0,0)) --Comment this line if you like the knockback on other players via Weapons.
     return false
 end)
+
 print("[sh_link2006dmg] Ready.")
