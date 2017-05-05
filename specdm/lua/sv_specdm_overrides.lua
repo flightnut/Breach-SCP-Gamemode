@@ -421,6 +421,13 @@ hook.Add("AcceptInput", "AcceptInput_Ghost", function(ent, name, activator, call
 			return true
 		end
 	end
+
+    --Makes sure players cannot TRIGGER ANYTHING
+    if activator:IsPlayer() then
+        if activator:Team() == TEAM_SPEC then
+            return true
+        end
+    end
 end)
 
 hook.Add("EntityEmitSound", "EntityEmitSound_SpecDM", function(t)

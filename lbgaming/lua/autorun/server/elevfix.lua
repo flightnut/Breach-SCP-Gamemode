@@ -99,14 +99,14 @@ end)
 
 --GateA_BotTele; GateA_TopTele; GateB_BotTele; GateB_TopTele;
 local ElevTeles ={
-	'GateA_BotTele', --Bottom
-	'GateA_TopTele', --Top
-	'GateB_TopTele', --Bottom (They are INVERTED!!)
-	'GateB_BotTele', -- Top (Props fucked up c:)
+	'elev_gate_b_bottom_tp1', --Gate A
+	'elev_gate_b_top_tp1', --Gate A
+	'elev_gate_b_bottom_tp', -- Gate B
+	'elev_gate_b_top_tp', -- Gate B
 }
 local TeleBlacklist = {
 	'trigger_teleport', --Lol?
-	'player', --Players are already teleported, we dont need to :)
+	'player', --Players are already teleported, we dont need to... But now they still trigger my script wtf :(
 	'predicted_viewmodel', --???
 	'func_door', --Doors
 	'prop_dynamic', --Doors
@@ -115,6 +115,9 @@ local TeleBlacklist = {
 	'ambient_generic', --sounds
 	'env_sprite', --Sprites
 	'info_player_start', --WHAT ARE YOU DOING HERE WHAT?
+	'env_shake',
+	'info_teleport_destination', -- LOL OOPS
+	'info_landmark',
 }
 --When those trigger, we also check anything inside their box and tp them up/down C:
 --Blacklist system up there because some entities SHOULD NOT MOVE.
@@ -126,22 +129,24 @@ hook.Add("AcceptInput","Link2006_TeleFix",function(ent,trigger)
 			MinVec = ent:GetPos() + MinVec
 			MaxVec = ent:GetPos() + MaxVec
 			local TeleEnts = ents.FindInBox(MinVec,MaxVec)
-			if ent:GetName() == 'GateA_BotTele' then
+			if ent:GetName() == 'elev_gate_b_bottom_tp1' or ent:GetName() == 'elev_gate_b_bottom_tp' then
 				--Teleport the entities to the top
 				for k,v in pairs(TeleEnts) do
 					if table.HasValue(TeleBlacklist,v:GetClass()) == false then
 						print("A <BotTele> TELEPORTING ["..v:GetClass().."] named: "..v:GetName())
-						v:SetPos(Vector(v:GetPos().x,v:GetPos().y,v:GetPos().z+1024))
+						v:SetPos(Vector(v:GetPos().x,v:GetPos().y,v:GetPos().z+2048))
 					end
 				end
-			elseif ent:GetName() == 'GateA_TopTele'	then
+			elseif ent:GetName() == 'elev_gate_b_top_tp1' or ent:GetName() == 'elev_gate_b_top_tp'	then
 				--Teleport the entities to the bottom
 				for k,v in pairs(TeleEnts) do
 					if table.HasValue(TeleBlacklist,v:GetClass()) == false then
 						print("A <TopTele>TELEPORTING ["..v:GetClass().."] named: "..v:GetName())
-						v:SetPos(Vector(v:GetPos().x,v:GetPos().y,v:GetPos().z-1024))
+						v:SetPos(Vector(v:GetPos().x,v:GetPos().y,v:GetPos().z-2048))
 					end
 				end
+			end
+			--[[
 			elseif ent:GetName() == 'GateB_TopTele'	then
 				--Teleport the entities to the top
 				for k,v in pairs(TeleEnts) do
@@ -165,7 +170,7 @@ hook.Add("AcceptInput","Link2006_TeleFix",function(ent,trigger)
 					end
 				end
 			end
-
+			]]--
 		end
 	end
 end)
