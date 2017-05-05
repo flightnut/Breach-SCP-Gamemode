@@ -198,14 +198,16 @@ ROUNDS = {
 	multiplebreaches = {
 		playersetup = function()
 			local pnum = #GetActivePlayers()
-			if pnum < 7 then
-				SetupPlayers(GetRoleTableCustom(#GetActivePlayers(), 1, 0, 0, 0, false))
-			elseif pnum > 6 and pnum < 13 then
-				SetupPlayers(GetRoleTableCustom(#GetActivePlayers(), 2, 0, 0, 0, false))
-			elseif pnum > 12 and pnum < 20 then
-				SetupPlayers(GetRoleTableCustom(#GetActivePlayers(), 3, 0, 0, 0, false))
-			else
-				SetupPlayers(GetRoleTableCustom(#GetActivePlayers(), 4, 0, 0, 0, false))
+			if pnum < 7 then -- 0 to 6 players
+				SetupPlayers(GetRoleTableCustom(#GetActivePlayers(), 1, 0, 0, 0, false)) -- 1 SCP
+			elseif pnum > 6 and pnum < 13 then --7 to 12 players
+				SetupPlayers(GetRoleTableCustom(#GetActivePlayers(), 2, 0, 0, 0, false)) -- 2 SCPs
+			elseif pnum > 12 and pnum < 20 then --13 to 19 players
+				SetupPlayers(GetRoleTableCustom(#GetActivePlayers(), 3, 0, 0, 0, false)) -- 3 SCPs
+			elseif pnum > 19 and pnum < 40 then -- 20 to 39 players
+				SetupPlayers(GetRoleTableCustom(#GetActivePlayers(), 4, 0, 0, 0, false)) -- 4 SCPs
+			else --40+ Players
+				SetupPlayers(GetRoleTableCustom(#GetActivePlayers(), 5, 0, 0, 0, false)) -- 5 SCPs
 			end
 		end,
 		name = "Multiple breaches",

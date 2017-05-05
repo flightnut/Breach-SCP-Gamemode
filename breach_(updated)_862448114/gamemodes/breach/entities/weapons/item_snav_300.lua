@@ -12,8 +12,8 @@ SWEP.Instructions	= "If you hold it, click RMB to change the view"
 
 SWEP.ViewModelFOV	= 62
 SWEP.ViewModelFlip	= false
-SWEP.ViewModel		= "models/props_junk/cardboard_box004a.mdl"
-SWEP.WorldModel		= "models/props_junk/cardboard_box004a.mdl"
+SWEP.ViewModel		= "models/props/mishka/snav.mdl"
+SWEP.WorldModel		= "models/props/mishka/snav.mdl"
 SWEP.PrintName		= "S-Nav 300"
 SWEP.Slot			= 1
 SWEP.SlotPos		= 1

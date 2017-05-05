@@ -12,8 +12,8 @@ SWEP.Instructions	= "If you hold it, your chat messages and voice chat will be g
 
 SWEP.ViewModelFOV	= 62
 SWEP.ViewModelFlip	= false
-SWEP.ViewModel		= "models/props_junk/cardboard_box004a.mdl"
-SWEP.WorldModel		= "models/props_junk/cardboard_box004a.mdl"
+SWEP.ViewModel		= "models/props/mishka/radio.mdl"
+SWEP.WorldModel		= "models/props/mishka/radio.mdl"
 SWEP.PrintName		= "Radio"
 SWEP.Slot			= 1
 SWEP.SlotPos		= 1
