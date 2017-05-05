@@ -50,7 +50,7 @@ SWEP.IDK					= 125
 SWEP.HeadshotMultiplier		= 2
 SWEP.DamageDistanceMul		= 1
 
--- Sights
+// Sights
 SWEP.MinFov					= 40
 SWEP.ZoomFov				= 90
 SWEP.IsScoping				= false
@@ -58,7 +58,7 @@ SWEP.HasScope				= false
 SWEP.DrawCustomCrosshair	= true
 SWEP.NeedtoScope			= false
 
--- Silencer
+// Silencer
 SWEP.HasSilencer			= nil
 SWEP.SilencerModel 			= nil
 SWEP.NormalModel			= nil
@@ -71,7 +71,7 @@ end
 function SWEP:Equip()
 	if SERVER and IsValid(self.Owner) and self.Primary.Ammo != "none" then
 		if self.Owner.gettingammo then
-			--print(self.Owner.gettingammo)
+			//print(self.Owner.gettingammo)
 			self:SetClip1(self.Owner.gettingammo)
 			self.Owner.gettingammo = 0
 		end
@@ -85,9 +85,9 @@ function SWEP:Initialize()
 end
 
 function SWEP:PreDrop()
-	--if SERVER and IsValid(self.Owner) and self.Primary.Ammo != "none" then
-	--	self.SavedAmmo = self:Clip1()
-	--end
+	//if SERVER and IsValid(self.Owner) and self.Primary.Ammo != "none" then
+	//	self.SavedAmmo = self:Clip1()
+	//end
 end
 
 function SWEP:Precache()
@@ -137,7 +137,7 @@ function SWEP:SecondaryAttack()
 				self:EmitSound(self.ScopeSound)
 			end
 		end
-		--self:SetNextPrimaryFire( CurTime() + self.Primary.Delay)
+		//self:SetNextPrimaryFire( CurTime() + self.Primary.Delay)
 	else
 		self:SetNextPrimaryFire( CurTime() + self.Secondary.Delay)
 	end
