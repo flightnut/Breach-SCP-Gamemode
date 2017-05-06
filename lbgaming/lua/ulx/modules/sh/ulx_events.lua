@@ -169,6 +169,8 @@ function ulx.eventstart (calling_ply)
 	--default rank: Super admin !
 	timer.Destroy("PreparingTime")
 	timer.Destroy("RoundTime")
+	SetRoundState(ROUND_ACTIVE)
+	UpdatePrepareVariable(false)
 	preparing = false
 	postround = false
 	ulx.fancyLogAdmin( calling_ply, "#A stopped the round" )
@@ -185,7 +187,8 @@ function ulx.hidenseek(calling_ply, seekCount)
 		timer.Destroy("RoundTime")
 		postround = false
 		preparing = true -- Whatever
-
+		UpdatePrepareVariable(true)
+		SetRoundState(ROUND_PREP)
 		local AllPlayers = {}
 		for k,v in pairs(player.GetAll()) do
 			if v.ActivePlayer then
@@ -260,7 +263,9 @@ function ulx.hidenseek(calling_ply, seekCount)
 		end)
 		]]--
 		timer.Create("HideNSeek_Unfreeze",hns_unfreeze_time,1,function()
+			SetRoundState(ROUND_ACTIVE)
 			preparing = false -- Whatever
+			UpdatePrepareVariable(false)
 			for k,v in pairs(team.GetPlayers(TEAM_SCP)) do
 				v:SetPos(SPAWN_035)
 				v:UnLock() --Unfreeze SCPs
