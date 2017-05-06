@@ -181,6 +181,11 @@ function ulx.hidenseek(calling_ply, seekCount)
 	--TODO: Pull seekCount as a number, default to 5
 
 	if SERVER then
+		timer.Destroy("PreparingTime")
+		timer.Destroy("RoundTime")
+		postround = false
+		preparing = true -- Whatever
+
 		local AllPlayers = {}
 		for k,v in pairs(player.GetAll()) do
 			if v.ActivePlayer then
@@ -221,9 +226,13 @@ function ulx.hidenseek(calling_ply, seekCount)
 			seekSCP:SetHealth(1000000)
 			seekSCP:GodEnable()
 			seekSCP:SetNoCollideWithTeammates(true)
-			seekSCP:Lock()
+			--[[
+			timer.Simple(1,function()
+				seekSCP:Lock()
+			end)
+			]]--
 			timer.Simple(0.25,function()
-				ULib.tsayColor(seekSCP,true,team.GetColor(TEAM_SCP),"[Hide & Seek] You're a seeker, you'll be unfrozen in "..tostring(hns_unfreeze_time).." seconds...")
+				ULib.tsayColor(seekSCP,true,team.GetColor(TEAM_SCP),"[Hide & Seek] You're a seeker, you'll be freed in "..tostring(hns_unfreeze_time).." seconds...")
 			end)
 			--timer.Simple(10,function() --10 seconds after they're spawned.
 			timer.Create("HideNSeek_SetWep_"..tostring(i),10,1,function()
@@ -251,6 +260,7 @@ function ulx.hidenseek(calling_ply, seekCount)
 		end)
 		]]--
 		timer.Create("HideNSeek_Unfreeze",hns_unfreeze_time,1,function()
+			preparing = false -- Whatever
 			for k,v in pairs(team.GetPlayers(TEAM_SCP)) do
 				v:SetPos(SPAWN_035)
 				v:UnLock() --Unfreeze SCPs
@@ -260,7 +270,7 @@ function ulx.hidenseek(calling_ply, seekCount)
 					v:SetScientist()
 					v:SetPos(table.Random(SPAWN_CLASSD))
 					timer.Simple(0.25,function()
-						ULib.tsayColor(v,true,team.GetColor(TEAM_SCI),"[Hide & Seek] You were respawned and seekers are unfrozen, You have to hide!")
+						ULib.tsayColor(v,true,team.GetColor(TEAM_SCI),"[Hide & Seek] You were respawned and seekers are freed, You have to hide!")
 						ULib.tsayColor(v,true,Color(255,0,0),"[Hide & Seek] Please note, you cannot hide in the pocket dimension!")
 					end)
 				end
@@ -272,7 +282,7 @@ function ulx.hidenseek(calling_ply, seekCount)
 			v:SetScientist()
 			v:SetPos(table.Random(SPAWN_CLASSD))
 			timer.Simple(0.25,function()
-				ULib.tsayColor(v,true,team.GetColor(TEAM_SCI),"[Hide & Seek] Seekers will be unfrozen in "..tostring(hns_unfreeze_time).." seconds, hide!")
+				ULib.tsayColor(v,true,team.GetColor(TEAM_SCI),"[Hide & Seek] Seekers will be freed in "..tostring(hns_unfreeze_time).." seconds, hide!")
 				ULib.tsayColor(v,true,Color(255,0,0),"[Hide & Seek] Please note, you cannot hide in the pocket dimension!")
 			end)
 		end
@@ -324,6 +334,7 @@ function ulx.hidenseek(calling_ply, seekCount)
 			print("<!> MAP HAS BEEN RESET, ABORTING HIDE & SEEK EVENT <!> ")
 			for k,v in pairs(player.GetAll()) do
 				v:GodDisable()
+				v:UnLock()
 				--Other stuff that breaks when map resets goes here
 			end
 			hook.Remove('PlayerDeath','HideNSeek_Counter1')
@@ -346,7 +357,7 @@ function ulx.hidenseek(calling_ply, seekCount)
 end
 local hidenseek = ulx.command("Link2006","ulx hidenseek",ulx.hidenseek,"!hidenseek")
 hidenseek:defaultAccess(ULib.ACCESS_SUPERADMIN)
-hidenseek:help("Hide & Seek event, Must start Multiple Breaches, then !eventstart, then this one! This ignores br_spectate players.")
+hidenseek:help("Hide & Seek event, Must start Multiple Breaches before this one! This ignores br_spectate players. As of 1.1, this does !eventstart internally.")
 hidenseek:addParam{ type=ULib.cmds.NumArg, hint="Number of seekers", min=1, default=5, ULib.cmds.optional }
 
 
