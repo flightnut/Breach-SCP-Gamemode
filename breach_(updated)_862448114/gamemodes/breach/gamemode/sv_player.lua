@@ -229,6 +229,8 @@ function mply:SetNTF()
 	self:SetNoCollideWithTeammates(false)
 	--Set player's model to scale
 	self:SetModelScale(1.0,0)
+	--Link2006's speed fix
+	self:SetCanWalk(true)
 end
 
 function mply:SetScientist()
@@ -265,6 +267,8 @@ function mply:SetScientist()
 	--ForceShow the objectives for the current player. (Link2006)
 	net.Start("RolesSelected")
 	net.Send(self)
+	--Link2006's speed fix
+	self:SetCanWalk(true)
 end
 
 --MTF
@@ -342,6 +346,8 @@ function mply:SetCommander()
 	--ForceShow the objectives for the current player. (Link2006)
 	net.Start("RolesSelected")
 	net.Send(self)
+	--Link2006's speed fix
+	self:SetCanWalk(true)
 end
 
 function mply:SetGuard()
@@ -380,6 +386,8 @@ function mply:SetGuard()
 	--ForceShow the objectives for the current player. (Link2006)
 	net.Start("RolesSelected")
 	net.Send(self)
+	--Link2006's speed fix
+	self:SetCanWalk(true)
 end
 
 --Chaos
@@ -474,6 +482,8 @@ function mply:SetChaosInsurgency(stealth)
 	--ForceShow the objectives for the current player. (Link2006)
 	net.Start("RolesSelected")
 	net.Send(self)
+	--Link2006's speed fix
+	self:SetCanWalk(true)
 end
 
 function mply:SetChaosInsCom(spawn)
@@ -523,6 +533,8 @@ function mply:SetChaosInsCom(spawn)
 	--ForceShow the objectives for the current player. (Link2006)
 	net.Start("RolesSelected")
 	net.Send(self)
+	--Link2006's speed fix
+	self:SetCanWalk(true)
 end
 
 function mply:UnUseArmor()
@@ -562,6 +574,8 @@ function mply:SetSpectator()
 	self:SetNoCollideWithTeammates(true)
 	--Set player's model to scale
 	self:SetModelScale(1.0,0)
+	--Link2006's speed fix
+	self:SetCanWalk(true)
 end
 --SCP Roles
 --SCP-1048-A
@@ -600,6 +614,8 @@ function mply:SetSCP1048a()
 	--ForceShow the objectives for the current player. (Link2006)
 	net.Start("RolesSelected")
 	net.Send(self)
+	--Link2006's speed fix
+	self:SetCanWalk(true)
 end
 --SCP-035
 function mply:SetSCP035()
@@ -649,6 +665,8 @@ function mply:SetSCP035()
 	--ForceShow the objectives for the current player. (Link2006)
 	net.Start("RolesSelected")
 	net.Send(self)
+	--Link2006's speed fix
+	self:SetCanWalk(true)
 end
 --SCP-173
 function mply:SetSCP173()
@@ -687,6 +705,9 @@ function mply:SetSCP173()
 	--ForceShow the objectives for the current player. (Link2006)
 	net.Start("RolesSelected")
 	net.Send(self)
+	--Link2006's speed fix !DO NOT REMOVE FOR THIS SCP!
+	--Fixes a bug where he could walk even if looked at, DOES NOT STOP THEM <!>
+	self:SetCanWalk(false)
 end
 --SCP-106
 function mply:SetSCP106()
@@ -724,6 +745,8 @@ function mply:SetSCP106()
 	--ForceShow the objectives for the current player. (Link2006)
 	net.Start("RolesSelected")
 	net.Send(self)
+	--Link2006's speed fix
+	self:SetCanWalk(true)
 end
 --SCP-049
 function mply:SetSCP049()
@@ -761,6 +784,8 @@ function mply:SetSCP049()
 	--ForceShow the objectives for the current player. (Link2006)
 	net.Start("RolesSelected")
 	net.Send(self)
+	--Link2006's speed fix
+	self:SetCanWalk(true)
 end
 --SCP-682
 function mply:SetSCP682()
@@ -799,6 +824,8 @@ function mply:SetSCP682()
 	--ForceShow the objectives for the current player. (Link2006)
 	net.Start("RolesSelected")
 	net.Send(self)
+	--Link2006's speed fix
+	self:SetCanWalk(true)
 end
 --SCP-457
 function mply:SetSCP457()
@@ -837,6 +864,8 @@ function mply:SetSCP457()
 	--ForceShow the objectives for the current player. (Link2006)
 	net.Start("RolesSelected")
 	net.Send(self)
+	--Link2006's speed fix
+	self:SetCanWalk(true)
 end
 --SCP-0-082
 function mply:SetSCP0082()
@@ -920,6 +949,8 @@ function mply:SetSCP0082()
 	self:SetNoCollideWithTeammates(true)
 	--Set player's model to scale
 	self:SetModelScale(1.0,0)
+	--Link2006's speed fix
+	self:SetCanWalk(true)
 end
 --SCP-0-492 Baby Zombie
 function mply:SetSCP0492()
@@ -1009,6 +1040,8 @@ function mply:SetSCP0492()
 	self:SetNoCollideWithTeammates(false)
 	--Set player's model to scale
 	self:SetModelScale(1.0,0)
+	--Link2006's speed fix
+	self:SetCanWalk(true)
 end
 --SCP-966
 function mply:SetSCP966()
@@ -1049,6 +1082,8 @@ function mply:SetSCP966()
 	self:SetModelScale(1.0,0)
 	net.Start("RolesSelected")
 	net.Send(self)
+	--Link2006's speed fix
+	self:SetCanWalk(true)
 end
 
 function mply:SetClassD()
@@ -1084,6 +1119,8 @@ function mply:SetClassD()
 	--ForceShow the objectives for the current player. (Link2006)
 	net.Start("RolesSelected")
 	net.Send(self)
+	--Link2006's speed fix
+	self:SetCanWalk(true)
 end
 
 function mply:SetSiteDirector(spawn)
@@ -1125,6 +1162,8 @@ function mply:SetSiteDirector(spawn)
 	--ForceShow the objectives for the current player. (Link2006)
 	net.Start("RolesSelected")
 	net.Send(self)
+	--Link2006's speed fix
+	self:SetCanWalk(true)
 end
 
 function mply:DropWep(class, clip)
