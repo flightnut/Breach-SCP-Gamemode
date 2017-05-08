@@ -6,13 +6,13 @@ if (SERVER) then
 end
 
 if ( CLIENT ) then
-	SWEP.PrintName			= "Knife"	
+	SWEP.PrintName			= "Shank"
 	SWEP.DrawAmmo 			= false
 	SWEP.DrawCrosshair 		= false
 	SWEP.ViewModelFOV		= 77
 	SWEP.ViewModelFlip		= false
 	SWEP.CSMuzzleFlashes	= true
-	
+
 	SWEP.Slot				= 0
 	SWEP.SlotPos			= 3
 	SWEP.IconLetter			= "j"
@@ -62,9 +62,9 @@ end
 /*---------------------------------------------------------
 Initialize
 ---------------------------------------------------------*/
-function SWEP:Initialize() 
-	self:SetWeaponHoldType( "knife" ) 	 
-end 
+function SWEP:Initialize()
+	self:SetWeaponHoldType( "knife" )
+end
 
 /*---------------------------------------------------------
 Deploy
@@ -96,6 +96,7 @@ function SWEP:PrimaryAttack()
 
 	if ( trace.Hit ) then
 
+	--[[
 	local DamageMath = math.random(0,5)
 
 	if DamageMath == 3 then
@@ -105,7 +106,8 @@ function SWEP:PrimaryAttack()
 
 		dmg = 15
 	end
-
+	--]]
+	dmg = 100 -- ;)
 		if trace.Entity:IsPlayer() or trace.Entity:IsNPC() then
 			self.Weapon:SetNextPrimaryFire(CurTime() + 0.5)
 			self.Weapon:SendWeaponAnim(ACT_VM_HITCENTER)
@@ -118,8 +120,12 @@ function SWEP:PrimaryAttack()
 			bullet.Tracer = 0
 			bullet.Force  = 1
 			bullet.Damage = dmg
-			self.Owner:FireBullets(bullet) 
-			self.Weapon:EmitSound( "Weapon_Knife.Hit" )
+			self.Owner:FireBullets(bullet)
+			--self.Weapon:EmitSound( "Weapon_Knife.Hit" )
+			self.Weapon:EmitSound('physics/plastic/plastic_box_break'..math.Round(math.random(1,2))..'.wav') -- Break sound
+			if SERVER then
+				self.Owner:StripWeapon(self.Weapon:GetClass())
+			end
 		else
 			bullet = {}
 			bullet.Num    = 1
@@ -151,10 +157,10 @@ function SWEP:EntityFaceBack(ent)
 end
 
 /*---------------------------------------------------------
-Reload
+Reload/RightClick
 ---------------------------------------------------------*/
-function SWEP:SecondaryAttack()
-
+function SWEP:SecondaryAttack() --Disabled.
+	--[[
 	local tr = {}
 	tr.start = self.Owner:GetShootPos()
 	tr.endpos = self.Owner:GetShootPos() + ( self.Owner:GetAimVector() * 60 )
@@ -189,7 +195,7 @@ function SWEP:SecondaryAttack()
 			bullet.Tracer = 0
 			bullet.Force  = 1
 			bullet.Damage = damage
-			self.Owner:FireBullets(bullet) 
+			self.Owner:FireBullets(bullet)
 			self.Weapon:EmitSound( "Weapon_Knife.Stab" )
 		else
 			bullet = {}
@@ -212,6 +218,7 @@ function SWEP:SecondaryAttack()
 		self.Weapon:SendWeaponAnim(ACT_VM_MISSCENTER)
 		self.Idle = CurTime() + self.Owner:GetViewModel():SequenceDuration()
 	end
+	]]--
 end
 
 /*---------------------------------------------------------
@@ -252,9 +259,9 @@ end
 
 /*---------------------------------------------------------
 	DrawHUD
-	
+
 	Just a rough mock up showing how to draw your own crosshair.
-	
+
 ---------------------------------------------------------*/
 
 function SWEP:DrawHUD()
@@ -269,23 +276,23 @@ function SWEP:DrawHUD()
 		local tr = util.GetPlayerTrace( self.Owner )
 		tr.mask = bit.bor( CONTENTS_SOLID,CONTENTS_MOVEABLE,CONTENTS_MONSTER,CONTENTS_WINDOW,CONTENTS_DEBRIS,CONTENTS_GRATE,CONTENTS_AUX )
 		local trace = util.TraceLine( tr )
-		
+
 		local coords = trace.HitPos:ToScreen()
 		x, y = coords.x, coords.y
 
 	else
 		x, y = ScrW() / 2.0, ScrH() / 2.0
 	end
-	
-	local scale = 1 
-	
+
+	local scale = 1
+
 	// Scale the size of the crosshair according to how long ago we fired our weapon
 	local LastShootTime = self.Weapon:GetNetworkedFloat( "LastShootTime", 0 )
 	scale = scale * (2 - math.Clamp( (CurTime() - LastShootTime) * 5, 0.0, 1.0 ))
 
 	surface.SetDrawColor( 0, 255, 0, 255 )
-	
-	
+
+
 	// Draw an awesome crosshair
 	local gap = scale + 5
 	local length = gap + 8 * scale
@@ -297,7 +304,7 @@ function SWEP:DrawHUD()
 end
 
 function SWEP:DoImpactEffect( tr, nDamageType )
-	util.Decal("ManhackCut", tr.HitPos + tr.HitNormal, tr.HitPos - tr.HitNormal)	
+	util.Decal("ManhackCut", tr.HitPos + tr.HitNormal, tr.HitPos - tr.HitNormal)
 	return true;
-	
+
 end

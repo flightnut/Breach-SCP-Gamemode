@@ -104,7 +104,13 @@ function SWEP:Think() --Predicted Hook.
 		for k,v in pairs(ents.FindInSphere( self.Owner:GetPos(), 150 )) do
 			if v:IsPlayer() then
 				if v:Team() != TEAM_SCP and v:Team() != TEAM_SPEC then
-					v:Ignite(0.3,100)
+					if v.UsingArmor then --They have an armor
+						if v.UsingArmor ~= "armor_fireproof" then
+							v:Ignite(0.3,100) --It's not fireproof.
+						end
+					else --They don't have an armor.
+						v:Ignite(0.3,100)
+					end
 					--Heal buff by Link2006, Please optimize it. I put it here just in case it's needed
 					if self.Cooldown == nil then --this is nil.
 						print("[SCP-457] CoolDown table for 457 is nil while we're in Think()? FIX ME")

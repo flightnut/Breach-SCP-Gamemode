@@ -1,9 +1,12 @@
 AddCSLuaFile()
 local scale = 1.1
+--[[
 if TEAM_SCP == nil or TEAM_SPEC == nil then
 	TEAM_SCP = math.huge
 	TEAM_SPEC = math.huge
 end
+]]--
+
 ENT.Base = "base_nextbot"
 ENT.Class			= "scp_860_2"
 ENT.Spawnable		= true
@@ -90,6 +93,15 @@ end
 
 function ENT:PerformSight()
 	local foundEnts = ents.FindInSphere(self:GetPos(),self.EyesightDistance)
+
+	--Link2006's TeamSpec/TeamSCP Check
+	for i=1,#self.Enemys do --Would probably work better if i did for k,v in pairs() but WHATEVER :x
+		if self.Enemys[i]:Team() == TEAM_SPEC or self.Enemys[i]:Team() == TEAM_SCP then
+			table.remove(self.VisionTable,i)
+			table.remove(self.Enemys,i)
+		end
+	end
+
 	for i=1,#self.Enemys do
 		self.VisionTable[i].visible = false
 		self.VisionTable[i].lost_interest_count = self.VisionTable[i].lost_interest_count - 1
@@ -135,7 +147,7 @@ function ENT:MoveToPos( pos, options )
 		path:Update( self )
 		self:EmitSound("scp_860_2/860walk"..math.random(1,2)..".ogg")
 		self:PerformSight()
-		
+
 		if self:HaveTarget() then
 			return "ok"
 		end
@@ -149,7 +161,7 @@ function ENT:MoveToPos( pos, options )
 		if ( self.loco:IsStuck() ) then
 
 			self.Target = nil
-			
+
 			return "stuck"
 
 		end
@@ -195,14 +207,14 @@ function ENT:ChaseTarget()
 		path:Update( self )								-- This function moves the bot along the path
 		self:EmitSound("scp_860_2/860walk"..math.random(1,2)..".ogg")
 		self:PerformSight()
-		
+
 		if self:GetRangeTo(self:GetTarget():GetPos()) <= 129.6*scale and self:GetTarget():Alive() then
 			self:EmitSound("scp_860_2/860attack"..math.random(1,2)..".ogg")
 			self.loco:FaceTowards(self:GetTarget():GetPos())
 			self:PlaySequenceAndWait(self:RandomAttackSeq())
 			self:GetTarget():TakeDamage(100,self,self)
 		end
-		
+
 		if ( options.draw ) then path:Draw() end
 		-- If we're stuck then call the HandleStuck function and abandon
 		if ( self.loco:IsStuck() ) then
@@ -263,7 +275,7 @@ end
 function ENT:PlaySequence(name,speed)
 	self:SetSequence( self:LookupSequence(name) )
 	speed = speed or 1
-	
+
 	self:ResetSequenceInfo()
 	self:SetCycle( 0 )
 	self:SetPlaybackRate( speed  );
