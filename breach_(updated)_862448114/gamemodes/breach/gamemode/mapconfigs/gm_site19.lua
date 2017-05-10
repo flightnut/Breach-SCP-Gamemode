@@ -822,13 +822,20 @@ BUTTONS = {
 	},
 	{
 		name = "SCP 035",
-		pos = Vector(5480.000000,-521.000000,53.000000),
+		pos = Vector(5480.000000, -521.000000, 53.000000),
 		canactivate = function(pl, ent) return Link2006_DoorCheck(pl,ent) end --You can't open the door yet.
 	},
 	{
 		name = "HCZ Elevators", --What can i do to force this entity to always open :c?
-		pos = Vector(4809.000000,-152.000000,53.000000),
+		pos = Vector(4809.000000, -152.000000, 53.000000),
 		canactivate = function(pl, ent) return Link2006_DoorCheck(pl,ent) end
+	},
+	{
+		name = "Femur Breaker",
+		pos = Vector(2176, 5244.5, -201),
+		usesounds = false,
+		clevel = 4,
+		enabled = true
 	}
 
 }
