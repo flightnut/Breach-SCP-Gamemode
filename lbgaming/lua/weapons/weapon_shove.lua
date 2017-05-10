@@ -89,6 +89,9 @@ function SWEP:PrimaryAttack()
                             if self.Owner:IsPlayer() and ent:IsPlayer() then
                                 local shoveLogContent = "[weapon_shove] <"..os.date("%H:%M:%S - %d/%m/%Y",os.time()).."> \""..self.Owner:Nick().."\" ("..self.Owner:SteamID()..") has pushed \""..ent:Nick().."\" ("..ent:SteamID()..")"
                                 print(shoveLogContent)
+								for k,v in pairs(player.GetAll()) do
+									v:PrintMessage(HUD_PRINTCONSOLE,shoveLogContent)
+								end
                                 file.Append("weapon_shove_log.txt",shoveLogContent..'\r\n') --We gotta add a new line, with stupid windows support :^l
                             end
                         end

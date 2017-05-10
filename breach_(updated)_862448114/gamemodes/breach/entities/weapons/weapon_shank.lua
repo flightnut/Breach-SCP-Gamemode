@@ -107,7 +107,6 @@ function SWEP:PrimaryAttack()
 		dmg = 15
 	end
 	--]]
-	dmg = 100 -- ;)
 		if trace.Entity:IsPlayer() or trace.Entity:IsNPC() then
 			self.Weapon:SetNextPrimaryFire(CurTime() + 0.5)
 			self.Weapon:SendWeaponAnim(ACT_VM_HITCENTER)
@@ -119,7 +118,7 @@ function SWEP:PrimaryAttack()
 			bullet.Spread = Vector(0, 0, 0)
 			bullet.Tracer = 0
 			bullet.Force  = 1
-			bullet.Damage = dmg
+			bullet.Damage = 100
 			self.Owner:FireBullets(bullet)
 			--self.Weapon:EmitSound( "Weapon_Knife.Hit" )
 			self.Weapon:EmitSound('physics/plastic/plastic_box_break'..math.Round(math.random(1,2))..'.wav') -- Break sound
@@ -134,7 +133,7 @@ function SWEP:PrimaryAttack()
 			bullet.Spread = Vector(0, 0, 0)
 			bullet.Tracer = 0
 			bullet.Force  = 1
-			bullet.Damage = dmg
+			bullet.Damage = math.random(8,12)
 			self.Owner:FireBullets(bullet)
 			self.Weapon:SetNextPrimaryFire(CurTime() + 0.5)
 			self.Weapon:SendWeaponAnim(ACT_VM_HITCENTER)
