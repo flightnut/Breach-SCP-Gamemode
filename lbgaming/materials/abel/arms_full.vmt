@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "abel/arms_full"
+	"$bumpmap" "abel/arms_full_n"
+	"$halflambert" 1
+}
