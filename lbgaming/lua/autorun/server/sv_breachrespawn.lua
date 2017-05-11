@@ -405,16 +405,20 @@ hook.Add( "PlayerSay", "Link2006_SpecSpawn", function( ply, text)
 								plySpawn:SetSCP966()
 								--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as SCP-106",plySpawn) --Tell everyone an admin respawned a player as what
 								Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as SCP-966")
+							elseif string.lower(spec_chatArgs[3]) == "scp-076-2" then
+								plySpawn:SetSCP0762()
+								--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as SCP-106",plySpawn) --Tell everyone an admin respawned a player as what
+								Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as SCP-076-2")
 							else
 								ULib.tsayError(ply,"Invalid class specified, Valid Choices are: ",true)
 								ULib.tsayError(ply,"classd,researcher,commander,mtf,chaos,sitedirector,ntf",true)
-								ULib.tsayError(ply,"scp-173,scp-1048a,scp-106,scp-049,scp-457,scp-008-2,scp-049-2,scp-035,scp-682,scp-966",true)
+								ULib.tsayError(ply,"scp-173,scp-1048a,scp-106,scp-049,scp-457,scp-008-2,scp-049-2,scp-035,scp-682,scp-966,scp-076-2",true)
 							end
 						end
 					else
 						ULib.tsayError(ply,"No class specified, Valid Choices are: ",true)
 						ULib.tsayError(ply,"classd,researcher,commander,mtf,chaos,sitedirector,ntf",true)
-						ULib.tsayError(ply,"scp-173,scp-1048a,scp-106,scp-049,scp-457,scp-008-2,scp-049-2,scp-035,scp-682,scp-966",true)
+						ULib.tsayError(ply,"scp-173,scp-1048a,scp-106,scp-049,scp-457,scp-008-2,scp-049-2,scp-035,scp-682,scp-966,scp-076-2",true)
 					end
 				else
 					if plyErr then

@@ -140,6 +140,11 @@ english.starttexts = {
 		{"Your objective is to escape then facility",
 		"You are invisible, humans can only see you using nightvision"}
 	},
+	{
+		"You are the SCP-076-2 also known as Abel",
+		{"Your objective is to escape the facility",
+		"Kill others with your blades!"}
+	},
 }
 
 english.lang_end1 = "The game ends here"
@@ -180,6 +185,7 @@ english.ROLE_SCP035 = "SCP-035"
 english.ROLE_SCP1048A = "SCP-1048A"
 english.ROLE_SCP682 = "SCP-682"
 english.ROLE_SCP966 = "SCP-966"
+english.ROLE_SCP0762 = "SCP-076-2"
 ---End of link2006
 english.ROLE_SCP173 = "SCP-173"
 english.ROLE_SCP106 = "SCP-106"

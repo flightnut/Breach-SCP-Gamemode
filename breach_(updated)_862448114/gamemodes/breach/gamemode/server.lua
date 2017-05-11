@@ -171,12 +171,15 @@ function GetRoleTable(all)
 	elseif all > 15 and all < 29 then --16 to 28
 		scps = 3
 		all = all - 3
-	elseif all > 28 and all < 60 then --29 to 59 players 
+	elseif all > 28 and all < 50 then --29 to 49 players
 		scps = 4
 		all = all - 4
-	elseif all > 59 then  -- 60+ players
+	elseif all > 49 and all < 60 then  -- 50 to 59 players
 		scps = 5
 		all = all - 5
+	elseif all > 59 then  -- 60+ players
+		scps = 6
+		all = all - 6  
 	end
 	//mtfs = math.Round(all * 0.299)
 

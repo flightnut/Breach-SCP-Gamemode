@@ -87,6 +87,7 @@ SPAWN_035 = Vector(5362.450684,-823.380737,0.031250)
 SPAWN_966 = Vector(4380.3989257813, 2345.3510742188, 25.031242370605)
 SPAWN_939 = Vector(1141.1956787109, -782.48986816406, -742.96875)
 SPAWN_682 = Vector(2053.1604003906, 3009.12109375, -358.96875)
+SPAWN_0762 = Vector(5441.330078, 1135.168579, -447.968750)
 ENTER914 = Vector(1648.743164, -601.740234, 59.760605)
 EXIR914 = Vector(1651.584229, -1052.149902, 7.470211)
 POS_914BUTTON = Vector(1567.000000, -832.000000, 46.000000)
@@ -836,6 +837,11 @@ BUTTONS = {
 		usesounds = false,
 		clevel = 4,
 		enabled = true
+	},
+	{
+		name = "SCP-895", --where we'll put SCP-076
+		pos = Vector(5440.5,360,53),
+		canactivate = function(pl,ent) return !preparing end
 	}
 
 }

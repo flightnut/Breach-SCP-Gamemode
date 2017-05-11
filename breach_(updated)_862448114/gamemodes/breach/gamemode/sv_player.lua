@@ -793,11 +793,11 @@ function mply:SetSCP682()
 	self:UnSpectate()
 	self:GodDisable()
 	self:Spawn()
-	self:SetPos(SPAWN_682) --TODO: Add Spawn position (MapConfig )
+	self:SetPos(SPAWN_682) --
 	self:StripWeapons()
 	self:RemoveAllAmmo()
 	self:SetTeam(TEAM_SCP)
-	self:SetNClass(ROLE_SCP682) --TODO: Add Role682 (Roles )
+	self:SetNClass(ROLE_SCP682) --
 	self:SetModel("models/cultist_kun/scp_crock.mdl")
 	self:SetHealth(10000)
 	self:SetMaxHealth(10000)
@@ -963,12 +963,7 @@ function mply:SetSCP0492()
 	--end of turnmeback
 
 	self:SetTeam(TEAM_SCP)
-	--TODO: If Model name starts with ClassD's model, then ClassD zombie
-	--		elseif model name starts with Researcher model, then Researcher zombie
-	--		elseif model name starts with MTF model, then MTF zombie
-	--		elseif model name starts with NTF model, then MTF zombie - TEMPORARY UNTIL WE GET NTF AND CHAOS
-	--		elseif model name starts with CHAOS model, then MTF zombies - TEMPORARY ^
-	--		else model sets to zombie_classic (NO MODEL AVAILABLE?)
+	--This here changes the model to a zombie one.
 	print("SCP-049-2 on \""..self:Nick().."\" with model \""..self:GetModel().."\"")
 	if string.match(self:GetModel(),"models/player/kerry/class_d_%d?%d.mdl",0) then --Should only replace when
 		local newModel = string.Replace(self:GetModel(),"models/player/kerry/class_d_","models/player/kerry/class_d_zombie_")
@@ -1056,7 +1051,7 @@ function mply:SetSCP966()
 	--self:SetGTeam(TEAM_SCP)
 	self:SetTeam(TEAM_SCP)
 	self:SetNClass(ROLE_SCP966)
-	--self:SetModel("models/immigrant/outlast/walrider_pm.mdl") --TODO: Get a better playermodel ...
+	--self:SetModel("models/immigrant/outlast/walrider_pm.mdl")
 	self:SetModel('models/scp/966.mdl')
 	--self:SetMaterial("966black/966black", false)
 	self:SetHealth(1000)
@@ -1080,6 +1075,45 @@ function mply:SetSCP966()
 	--Link2006
 	self:SetNoCollideWithTeammates(false)
 	self:SetModelScale(1.0,0)
+	net.Start("RolesSelected")
+	net.Send(self)
+	--Link2006's speed fix
+	self:SetCanWalk(true)
+end
+function mply:SetSCP0762()
+	self.handsmodel = nil
+	self:UnSpectate()
+	self:GodDisable()
+	self:Spawn()
+	self:SetPos(SPAWN_0762)
+	self:StripWeapons()
+	self:RemoveAllAmmo()
+	self:SetTeam(TEAM_SCP)
+	self:SetNClass(ROLE_SCP0762)
+	self:SetModel("models/abel/abel.mdl")
+	self:SetHealth(1500)
+	self:SetMaxHealth(1500)
+	self:SetArmor(0)
+	self:SetWalkSpeed(180)
+	self:SetRunSpeed(250)
+	self:SetMaxSpeed(250)
+	self:SetJumpPower(200)
+	self:SetNoDraw(false)
+	self.Active = true
+	self.canblink = false
+	self:AllowFlashlight( true )
+	self.WasTeam = TEAM_SCP
+	self:SetNoTarget( true )
+	timer.Simple(0.5, function()
+		self:Give("weapon_katana") --TEMPORARY, Until we get  076-2's Katana...
+	end)
+	self:SetupHands()
+	self.BaseStats = nil
+	self.UsingArmor = nil
+	self:SetNoCollideWithTeammates(false)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
+	--ForceShow the objectives for the current player. (Link2006)
 	net.Start("RolesSelected")
 	net.Send(self)
 	--Link2006's speed fix
