@@ -22,10 +22,10 @@ SWEP.Slot			= 3
 SWEP.Spawnable		= true
 
 SWEP.betterone = "weapon_mtf_mp5"
-SWEP.ISSCP = true
+--SWEP.ISSCP = true
 SWEP.Primary.ClipSize		= 50
 SWEP.Primary.DefaultClip	= 0
-//SWEP.Primary.Sound			= Sound("Weapon_P90.Single")
+--SWEP.Primary.Sound			= Sound("Weapon_P90.Single")
 SWEP.Primary.Sound			= Sound("gunshot.ogg")
 SWEP.Primary.Automatic		= true
 SWEP.Primary.Ammo			= "SMG1"

@@ -179,7 +179,7 @@ function GetRoleTable(all)
 		all = all - 5
 	elseif all > 59 then  -- 60+ players
 		scps = 6
-		all = all - 6  
+		all = all - 6
 	end
 	//mtfs = math.Round(all * 0.299)
 
@@ -257,6 +257,16 @@ function SetupPlayers(pltab)
 	//local pltab = PLAYER_SETUP[player.GetCount() - 2]
 	//local pltab = GetRoleTable(player.GetCount())
 	local allply = GetActivePlayers()
+
+	local scpplys = {}
+	for k,v in pairs(allply) do
+		if v:GetNWBool("HasBeenSCP") ~= true then
+			table.insert(scpplys,v)
+		end
+	end
+
+
+
 	-- SCP, MTF, Class D, Researchers, Chaos Insurgency --
 
 	// SCP
@@ -266,14 +276,24 @@ function SetupPlayers(pltab)
 			spctab = table.Copy(SPCS)
 			//print("not enough scps, copying another table")
 		end
-		local pl = table.Random(allply)
+		--local pl = table.Random(allply)
+		local pl = table.Random(scpplys)
 		local scp = table.Random(spctab)
 		scp["func"](pl)
 		print("assigning " .. pl:Nick() .. " to scps")
 		table.RemoveByValue(spctab, scp)
 		table.RemoveByValue(allply, pl)
 	end
+	scpplys = nil --Delete that table, we do not need it anymore
 	// MTF Commander
+	for k,v in pairs(player.GetAll()) do
+		if v:Team() == TEAM_SCP then --The SCPs will get the flag set to true
+			v:SetNWBool("HasBeenSCP", true)
+		else --everyone else that DID NOT get this team, will have their flag reset.
+			v:SetNWBool("HasBeenSCP", false)
+		end
+	end
+
 	local mtfspawns = table.Copy(SPAWN_GUARD)
 	if pltab[2] > 0 then
 		local pl = table.Random(allply)

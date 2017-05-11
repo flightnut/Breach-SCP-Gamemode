@@ -225,7 +225,7 @@ function SWEP:Slash()
 					--Don't Shoot them!
 					return -- We cannot slash them, they're our friend
 				else
-					bullet.Damage = math.random(25,50)
+					bullet.Damage = math.random(35,50)
 				end
 			end
 		else

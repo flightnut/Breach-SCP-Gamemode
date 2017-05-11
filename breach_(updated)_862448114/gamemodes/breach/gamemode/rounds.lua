@@ -206,8 +206,10 @@ ROUNDS = {
 				SetupPlayers(GetRoleTableCustom(#GetActivePlayers(), 3, 0, 0, 0, false)) -- 3 SCPs
 			elseif pnum > 19 and pnum < 40 then -- 20 to 39 players
 				SetupPlayers(GetRoleTableCustom(#GetActivePlayers(), 4, 0, 0, 0, false)) -- 4 SCPs
-			else --40+ Players
+			elseif pnum > 39 and pnum < 60 then -- 40 to 59 players
 				SetupPlayers(GetRoleTableCustom(#GetActivePlayers(), 5, 0, 0, 0, false)) -- 5 SCPs
+			else --60+ Players
+				SetupPlayers(GetRoleTableCustom(#GetActivePlayers(), 6, 0, 0, 0, false)) -- 6 SCPs
 			end
 		end,
 		name = "Multiple breaches",
