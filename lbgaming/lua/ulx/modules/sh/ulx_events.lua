@@ -205,10 +205,17 @@ function ulx.hidenseek(calling_ply, seekCount)
 			AllPlayers = nil
 			return
 		end
-		--Trying to make this as early as possible.
-		for k,v in pairs(ents.FindByClass('status_sh_cryofrozen')) do
-			print("Found Frozen status id "..k.."! Removing...")
-			v:Remove()
+		local blacklisted_Entities = {
+			"status_sh_cryofrozen",
+			"item_snav_300",
+			"item_snav_ultimate",
+		}
+		--Cleaning entities we do not like
+		for k,ent in pairs(ents.GetAll()) do
+			if table.HasValue(blacklisted_Entities,ent:GetClass()) then
+				print("Removing entity "..tostring(ent).." ...")
+				ent:Remove()
+			end
 		end
 
 		for i=1,player.GetCount() do
