@@ -1,10 +1,10 @@
 if( SERVER ) then
-	AddCSLuaFile( "shared.lua" )
-resource.AddFile("models/weapons/w_katana.mdl");
-resource.AddFile("models/weapons/v_katana.mdl");
-resource.AddFile("materials/models/weapons/v_katana/katana_normal.vtf");
-resource.AddFile("materials/models/weapons/v_katana/katana.vtf");
-resource.AddFile("materials/models/weapons/v_katana/katana.vmt");
+	AddCSLuaFile( "weapon_katana.lua" )
+	resource.AddFile("models/weapons/w_katana.mdl");
+	resource.AddFile("models/weapons/v_katana.mdl");
+	resource.AddFile("materials/models/weapons/v_katana/katana_normal.vtf");
+	resource.AddFile("materials/models/weapons/v_katana/katana.vtf");
+	resource.AddFile("materials/models/weapons/v_katana/katana.vmt");
 end
 
 if( CLIENT ) then
@@ -15,290 +15,260 @@ if( CLIENT ) then
 	SWEP.DrawCrosshair = true
 end
 
-SWEP.Author			= "Vorius"
-SWEP.Instructions	= "Click to slash"
-SWEP.Contact		= ""
-SWEP.Purpose		= "SCP-076 Katana"
-SWEP.Category		= "SCP Weapons"
-
-SWEP.ViewModelFOV	= 60
-SWEP.ViewModelFlip	= false
-
-SWEP.Spawnable			= true
-SWEP.AdminSpawnable		= true
-
-
-SWEP.ViewModel      = "models/weapons/v_katana.mdl"
-SWEP.WorldModel   	= "models/weapons/w_katana.mdl"
-
-SWEP.Primary.Sound				= Sound( "Weapon_Knife.Slash" )
-SWEP.Primary.Delay				= 1
+SWEP.Author						= "Vorius"
+SWEP.Instructions				= "Click to slash"
+SWEP.Contact					= ""
+SWEP.Purpose					= "SCP-076 Katana"
+SWEP.Category					= "SCP Weapons"
+SWEP.Spawnable					= true
+SWEP.AdminSpawnable				= true
+SWEP.Thinkdelay       		    = 0
+SWEP.Primary.Delay				= 0.25
 SWEP.Primary.Recoil				= 0
-SWEP.Primary.Damage				= 1000
+SWEP.Primary.Damage				= math.random(28,45)
 SWEP.Primary.NumShots			= 1
 SWEP.Primary.Cone				= 0
 SWEP.Primary.ClipSize			= -1
+SWEP.ISSCP 						= true
 SWEP.Primary.DefaultClip		= -1
 SWEP.Primary.Automatic   		= false
 SWEP.Primary.Ammo         		= "none"
-
-SWEP.Secondary.Delay			= 0
+SWEP.Cloaked                    = false
+SWEP.CSMuzzleFlashes			= true
+SWEP.Secondary.Delay			= 5
 SWEP.Secondary.Recoil			= 0
-SWEP.Secondary.Damage			= 1000
+SWEP.Secondary.Damage			= 2
 SWEP.Secondary.NumShots			= 1
 SWEP.Secondary.Cone				= 0
 SWEP.Secondary.ClipSize			= -1
 SWEP.Secondary.DefaultClip		= -1
 SWEP.Secondary.Automatic  	 	= false
-SWEP.Secondary.Ammo         	= "none"
-
-SWEP.IronSightsPos = Vector (0, 0, 0)
-SWEP.IronSightsAng = Vector (-66.4823, 4.1536, 0)
-
-SWEP.droppable = false
+SWEP.Primary.Sound				= Sound( "Weapon_Knife.Slash" )
+SWEP.HitDistance				= 75
+SWEP.HitInclination				= 0.4
+SWEP.HitPushback				= 850
+SWEP.HoldType 					= "melee2"
+SWEP.ViewModelFOV				= 60
+SWEP.ViewModelFlip				= false
+SWEP.ViewModel					= "models/weapons/v_katana.mdl"
+SWEP.WorldModel 				= "models/weapons/w_katana.mdl"
+SWEP.ThrowTimer    		        = false
+SWEP.MeleeRevert    	        = false
+SWEP.droppable 					= false
+SWEP.IronSightsPos				= Vector (0, 0, 0)
+SWEP.IronSightsAng 				= Vector (-66.4823, 4.1536, 0)
 
 function SWEP:Initialize()
-	--if( SERVER ) then
-			--self:SetWeaponHoldType("sword");
-			self:SetWeaponHoldType("melee2");
-	--end
-
+	self:SetWeaponHoldType("melee2");
 	self.mode = 1
 	self.changemode = 0
 	self.CanPrimary = true
 	self.Weapon:SetNetworkedBool( "Ironsights", false )
 
 	self.Hit = {
-	Sound( "weapons/rpg/shotdown.wav" )};
+		Sound( "weapons/rpg/shotdown.wav" )
+	};
 	self.FleshHit = {
-  	Sound( "ambient/machines/slicer1.wav" ),
-  	Sound( "ambient/machines/slicer2.wav" ),
-	Sound( "ambient/machines/slicer3.wav" ),
-  	Sound( "ambient/machines/slicer4.wav" ),	 } ;
+  		Sound( "ambient/machines/slicer1.wav" ),
+  		Sound( "ambient/machines/slicer2.wav" ),
+		Sound( "ambient/machines/slicer3.wav" ),
+  		Sound( "ambient/machines/slicer4.wav" ),
+	} ;
 end
 
-local IRONSIGHT_TIME = 0.25
-
-/*---------------------------------------------------------
-   Name: GetViewModelPosition
-   Desc: Allows you to re-position the view model
----------------------------------------------------------*/
-function SWEP:GetViewModelPosition( pos, ang )
-
-	if ( !self.IronSightsPos ) then return pos, ang end
-
-	local bIron = self.Weapon:GetNetworkedBool( "Ironsights" )
-
-	if ( bIron != self.bLastIron ) then
-
-		self.bLastIron = bIron
-		self.fIronTime = CurTime()
-
-		if ( bIron ) then
-			self.SwayScale 	= 1.0
-			self.BobScale 	= 1.0
-		else
-			self.SwayScale 	= 0.3
-			self.BobScale 	= 0.1
-		end
-
-	end
-
-	local fIronTime = self.fIronTime or 0
-
-	if ( !bIron && fIronTime < CurTime() - IRONSIGHT_TIME ) then
-		return pos, ang
-	end
-
-
-	local Mul = 1.0
-
-	if ( fIronTime > CurTime() - IRONSIGHT_TIME ) then
-
-		Mul = math.Clamp( (CurTime() - fIronTime) / IRONSIGHT_TIME, 0, 1 )
-
-		if (!bIron) then Mul = 1 - Mul end
-
-	end
-
-	local Offset	= self.IronSightsPos
-
-	if ( self.IronSightsAng ) then
-
-		ang = ang * 1
-		ang:RotateAroundAxis( ang:Right(), 		self.IronSightsAng.x * Mul )
-		ang:RotateAroundAxis( ang:Up(), 		self.IronSightsAng.y * Mul )
-		ang:RotateAroundAxis( ang:Forward(), 	self.IronSightsAng.z * Mul )
-
-
-	end
-
-	local Right 	= ang:Right()
-	local Up 		= ang:Up()
-	local Forward 	= ang:Forward()
-
-
-
-	pos = pos + Offset.x * Right * Mul
-	pos = pos + Offset.y * Forward * Mul
-	pos = pos + Offset.z * Up * Mul
-
-	return pos, ang
-
-	end
-
-
-/*---------------------------------------------------------
-	SetIronsights
----------------------------------------------------------*/
-function SWEP:SetIronsights( b )
-
-	self.Weapon:SetNetworkedBool( "Ironsights", b )
-
+function SWEP:StatIncrease()
+	timer.Simple(0.5, function()
+  		if not IsValid(self) or not IsValid(self.Owner) then return end
+			if self.Owner:Health() <= 100 then
+	 			self.Owner:SetHealth(self.Owner:Health() + 200)
+	 		end
+  		end)
 end
 
-function SWEP:Precache()
-end
+function SWEP:Holster()
+	if self:IsValid() and self.Owner:IsValid() then
+		self.Owner:SetJumpPower(200)
+		--[[
+		self:SetNWBool( "Katana_View_Cloak", false)
+		if self:GetNWBool("Katana_Cloak") == true then
+			if not self.Owner:Alive() then
+				self.Owner:SetMaterial("")
+		 		if SERVER then
+					self.Owner:DrawWorldModel( true )
+		  		end
+			else
+				timer.Destroy("CloakTime")
+				self:SetNWBool( "Katana_Cloak", false )
+				self:EmitSound("npc/dog/dog_idle1.wav")
+				self.Owner:DrawShadow( true )
+				self.Owner:SetMaterial("")
 
-function SWEP:Deploy()
-	self.Weapon:SendWeaponAnim( ACT_VM_DRAW )
-	self:SetNextPrimaryFire(CurTime() + 0.7)
-	self:SetNextSecondaryFire(CurTime() + 0.7)
-	self:SetWeaponHoldType("melee2"); -- I guess?
-	return true;
-end
-
-function SWEP:SecondaryAttack()
-	if ( !self.IronSightsPos ) then return end
-	bIronsights = !self.Weapon:GetNetworkedBool( "Ironsights", false )
-	self:SetIronsights( bIronsights )
-	self.NextSecondaryAttack = CurTime() + 0.3
-
-if self.mode == 1 and CurTime() > self.changemode then
-	self.changemode = CurTime() + 0.2
-	self.mode = 2
-	self:SetWeaponHoldType("normal");
-	self.Owner:PrintMessage( HUD_PRINTCENTER, "Weapon Lowered" )
-	self.CanPrimary = false
-elseif self.mode == 2 and CurTime() > self.changemode then
-	self.changemode = CurTime() + 0.2
-	self.mode = 1
-	--self:SetWeaponHoldType("sword");
-	self:SetWeaponHoldType("melee2"); --WHY IS IT NOT USING THIS INSTEAD ASJDKHAJUSFBASFGHA
-	self.Owner:PrintMessage( HUD_PRINTCENTER, "Weapon Raised" )
-	self.CanPrimary = true
-end
-end
-
-SWEP.NextSwing = 0
-
-function SWEP:PrimaryAttack()
-	if self.mode == 1 then
-		self.Weapon:SetNextSecondaryFire( CurTime() + self.Secondary.Delay )
-		self.Weapon:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
-		self.Weapon:EmitSound( self.Primary.Sound )
-		self:Slash()
-		self.Weapon:SendWeaponAnim( ACT_VM_MISSCENTER )
-		self.Owner:SetAnimation( PLAYER_ATTACK1 )
-	end
-	if self.mode == 2 then
-		self.Owner:PrintMessage( HUD_PRINTCENTER, "Cannot attack!" )
-	end
-end
-
-function SWEP:Slash()
- 	local trace = self.Owner:GetEyeTrace();
-	if trace.HitPos:Distance(self.Owner:GetShootPos()) <= 70 then
-
-		bullet = {}
-		bullet.Num    = 1
-		bullet.Src    = self.Owner:GetShootPos()
-		bullet.Dir    = self.Owner:GetAimVector()
-		bullet.Spread = Vector(0, 0, 0)
-		bullet.Tracer = 0
-		bullet.Force  = 14
-		bullet.Damage = 1000
-		if( trace.Entity:IsPlayer() or trace.Entity:IsNPC() or trace.Entity:GetClass()=="prop_ragdoll" ) then
-			self.Owner:EmitSound( self.FleshHit[math.random(1,#self.FleshHit)] );
-			if trace.Entity:IsPlayer() then
-				if trace.Entity:Team() == TEAM_SCP then
-					--Don't Shoot them!
-					return -- We cannot slash them, they're our friend
-				else
-					bullet.Damage = math.random(35,50)
+				if SERVER then
+					self.Owner:DrawWorldModel( true )
+					self.Owner:SetNoTarget(false)
 				end
 			end
-		else
-			bullet.Damage = math.random(5,14)
-			self.Owner:EmitSound( self.Hit[math.random(1,#self.Hit)] );
 		end
-			self.Owner:FireBullets(bullet)
+		]]--
 	end
 end
 
-
---[[
-	local ActIndex = {}
-	ActIndex["pistol"] 		= ACT_HL2MP_IDLE_PISTOL
-	ActIndex["smg"] 			= ACT_HL2MP_IDLE_SMG1
-	ActIndex["grenade"] 		= ACT_HL2MP_IDLE_GRENADE
-	ActIndex["ar2"] 			= ACT_HL2MP_IDLE_AR2
-	ActIndex["shotgun"] 		= ACT_HL2MP_IDLE_SHOTGUN
-	ActIndex["rpg"]	 		= ACT_HL2MP_IDLE_RPG
-	ActIndex["physgun"] 		= ACT_HL2MP_IDLE_PHYSGUN
-	ActIndex["crossbow"] 		= ACT_HL2MP_IDLE_CROSSBOW
-	ActIndex["melee"] 		= ACT_HL2MP_IDLE_MELEE
-	ActIndex["slam"] 			= ACT_HL2MP_IDLE_SLAM
-	ActIndex["normal"]		= ACT_HL2MP_IDLE
-	ActIndex["knife"]			= ACT_HL2MP_IDLE_KNIFE
-	ActIndex["sword"]			= ACT_HL2MP_IDLE_MELEE2
-	ActIndex["passive"]		= ACT_HL2MP_IDLE_PASSIVE
-	ActIndex["fist"]			= ACT_HL2MP_IDLE_FIST
-
-function SWEP:SetWeaponHoldType(t)
-	local index = ActIndex[t]
-	if (index == nil) then
-		Msg("SWEP:SetWeaponHoldType - ActIndex[ \""..t.."\" ] isn't set!\n")
-		return
-	end
-	self.ActivityTranslate = {}
-	self.ActivityTranslate [ACT_HL2MP_IDLE] 					= index
-	self.ActivityTranslate [ACT_HL2MP_WALK] 					= index + 1
-	self.ActivityTranslate [ACT_HL2MP_RUN] 					= index + 2
-	self.ActivityTranslate [ACT_HL2MP_IDLE_CROUCH] 				= index + 3
-	self.ActivityTranslate [ACT_HL2MP_WALK_CROUCH] 				= index + 4
-	self.ActivityTranslate [ACT_HL2MP_GESTURE_RANGE_ATTACK] 		= index + 5
-	self.ActivityTranslate [ACT_HL2MP_GESTURE_RELOAD] 			= index + 6
-	self.ActivityTranslate [ACT_HL2MP_JUMP] 					= index + 7
-	self.ActivityTranslate [ACT_RANGE_ATTACK1] 				= index + 8
-end
-
-function SWEP:TranslateActivity(act)
-	if (self.Owner:IsNPC()) then
-		if (self.ActivityTranslateAI[act]) then
-			return self.ActivityTranslateAI[act]
-		end
-		return -1
-	end
-	if (self.ActivityTranslate[act] != nil) then
-		return self.ActivityTranslate[act]
-	end
-	return -1
+--[[  ???
+	return true
 end
 ]]--
 
-function SWEP:DoImpactEffect( tr, nDamageType )
-	util.Decal("ManhackCut", tr.HitPos + tr.HitNormal, tr.HitPos - tr.HitNormal)
-	return true;
+function SWEP:OnRemove()
 
 end
 
-/*---------------------------------------------------------
-Think
----------------------------------------------------------*/
+function SWEP:Deploy()
+	self.Weapon:SendWeaponAnim(ACT_VM_DRAW)
+	if not IsValid(self) or not IsValid(self.Owner) then return end
+
+	if SERVER then
+		self.Owner:DrawWorldModel( true )
+	end
+	self.Owner:SetJumpPower(400)
+
+	return true
+end
+
+if SERVER then
+	function SWEP:Equip( NewOwner )
+		self:StatIncrease()
+		--[[
+		self:SetNWBool( "KatanaJump", false )
+		self:SetNWBool( "Katana_View_Cloak", false )
+		self:SetNWBool( "Katana_Cloak", false )
+		]]--
+	end
+end
+
+function SWEP:SecondaryAttack()
+
+end
+
+function SWEP:PrimaryAttack()
+	if not IsValid(self) or not IsValid(self.Owner) then return end
+	self.Weapon:SetNextPrimaryFire( CurTime() + self.Primary.Delay )
+	self.Weapon:EmitSound( self.Primary.Sound )	--slash in the wind sound here
+	--[[
+	timer.Simple(0.2, function()
+		if IsValid(self) then
+			self:Slash()
+		end
+	end)
+	]]--
+	self:Slash()
+	self.Weapon:SendWeaponAnim( ACT_VM_MISSCENTER )
+	self.Owner:SetAnimation( PLAYER_ATTACK1 )
+end
+
+function SWEP:Slash()
+  local trace = self.Owner:GetEyeTrace();
+  if trace.HitPos:Distance(self.Owner:GetShootPos()) <= 114 then
+    if not IsValid(self) or not IsValid(self.Owner) then return end
+    pos = self.Owner:GetShootPos()
+    ang = self.Owner:GetAimVector()
+    damagedice = math.Rand(0.9,1.50)
+    pain = self.Primary.Damage * damagedice
+    if SERVER and IsValid(self.Owner) then
+      local slash = {}
+      slash.start = pos
+      slash.endpos = pos + (ang * 70)
+      slash.filter = self.Owner
+      slash.mins = Vector(1,1,1) * -20
+      slash.maxs = Vector(1,1,1) * 20
+      local slashtrace = util.TraceHull(slash)
+      if slashtrace.Hit then
+        targ = slashtrace.Entity
+        if targ:IsPlayer() or targ:IsNPC() then
+          if targ:Team() == TEAM_SCP then
+            return
+          end
+          self.Owner:EmitSound( self.FleshHit[math.random(1,#self.FleshHit)] );
+          paininfo = DamageInfo()
+          paininfo:SetDamage(pain)
+          paininfo:SetDamageType(DMG_SLASH)
+          paininfo:SetAttacker(self.Owner)
+          paininfo:SetInflictor(self.Weapon)
+          local RandomForce = math.random(1000,20000)
+          paininfo:SetDamageForce(slashtrace.Normal * RandomForce)
+          if targ:IsPlayer() then
+            targ:ViewPunch( Angle( -10, -20, 0 ) )
+          end
+          if SERVER then
+            local blood = targ:GetBloodColor()
+            local fleshimpact = EffectData()
+            fleshimpact:SetEntity(self.Weapon)
+            fleshimpact:SetOrigin(slashtrace.HitPos)
+            fleshimpact:SetNormal(slashtrace.HitPos)
+            if blood >= 0 then
+              fleshimpact:SetColor(blood)
+              util.Effect("BloodImpact", fleshimpact)
+            end
+          end
+          if SERVER then targ:TakeDamageInfo(paininfo) end
+        else
+          self.Owner:EmitSound( self.Hit[math.random(1,#self.Hit)] )
+          look = self.Owner:GetEyeTrace()
+          util.Decal("ManhackCut", look.HitPos + look.HitNormal, look.HitPos - look.HitNormal )
+        end
+      end
+    end
+    if( trace.Entity:IsPlayer() or trace.Entity:IsNPC() or trace.Entity:GetClass()=="prop_ragdoll" ) then
+      if trace.Entity:IsPlayer() then
+        if trace.Entity:Team() == TEAM_SCP then
+          --Don't Shoot them!
+          return -- We cannot slash them, they're our friend
+        end
+      end
+    end
+  end
+end
+
+-----------------------------------Credit for this part goes to RobotBoy655, Just rewritten so I can learn it for myself and altered to my liking-----------------------------------
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+--[[
 function SWEP:Think()
-if self.Idle and CurTime()>=self.Idle then
-self.Idle = nil
-self.Weapon:SendWeaponAnim( ACT_VM_IDLE )
+
+
+	if not IsValid(self) or not IsValid(self.Owner) then return end
+
+	if self:GetNWBool("GrenadeHoldType") == true then
+		self:SetWeaponHoldType("grenade")
+	end
+
+	if self:GetNWBool("GrenadeHoldType") == false then
+		self:SetWeaponHoldType("melee2")
+	end
+
+	if self:GetNWBool("KatanaJump") == true then
+		self:SetWeaponHoldType("melee")
+	end
+
+	if self:GetNWBool("Katana_View_Cloak") == true then
+		self.Owner:GetViewModel():SetMaterial("sprites/heatwave")
+		 else
+		self.Owner:GetViewModel():SetMaterial("")
+	end
+
+	self.Owner:RemoveAllDecals()
+
+
+	if not self.Owner:OnGround() then
+	 self:SetNWBool( "KatanaJump", true )
+	else
+	 self:SetNWBool( "KatanaJump", false )
+	end
+
+	if self.Idle and CurTime()>=self.Idle then
+		self.Idle = nil
+		self.Weapon:SendWeaponAnim( ACT_VM_IDLE )
+	end
+
 end
-end
+]]--
