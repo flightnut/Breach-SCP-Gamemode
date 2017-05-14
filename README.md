@@ -27,6 +27,8 @@ This README would normally document whatever steps are necessary to get your app
 * ulx playsound nukes/nuke2.ogg; ulx explode *
 * ulx playsound nukes/alpha_warheads_fail.ogg
 
+ulx tsaycolor "The Goal is to Hide NOT escape INGORE the timer round will auto end when there are 10 left!" red
+
 
 For Bots: (replace 58 with the number of bots you want) 
 
