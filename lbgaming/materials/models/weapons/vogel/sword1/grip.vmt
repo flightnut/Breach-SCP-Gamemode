@@ -1,0 +1,14 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/weapons/vogel/sword1/grip"
+	"$selfillum" 1
+	"$selfillumtint" "[1 1 1]"
+	"$selfillummask" "models/weapons/vogel/sword1/lightmap"
+	Proxies
+	{
+		SwordColor
+		{
+			resultVar	"$selfillumtint"
+		}
+	}
+}
