@@ -1,5 +1,15 @@
 --I've put it here so we can pre-cache them all and resource.addFile them
-local sm_says = {
+local sm_scp457 = {
+	['a'] = {"scp_457_yes.mp3","Yes.."},
+	['b'] = {"scp_457_want_burn.mp3","Want burn"},
+	['c'] = {"scp_457_they_burn.mp3","They burn"},
+	['d'] = {"scp_457_hungry.mp3","Hungry"},
+	['e'] = {"scp_457_grow.mp3","Grow"},
+	['f'] = {"scp_457_dislike.mp3","Dislike"},
+	['g'] = {"scp_457_cannot_burn.mp3","Cannot Burn"},
+}
+
+local sm_scp049 = {
 	['a'] = {"049_3.wav","Oh my..."},
 	['b'] = {"049_4.wav","You are not a doctor."},
 	['c'] = {"049_5.wav","I sense the disease in you."},
@@ -10,6 +20,7 @@ local sm_says = {
 	['h'] = {"049_alert_2.wav","Greetings."},
 	['i'] = {"049_9.wav","*Singing*"},
 	['j'] = {"049_10.wav","Oh my...(2)"},
+
 }
 util.AddNetworkString("sm_emitsound")
 
@@ -17,21 +28,33 @@ util.AddNetworkString("sm_emitsound")
 net.Receive("sm_emitsound",function(ln, ply)
 	--Link2006 fixed the exploit that allowed anyone to play any sound ._.
 
-	if ply:GetNClass() ~= ROLE_SCP049 then return end
-	if ply:GetNWBool("sm_emitallowed",true) == true then ply:SetNWBool("sm_emitallowed",true) end
-	if ply:GetNWBool("sm_emitallowed") == false then return end
-	local SndKey = net.ReadString()
-	--Makes sure that we don't try to play a nil sound :)
-	if sm_says[SndKey] == nil then SndKey = 'g' end
+	if ply:GetNClass() ~= ROLE_SCP049 and ply:GetNClass() ~= ROLE_SCP457 then return end
 
-	local Snd = sm_says[SndKey][1] --The sound file in the table,with the key that the client sent. :)
+	if ply:GetNWBool("sm_emitallowed",true) == false then return end
+
+	local SndKey = net.ReadString()
+	local Snd = nil --The sound file in the table,with the key that the client sent. :)
+
+	if ply:GetNClass() == ROLE_SCP049 then
+		if sm_scp049[SndKey] == nil then
+			Snd = sm_scp049['g'][1]
+		else
+			Snd = sm_scp049[SndKey][1]
+		end
+	else
+		if sm_scp457[SndKey] == nil then
+			Snd = sm_scp457['g'][1]
+		else
+			Snd = sm_scp457[SndKey][1]
+		end
+	end
 
 	--sound,level,pitch,volume,channel
 	--ply:EmitSound( Sound(Snd), 100, 100, 1, CHAN_AUTO )
 
 	--'Stolen' from Breach itself.
 	--lua_run for k,bot in pairs ( player.GetBots ( ) ) do bot:EmitSound ("049_9.wav", 75, 100, CHAN_WEAPON ) end
-	ply:EmitSound( Sound(Snd), 75, 100, CHAN_WEAPON )  
+	ply:EmitSound( Sound(Snd), 75, 100, CHAN_WEAPON )
 	--Attempt at making this actually 3D
 	--This DOES NOT Work when a server restarts
 	-- sound is not precached?
@@ -44,7 +67,13 @@ net.Receive("sm_emitsound",function(ln, ply)
 	end)
 end)
 
-for k,sndFile in pairs(sm_says) do
+for k,sndFile in pairs(sm_scp457) do
+	print("Loading sound/"..sndFile[1].." ...")
+	util.PrecacheSound(sndFile[1])
+	resource.AddFile("sound/"..sndFile[1])
+end
+
+for k,sndFile in pairs(sm_scp049) do
 	print("Loading sound/"..sndFile[1].." ...")
 	util.PrecacheSound(sndFile[1])
 	resource.AddFile("sound/"..sndFile[1])
