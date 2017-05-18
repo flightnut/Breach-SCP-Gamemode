@@ -199,6 +199,11 @@ function Link2006_AddFiles(name,remLength)
 	end
 end
 
+--Cats Shit---
+Link2006_AddFiles("addons/cat_shit/sound",string.len("addons/cat_shit/")) -- string Folder, string (length) to remove
+Link2006_AddFiles("addons/cat_shit/models",string.len("addons/cat_shit/")) -- string Folder, string (length) to remove
+Link2006_AddFiles("addons/cat_shit/materials",string.len("addons/cat_shit/")) -- string Folder, string (length) to remove
+
 --Breach content
 Link2006_AddFiles("addons/breach_(updated)_862448114/sound",string.len("addons/breach_(updated)_862448114/")) -- string Folder, string (length) to remove
 Link2006_AddFiles("addons/breach_(updated)_862448114/models",string.len("addons/breach_(updated)_862448114/")) -- string Folder, string (length) to remove
