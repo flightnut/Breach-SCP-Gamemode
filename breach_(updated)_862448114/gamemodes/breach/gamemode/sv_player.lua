@@ -873,6 +873,10 @@ function mply:SetSCP0082()
 	self:UnSpectate()
 	self:GodDisable()
 
+	--Fixes SCP-008-2 dropping undroppable items?
+	self:StripWeapons()
+	self:RemoveAllAmmo()
+
 	--Setting TurnMeback, This will setup the function to turn them back to human.
 	SetTurnMeBack(self,self:GetNClass(),self:Team()) --SetTurnMeBack(player,role,team)
 	--end of turnmeback
@@ -958,6 +962,9 @@ function mply:SetSCP0492()
 	self:UnSpectate()
 	self:GodDisable()
 
+	--Fixes SCP-049-2 dropping undroppable items?
+	self:StripWeapons()
+	self:RemoveAllAmmo()
 	--Setting TurnMeback, This will setup the function to turn them back to human.
 	SetTurnMeBack(self,self:GetNClass(),self:Team()) --SetTurnMeBack(player,role,team)
 	--end of turnmeback
