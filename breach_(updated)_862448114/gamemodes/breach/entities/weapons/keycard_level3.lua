@@ -5,8 +5,8 @@ SWEP.Instructions	= "If you hold it, you can open doors with level 3"
 
 SWEP.ViewModelFOV	= 62
 SWEP.ViewModelFlip	= false
-SWEP.ViewModel		= "models/breach/keycard.mdl"
-SWEP.WorldModel		= "models/breach/keycard.mdl"
+SWEP.ViewModel		= "models/mishka/models/keycard.mdl"
+SWEP.WorldModel		= "models/mishka/models/keycard.mdl"
 
 if CLIENT then
 	SWEP.WepSelectIcon 	= surface.GetTextureID("breach/wep_keycard3")
@@ -65,7 +65,7 @@ function SWEP:DrawWorldModel()
 end
 function SWEP:Initialize()
 	self:SetHoldType("normal")
-	self:SetSkin(2)
+	self:SetSkin(8)
 end
 function SWEP:Think()
 end

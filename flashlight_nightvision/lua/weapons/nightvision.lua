@@ -8,8 +8,8 @@ SWEP.AdminSpawnable = true
 SWEP.Category = "Rasko"
 
 SWEP.HoldType = "normal"
-SWEP.ViewModel		= "models/props_junk/cardboard_box004a.mdl"
-SWEP.WorldModel		= "models/props_junk/cardboard_box004a.mdl"
+SWEP.ViewModel		= "models/mishka/models/nvg.mdl"
+SWEP.WorldModel		= "models/mishka/models/nvg.mdl" -- "models/props_junk/cardboard_box004a.mdl"
 SWEP.DrawCrosshair = false
 
 SWEP.HitDistance = 50
@@ -52,6 +52,7 @@ function SWEP:Initialize()
 
 	if ( SERVER ) then
 		self.NvOwner = self:GetOwner() --Just in case ;)
+		self:SetSkin(math.Round(math.random(0,3)))
 	end
 
 	self:SetHoldType("normal")

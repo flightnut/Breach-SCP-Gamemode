@@ -11,8 +11,8 @@ SWEP.Instructions	= "If you hold it, you can open doors with every level"
 
 SWEP.ViewModelFOV	= 62
 SWEP.ViewModelFlip	= false
-SWEP.ViewModel		= "models/breach/keycard.mdl"
-SWEP.WorldModel		= "models/breach/keycard.mdl"
+SWEP.ViewModel		= "models/mishka/models/keycard.mdl"
+SWEP.WorldModel		= "models/mishka/models/keycard.mdl"
 SWEP.PrintName		= "Keycard Omni"
 SWEP.Slot			= 1
 SWEP.SlotPos		= 1
@@ -54,7 +54,7 @@ function SWEP:DrawWorldModel()
 end
 function SWEP:Initialize()
 	self:SetHoldType("normal")
-	self:SetSkin(5)
+	self:SetSkin(11)
 end
 function SWEP:Think()
 end

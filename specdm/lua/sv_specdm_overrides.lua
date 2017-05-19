@@ -147,7 +147,7 @@ hook.Add("PlayerDeath", "PlayerDeath_SpecDM", function(victim, inflictor, attack
                 attacker:ChatPrint('[SpecDM] You killed '..tostring(victim:Nick()))
                 victim:ChatPrint('[SpecDM] You were killed by '..tostring(attacker:Nick()))
             end
-
+            hook.Run('SpecDMKill',victim,attacker)
         end
 		if SpecDM.RespawnTime == 0 then
             SpecDM_Respawn(victim)

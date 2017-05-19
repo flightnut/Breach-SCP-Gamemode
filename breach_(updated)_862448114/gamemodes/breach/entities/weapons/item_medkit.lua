@@ -13,8 +13,8 @@ Secondary - heal others]]
 
 SWEP.ViewModelFOV	= 62
 SWEP.ViewModelFlip	= false
-SWEP.ViewModel		= "models/vinrax/props/firstaidkit.mdl"
-SWEP.WorldModel		= "models/vinrax/props/firstaidkit.mdl"
+SWEP.ViewModel		= "models/mishka/models/firstaidkit.mdl"
+SWEP.WorldModel		= "models/mishka/models/firstaidkit.mdl"
 SWEP.PrintName		= "First Aid kit"
 SWEP.Slot			= 1
 SWEP.SlotPos		= 1
@@ -47,6 +47,9 @@ function SWEP:DrawWorldModel()
 end
 function SWEP:Initialize()
 	self:SetHoldType("normal")
+	if SERVER then
+		self:SetSkin(math.Round(math.random(0,1)))
+	end
 end
 function SWEP:Think()
 end

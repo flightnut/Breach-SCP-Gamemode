@@ -54,7 +54,7 @@ function RoundRestart()
 	end
 	print("round: playersconfigured")
 	//PrintMessage(HUD_PRINTTALK, "Prepare, round will start in ".. GetPrepTime() .." seconds")
-	
+
 	preparing = true
 
 
@@ -204,7 +204,7 @@ canescortds = true
 canescortrs = true
 function CheckEscape()
 	--for k,v in pairs(ents.FindInSphere(POS_GATEA, 250)) do
-	for k,v in pairs(ents.FindInBox(POS_ESCAPEBOXMIN,POS_ESCAPEBOXMAX)) do 
+	for k,v in pairs(ents.FindInBox(POS_ESCAPEBOXMIN,POS_ESCAPEBOXMAX)) do
 		if v:IsPlayer() == true then
 			if v.isescaping == true then return end
 			if v:Team() == TEAM_CLASSD or v:Team() == TEAM_SCI or v:Team() == TEAM_SCP then
@@ -262,6 +262,7 @@ function CheckEscape()
 						v.isescaping = false
 					end)
 				end
+				hook.Run('BreachPlayerEscape',v,false) --Should tell that a player escaped, no matter who 
 			end
 		end
 	end
@@ -298,6 +299,7 @@ function CheckEscortMTF(pl)
 		v:SetSpectator()
 		v:AddFrags(10)
 		v:PrintMessage(HUD_PRINTTALK, "You've been escorted by " .. pl:Nick())
+		hook.Run('BreachPlayerEscape',v,true)
 		net.Start("OnEscaped")
 			net.WriteInt(3,4)
 		net.Send(v)
@@ -336,6 +338,7 @@ function CheckEscortChaos(pl)
 		v:SetSpectator()
 		v:AddFrags(10)
 		v:PrintMessage(HUD_PRINTTALK, "You've been captured by " .. pl:Nick())
+		hook.Run('BreachPlayerEscape',v,true)
 		net.Start("OnEscaped")
 			net.WriteInt(3,4)
 		net.Send(v)
