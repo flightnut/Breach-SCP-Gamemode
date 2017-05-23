@@ -210,10 +210,24 @@ function SWEP:Slash()
             end
           end
           if SERVER then targ:TakeDamageInfo(paininfo) end
-        else
+		else
+			--print("==Trace==")
+			local tr = self.Owner:GetEyeTraceNoCursor()
+			if tr.Entity:IsValid() then
+				if tr.Entity:GetClass() == "func_breakable" then
+					--Get the distance
+	          		self.Owner:EmitSound( self.Hit[math.random(1,#self.Hit)] )
+					tr.Entity:TakeDamage( 100, self.Owner, self.Owner )
+				else
+		            look = self.Owner:GetEyeTraceNoCursor()
+		            util.Decal("ManhackCut", look.HitPos + look.HitNormal, look.HitPos - look.HitNormal )
+				end
+			else
+	            look = self.Owner:GetEyeTrace()
+	            util.Decal("ManhackCut", look.HitPos + look.HitNormal, look.HitPos - look.HitNormal )
+			end
+			--print("==DONE!==")
           self.Owner:EmitSound( self.Hit[math.random(1,#self.Hit)] )
-          look = self.Owner:GetEyeTrace()
-          util.Decal("ManhackCut", look.HitPos + look.HitNormal, look.HitPos - look.HitNormal )
         end
       end
     end
