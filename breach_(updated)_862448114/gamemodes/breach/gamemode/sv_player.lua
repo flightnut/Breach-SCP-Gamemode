@@ -1112,7 +1112,9 @@ function mply:SetSCP0762()
 	self.WasTeam = TEAM_SCP
 	self:SetNoTarget( true )
 	timer.Simple(0.5, function()
-		self:Give("weapon_katana") --TEMPORARY, Until we get  076-2's Katana...
+		if self:GetNClass() == ROLE_SCP0762 then  --Oh god i forgot to check we STILL are 076-2, lol
+			self:Give("weapon_katana") --TEMPORARY, Until we get  076-2's Katana...
+		end
 	end)
 	self:SetupHands()
 	self.BaseStats = nil
