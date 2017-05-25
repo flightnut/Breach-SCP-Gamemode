@@ -218,6 +218,13 @@ function SWEP:Slash()
 					--Get the distance
 	          		self.Owner:EmitSound( self.Hit[math.random(1,#self.Hit)] )
 					tr.Entity:TakeDamage( 100, self.Owner, self.Owner )
+				elseif tr.Entity:GetClass() == 'prop_dynamic' then
+					if string.lower(tr.Entity:GetModel()) == 'models/foundation/containment/door01.mdl' then
+						if not preparing then
+							tr.Entity:TakeDamage( 26, self.Owner, self.Owner ) --Just no damage for now ok thx 
+						end
+						tr.Entity:EmitSound(Sound('MetalGrate.BulletImpact'))
+					end
 				else
 		            look = self.Owner:GetEyeTraceNoCursor()
 		            util.Decal("ManhackCut", look.HitPos + look.HitNormal, look.HitPos - look.HitNormal )
