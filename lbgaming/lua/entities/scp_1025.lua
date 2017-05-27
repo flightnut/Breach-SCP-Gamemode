@@ -176,15 +176,12 @@ function ENT:Use(activator, ply)
 
 		if ((number == 3) and (ply:GetNWInt("canBeInfectedb", 0) == 1)) then
 
-			timer.Create("blackblood", 1, 0, function()
+			timer.Create(ply:SteamID64().."_blackblood", 1, 0, function()
 				if (not ply:Alive()) or (ply:Team() == TEAM_SPEC) or (ply:Team() == TEAM_SCP) or preparing or postround then
 					ply:SetNWInt("canBeInfected", 0)
 					ply:SetNWInt("canBeInfectedb", 0)
-					timer.Remove("blackblood")
+					timer.Remove(ply:SteamID64().."_blackblood")
 				else
-					timer.Simple(1,function()
-							ply:PrintMessage(HUD_PRINTCENTER,"You cannot get any other diseases") --lol
-					end)
 					ply:SetNWInt("canBeInfected", 2)
 					ply:SetNWInt("canBeInfectedb", 2)
 

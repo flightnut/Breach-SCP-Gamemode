@@ -3,7 +3,7 @@ if SERVER then
 
 	local plymeta = FindMetaTable( "Player" )
 	CreateConVar("blinking_time",10,FCVAR_ARCHIVE,"Time between blinks")
-	CreateConVar("blinking_duration",0.5,FCVAR_ARCHIVE,"Duration time for blinking")
+	CreateConVar("blinking_duration",0.25,FCVAR_ARCHIVE,"Duration time for blinking")
 
 	function plymeta:IsBlinking()
 		--print("[DEBUG-IsBlinking] IsBlinking for: "..tostring(self))
@@ -24,6 +24,8 @@ if SERVER then
 	function plymeta:playerBlink(blinkDur)
 		--print(self)
 		--print(blinkDur)
+		if not self:IsValid() then return end -- We cannot rely on this player right now, abort!
+
 		if self.usedeyedrops then return false end --We do not need to blink yet! :)
 
 		if blinkDur == nil then
