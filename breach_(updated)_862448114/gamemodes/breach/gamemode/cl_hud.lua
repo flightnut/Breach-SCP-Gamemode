@@ -816,6 +816,7 @@ function CreateAvatarImage(ply)
 			AvatarImage:Remove()
 		end
 	end
+	if scpblinker then return end -- Dont render the avatar if we're blinking in breach
 	if d3HUD_enable_avatar:GetBool() then --Do we create one?
 		AvatarImage = vgui.Create( "AvatarImage" )
     	--local avImg = ScreenScale()

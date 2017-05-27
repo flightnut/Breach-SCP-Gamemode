@@ -209,6 +209,7 @@ function OnUseEyedrops(ply)
 	end)
 end
 
+--[[
 timer.Create("BlinkTimer", GetConVar("br_time_blinkdelay"):GetInt(), 0, function()
 	local time = GetConVar("br_time_blink"):GetFloat()
 	if time >= 5 then return end
@@ -228,6 +229,7 @@ timer.Create("BlinkTimer", GetConVar("br_time_blinkdelay"):GetInt(), 0, function
 		end
 	end)
 end)
+]]--
 
 nextgateaopen = 0
 function RequestOpenGateA(ply)

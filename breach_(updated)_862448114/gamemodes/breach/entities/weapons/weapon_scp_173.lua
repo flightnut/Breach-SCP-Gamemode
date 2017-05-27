@@ -99,7 +99,8 @@ function SWEP:Think()
 			} )
 			if tr_eyes.Entity == self.Owner or tr_center.Entity == self.Owner then
 				//self.Owner:PrintMessage(HUD_PRINTTALK, tostring(tr_eyes.Entity) .. " : " .. tostring(tr_center.Entity) .. " : " .. tostring(tr_center.Entity))
-				if self:IsLookingAt( v ) and v.isblinking == false then
+				--if self:IsLookingAt( v ) and v.isblinking == false then
+				if self:IsLookingAt( v ) and v:IsBlinking() then
 					watching = watching + 1
 					//if self:GetPos():Distance(v:GetPos()) > 100 then
 						//self.Owner:PrintMessage(HUD_PRINTTALK, v:Nick() .. " is looking at you")
@@ -110,9 +111,11 @@ function SWEP:Think()
 	end
 	if SERVER then
 		if watching > 0 then
-			self.Owner:SetFrozen(true) --simple
+			self.Owner:Freeze(true)
+			--self.Owner:SetFrozen(true) --simple
 		else
-			self.Owner:SetFrozen(false,500,500,175)--ez
+			self.Owner:Freeze(false)
+			--self.Owner:SetFrozen(false,500,500,175)--ez
 		end
 	end
 end
@@ -177,9 +180,11 @@ function SWEP:SecondaryAttack()
 	if self.NextSpecial > CurTime() then return end
 	//if ( !self:CanSecondaryAttack() ) then return end
 	self.NextSpecial = CurTime() + self.SpecialDelay
+	--[[
 	if CLIENT then
 		surface.PlaySound("Horror2.ogg")
 	end
+	]]--
 	local findents = ents.FindInSphere( self.Owner:GetPos(), 600 )
 	local foundplayers = {}
 	for k,v in pairs(findents) do
@@ -190,6 +195,9 @@ function SWEP:SecondaryAttack()
 				end
 			end
 		end
+	end
+	if SERVER then 
+		self.Owner:EmitSound("Horror2.ogg") --:)
 	end
 	if #foundplayers > 0 then
 		local fixednicks = "Blinded: "
@@ -205,18 +213,21 @@ function SWEP:SecondaryAttack()
 			else
 				fixednicks = fixednicks .. ", " .. v:Nick()
 			end
-			v:SendLua( 'surface.PlaySound("Horror2.ogg")' )
+			--v:SendLua( 'surface.PlaySound("Horror2.ogg")' )
+			v:playerBlink(time)
+			--[[
 			net.Start("PlayerBlink")
 				net.WriteFloat(time)
 			net.Send(v)
 			v.isblinking = true
+			]]--
 			v.blinkedby173 = true
 		end
 		self.Owner:PrintMessage(HUD_PRINTTALK, fixednicks)
 		timer.Create("UnBlinkTimer173", time + 0.2, 1, function()
 			for k,v in pairs(player.GetAll()) do
 				if v.blinkedby173 then
-					v.isblinking = false
+					--v.isblinking = false
 					v.blinkedby173 = false
 				end
 			end
@@ -243,7 +254,8 @@ function SWEP:DrawHUD()
 	end
 	showtext = "Special " .. specialstatus
 	--if self.DrawRed < CurTime() then
-	if self.Owner:GetIsFrozen() then
+	--if self.Owner:GetIsFrozen() then
+	if self.Owner:IsFrozen() then
 		self.CColor = Color(255,0,0)
 		showtextlook = "Someone is looking"
 		lookcolor = Color(145, 17, 62)

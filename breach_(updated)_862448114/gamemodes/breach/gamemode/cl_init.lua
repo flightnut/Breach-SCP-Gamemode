@@ -211,7 +211,7 @@ net.Receive( "OnEscaped", function( len )
 	esctime = CurTime() - timefromround
 	lastescapegot = CurTime() + 20
 	StartEndSound()
-	SlowFadeBlink(5)
+	--SlowFadeBlink(5)
 end)
 
 net.Receive( "ForcePlaySound", function( len )
@@ -341,6 +341,7 @@ function tick_flash()
 end
 hook.Add( "Tick", "htickflash", tick_flash )
 
+--[[
 net.Receive("PlayerBlink", function(len)
 	local time = net.ReadFloat()
 	Blink(time)
@@ -365,6 +366,7 @@ function Blink(time)
 	f_end = CurTime() + time
 	//print("blink start")
 end
+]]--
 
 last996attack = 0
 
