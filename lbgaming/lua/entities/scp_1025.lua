@@ -1,4 +1,4 @@
-AddCSLuaFile()
+AddCSLuaFile()AddCSLuaFile()
 
 DEFINE_BASECLASS("base_anim")
 
@@ -38,21 +38,42 @@ function ENT:Draw()
 end
 
 function ENT:Use(activator, ply)
+	--Only Humans are allowed to use the SCP
 	if ply:Team() == TEAM_SCP or ply:Team() == TEAM_SPEC or preparing or postround then
 		return
 	end
 
+	--Only to be ran on Serverside
 	if (SERVER) then
+	
+		--Easy cleanup timer
+		timer.Create("Cleanup", 0.1, 0, function()
+		
+			if preparing or postround or not ply:Alive() or ply:Team() == TEAM_SPEC or ply:Team() == TEAM_SCP then
+			
+				ply:SetNWBool("MuscularMutation", false)
+				ply:SetNWBool("RegenerativeTrait", false)
+				ply:SetNWBool("PinkEye", false)
+				timer.Remove(ply:SteamID64().."pinkTime")
+			
+			end
+		
+		end)
+		
+		--Informing player they cannot use the book when they have black blood.
 		if (ply:GetNWInt("canBeInfected", 0) == 2) then
-			ply:PrintMessage(HUD_PRINTCENTER,"You cannot get any other diseases") --lol
+			ply:PrintMessage(HUD_PRINTCENTER,"You cannot get any other diseases")
 			return
 		end
 
+		--Enabling all diseases
 		local number
 		if ((ply:GetNWInt("canBeInfected", 0) == 0) or (ply:GetNWInt("canBeInfectedb", 0) == 0)) then
 			 ply:SetNWInt("canBeInfected", 1)
 			 ply:SetNWInt("canBeInfectedb", 1)
 		end
+		
+		--Creating Disease table
 		local Diseases = {}
 
 		Diseases[1] = "Appendicitus"
@@ -66,10 +87,13 @@ function ENT:Use(activator, ply)
 		Diseases[9] = "Finger Calluses"
 		Diseases[10] = "Lung Cancer"
 		Diseases[11] = "Super Calluses"
+		Diseases[12] = "Pink Eye"
 
+		--Randomizing the diseases
 		math.randomseed(os.time())
 		number = math.random(1, 11)
 
+		--The diseases
 		ply:PrintMessage(HUD_PRINTCENTER, "You read about " .. Diseases[number])
 
 		if ((number == 1) and (ply:GetNWInt("canBeInfectedb", 0) == 1)) then
@@ -225,15 +249,17 @@ function ENT:Use(activator, ply)
 
 		end
 
-		if ((number == 7) and (ply:GetNWInt("canBeInfected", 0) == 1)) then
+		if ((number == 7) and (ply:GetNWInt("canBeInfected", 0) == 1) and not(ply:GetNWBool("MuscularMutation", false))) then
 
 			local newRunSpeed = ply:GetRunSpeed()
 			ply:SetRunSpeed(newRunSpeed +25)
+			ply:SetNWBool("MuscularMutation", true)
 
 		end
 
-		if ((number == 8) and (ply:GetNWInt("canBeInfected", 0) == 1)) then
+		if ((number == 8) and (ply:GetNWInt("canBeInfected", 0) == 1) and not (ply:GetNWBool("RegenerativeTrait", false))) then
 
+			ply:SetNWBool("RegenerativeTrait", true)
 			timer.Create(ply:SteamID64().."regen", 10, 0, function()
 
 				if (not ply:Alive()) or (ply:Team() == TEAM_SPEC) or (ply:Team() == TEAM_SCP) or preparing or postround then
@@ -279,26 +305,18 @@ function ENT:Use(activator, ply)
 
 		end
 
-		if ((number == 12) and (ply:GetNWInt("canBeInfected", 0) == 1)) then
-
-			timer.Create("SickleCell", 1, 0, function()
-
-				if (not ply:Alive()) or (ply:Team() == TEAM_SPEC) or (ply:Team() == TEAM_SCP) or preparing or postround then
-					ply:SetNWInt("canBeInfectedb", 0)
-					timer.Remove("SickleCell")
-				else
-					ply:SetNWInt("canBeInfectedb", 2)
-				end
-
-			end)
-
-		end
-
 		if ((number == 11) and (ply:GetNWInt("canBeInfected", 0) == 1)) then
 
 			ply:SetMaxHealth(300)
 			ply:SetHealth(300)
 
+		end
+		
+		if ((number == 12 and (ply:GetNWInt("canBeInfectedb", 0) == 1) and not ply:GetNWBool("PinkEye", false))) then
+		
+			ply:SetNWBool("PinkEye", true)
+			timer.Create(ply:SteamID64().."pinkTime", 5, 0, function() ply:playerBlink(0.25) end)
+		
 		end
 
 	end
