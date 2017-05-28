@@ -26,6 +26,8 @@ function ENT:Initialize()
 		phys:Wake()
 
 	end
+	
+	print("This script uses logos made on logomakr.com under the Creative Common License, if you wish to create your own logo; visit logomakr.com")
 
 end
 
@@ -78,20 +80,20 @@ function ENT:Use(activator, ply)
 
 		Diseases[1] = "Appendicitus"
 		Diseases[2] = "Asthma"
-		Diseases[3] = "Black Blood Syndrome"
+		Diseases[3] = "Black Blood Cell Mutation"
 		Diseases[4] = "Cardiac Arrest"
 		Diseases[5] = "Chicken Pox"
 		Diseases[6] = "The Common Cold"
-		Diseases[7] = "Muscular Mutation Trait"
-		Diseases[8] = "Regenerative Trait"
+		Diseases[7] = "Quadriceptic Mutation"
+		Diseases[8] = "Hyper-Cellular Mitosis"
 		Diseases[9] = "Finger Calluses"
 		Diseases[10] = "Lung Cancer"
-		Diseases[11] = "Super Calluses"
+		Diseases[11] = "Muscular Mutation"
 		Diseases[12] = "Pink Eye"
 
 		--Randomizing the diseases
 		math.randomseed(os.time())
-		number = math.random(1, 11)
+		number = math.random(1, 12)
 
 		--The diseases
 		ply:PrintMessage(HUD_PRINTCENTER, "You read about " .. Diseases[number])
