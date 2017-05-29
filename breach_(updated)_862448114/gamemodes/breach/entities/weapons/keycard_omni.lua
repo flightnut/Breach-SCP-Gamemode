@@ -11,8 +11,8 @@ SWEP.Instructions	= "If you hold it, you can open doors with every level"
 
 SWEP.ViewModelFOV	= 62
 SWEP.ViewModelFlip	= false
-SWEP.ViewModel		= "models/mishka/models/keycard.mdl"
-SWEP.WorldModel		= "models/mishka/models/keycard.mdl"
+SWEP.ViewModel		= "models/weapons/c_omnicardscpn.mdl"
+SWEP.WorldModel		= "models/weapons/w_omnicardscpn.mdl"
 SWEP.PrintName		= "Keycard Omni"
 SWEP.Slot			= 1
 SWEP.SlotPos		= 1
@@ -43,9 +43,11 @@ SWEP.Secondary.ClipSize		= -1
 SWEP.Secondary.DefaultClip	= -1
 SWEP.Secondary.Ammo			=  "none"
 SWEP.Secondary.Automatic	=  false
+SWEP.UseHands				= true
+
 
 function SWEP:Deploy()
-	self.Owner:DrawViewModel( false )
+	self.Owner:DrawViewModel( true )
 end
 function SWEP:DrawWorldModel()
 	if !IsValid(self.Owner) then
@@ -57,6 +59,11 @@ function SWEP:Initialize()
 	self:SetSkin(11)
 end
 function SWEP:Think()
+	--When IN_USE then
+	if self.Owner:KeyPressed(IN_USE) then
+		self.Owner:SetAnimation(ACT_VM_PRIMARYATTACK)
+		self.Weapon:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
+	end
 end
 function SWEP:Reload()
 end

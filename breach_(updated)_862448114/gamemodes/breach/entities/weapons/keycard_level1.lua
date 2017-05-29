@@ -15,7 +15,7 @@ SWEP.Instructions	= "If you hold it, you can open doors with level 1"
 SWEP.ViewModelFOV	= 62
 SWEP.ViewModelFlip	= false
 SWEP.ViewModel		= "models/weapons/c_keycard1scpn.mdl"
-SWEP.WorldModel		= "models/mishka/models/keycard.mdl"
+SWEP.WorldModel		= "models/weapons/w_keycard1scpn.mdl"
 SWEP.PrintName		= "Keycard Level 1"
 SWEP.Slot			= 1
 SWEP.SlotPos		= 1
@@ -73,17 +73,17 @@ function SWEP:Initialize()
 end
 local inRun = false;
 function SWEP:Think()
-
+	--When IN_USE then
+	if self.Owner:KeyPressed(IN_USE) then
+		self.Owner:SetAnimation(ACT_VM_PRIMARYATTACK)
+		self.Weapon:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
+	end
 end
 function SWEP:Reload()
 end
 function SWEP:PrimaryAttack()
-self.Owner:SetAnimation(ACT_VM_PRIMARYATTACK)
-self.Weapon:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
 end
 function SWEP:SecondaryAttack()
-self.Owner:SetAnimation(ACT_VM_PRIMARYATTACK)
-self.Weapon:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
 end
 function SWEP:CanPrimaryAttack()
 end

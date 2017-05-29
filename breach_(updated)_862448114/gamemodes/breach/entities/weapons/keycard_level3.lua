@@ -5,8 +5,8 @@ SWEP.Instructions	= "If you hold it, you can open doors with level 3"
 
 SWEP.ViewModelFOV	= 62
 SWEP.ViewModelFlip	= false
-SWEP.ViewModel		= "models/mishka/models/keycard.mdl"
-SWEP.WorldModel		= "models/mishka/models/keycard.mdl"
+SWEP.ViewModel		= "models/weapons/c_keycard3scpn.mdl"
+SWEP.WorldModel		= "models/weapons/w_keycard3scpn.mdl"
 
 if CLIENT then
 	SWEP.WepSelectIcon 	= surface.GetTextureID("breach/wep_keycard3")
@@ -35,6 +35,8 @@ SWEP.Secondary.ClipSize		= -1
 SWEP.Secondary.DefaultClip	= -1
 SWEP.Secondary.Ammo			=  "none"
 SWEP.Secondary.Automatic	=  false
+SWEP.UseHands				= true
+
 
 function SWEP:GetBetterOne()
 	local r = math.random(1,100)
@@ -56,7 +58,7 @@ function SWEP:GetBetterOne()
 	return "keycard_level3"
 end
 function SWEP:Deploy()
-	self.Owner:DrawViewModel( false )
+	self.Owner:DrawViewModel( true )
 end
 function SWEP:DrawWorldModel()
 	if !IsValid(self.Owner) then
@@ -68,6 +70,11 @@ function SWEP:Initialize()
 	self:SetSkin(8)
 end
 function SWEP:Think()
+	--When IN_USE then
+	if self.Owner:KeyPressed(IN_USE) then
+		self.Owner:SetAnimation(ACT_VM_PRIMARYATTACK)
+		self.Weapon:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
+	end
 end
 function SWEP:Reload()
 end

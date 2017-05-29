@@ -11,8 +11,8 @@ SWEP.Instructions	= "If you hold it, you can open doors with level 4"
 
 SWEP.ViewModelFOV	= 62
 SWEP.ViewModelFlip	= false
-SWEP.ViewModel		= "models/mishka/models/keycard.mdl"
-SWEP.WorldModel		= "models/mishka/models/keycard.mdl"
+SWEP.ViewModel		= "models/weapons/c_keycard4scpn.mdl"
+SWEP.WorldModel		= "models/weapons/w_keycard4scpn.mdl"
 SWEP.PrintName		= "Keycard Level 4"
 SWEP.Slot			= 1
 SWEP.SlotPos		= 1
@@ -21,6 +21,8 @@ SWEP.DrawCrosshair	= true
 SWEP.HoldType		= "normal"
 SWEP.Spawnable		= false
 SWEP.AdminSpawnable	= false
+SWEP.UseHands		= true
+
 
 function SWEP:GetBetterOne()
 	local r = math.random(1,100)
@@ -56,7 +58,7 @@ SWEP.Secondary.Ammo			=  "none"
 SWEP.Secondary.Automatic	=  false
 
 function SWEP:Deploy()
-	self.Owner:DrawViewModel( false )
+	self.Owner:DrawViewModel( true )
 end
 function SWEP:DrawWorldModel()
 	if !IsValid(self.Owner) then
@@ -68,6 +70,11 @@ function SWEP:Initialize()
 	self:SetSkin(9)
 end
 function SWEP:Think()
+	--When IN_USE then
+	if self.Owner:KeyPressed(IN_USE) then
+		self.Owner:SetAnimation(ACT_VM_PRIMARYATTACK)
+		self.Weapon:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
+	end
 end
 function SWEP:Reload()
 end
