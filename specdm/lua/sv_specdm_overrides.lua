@@ -306,7 +306,7 @@ hook.Add("Initialize", "Initialize_SpecDM", function()
 			end
 
 			if ent:IsGhost() and dmginfo:GetInflictor():GetClass() == "trigger_hurt" then
-				return true
+				return false
 			end
 		end
 	end)
