@@ -71,5 +71,5 @@ function ENT:Think()
 		end
 
 	end
-
+	return true --Oops apparently you gotta do this. 
 end
