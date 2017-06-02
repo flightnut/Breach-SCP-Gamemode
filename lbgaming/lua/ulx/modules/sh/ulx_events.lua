@@ -396,7 +396,7 @@ local brRounds = { --PLEASE NOTE: IF YOU ADD A ROUND, ADD IT HERE TOO
 	"none",
 	"multiplebreaches",
 	"zombieplague",
-	"spies",
+	--"spies", --Disabled
 	"assault",
 }
 

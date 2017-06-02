@@ -178,7 +178,6 @@ normalround = {
 }
 
 ROUNDS = {
-	--Assault is disabled for now, Sorry. I cannot figure a fix for this one :(
 	assault = {
 		playersetup = AssaultGamemode,
 		name = "Assault",
@@ -187,6 +186,7 @@ ROUNDS = {
 		mtfandscpdelay = false,
 		onroundstart = nil
 	},
+	--[[
 	spies = {
 		playersetup = SpyGamemode,
 		name = "Trouble in SCP Town",
@@ -195,6 +195,7 @@ ROUNDS = {
 		mtfandscpdelay = false,
 		onroundstart = nil
 	},
+	]]--
 	multiplebreaches = {
 		playersetup = function()
 			local pnum = #GetActivePlayers()

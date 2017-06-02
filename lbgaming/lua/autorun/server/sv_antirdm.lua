@@ -107,7 +107,7 @@ local function antirdm_respawn(victim,rl,vicTeam)
     elseif rl == ROLE_MTFNTF and vicTeam == TEAM_CHAOS then --if they are NTF Chaos (Spy)
         victim:SetChaosInsurgency(3) --Respawn as NTF Chaos
         if roundtype then
-            if (roundtype.name == ROUNDS.spies.name) then --If it's the TTT Gamemode, respawn them lmao
+            if (roundtype.name == "ROUNDS.spies.name is DISABLED") then --If it's the TTT Gamemode, respawn them lmao
                 victim:SetPos(table.Random(SPAWN_GUARD))
             else
                 victim:SetPos(table.Random(SPAWN_OUTSIDE))
@@ -173,7 +173,7 @@ local function antirdm(victim, inflictor, attacker)
                         end
                     end
                     print("[AntiRDM] Warning \""..attacker:Nick().."\" for RDM")
-                    if antirdm_enabled and (tostring(roundtype.name) ~= ROUNDS.spies.name) then --As long it's not TTT lol ...
+                    if antirdm_enabled and (tostring(roundtype.name) ~= "ROUNDS.spies.name is DISABLED") then --As long it's not TTT lol ...
                         ULib.tsayColor(nil,true,Color(255,0,0),"[AntiRDM]",Color(255,255,255)," \"",team.GetColor(attacker:Team()),attacker:Nick(),Color(255,255,255),"\" was warned for killing \"",team.GetColor(victim:Team()),victim:Nick(),Color(255,255,255),"\"")
                         RunConsoleCommand("awarn_warn",attacker:SteamID(),"\"RDM Detected by AntiRDM\"")
                     else
@@ -291,7 +291,7 @@ hook.Add("PlayerShouldTakeDamage","AntiRDM_NoDamage",function(victim,attacker)
         end
     end
     --Force Friendly Fire ON when Round is "spies"
-    if roundtype and (roundtype.name == ROUNDS.spies.name) then --If it's the TTT Gamemode, respawn them lmao
+    if roundtype and (roundtype.name == "ROUNDS.spies.name is DISABLED") then --If it's the TTT Gamemode, respawn them lmao
         return true
     end
     --Force Friendly Fire ON when round is over, but if it isn't then we do our checks. :)

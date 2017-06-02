@@ -502,7 +502,7 @@ hook.Add("PostCleanupMap","Link2006_AutoSpawn",function() --On New Round
 					ULib.tsayColor(nil,true,team.GetColor(TEAM_SCP),"SCP-035",Color(255,255,255)," can kill ",team.GetColor(TEAM_CLASSD),"ClassDs",Color(255,255,255)," in this round!") --We have FriendlyFire Enabled when it's TTT
 				end
                 timer.Create("BreachRespawn_Spectators", 12, 1, function()   Link2006_RespawnSpecs(nil,"classd",nil) end)
-			elseif (roundtype.name == ROUNDS.spies.name) then
+			elseif (roundtype.name == "ROUNDS.spies.name is DISABLED") then
                 print("[BreachRespawn] Round is "..roundtype.name..", Respawning specs in 12 seconds...")
 				ULib.tsayColor(nil,true,Color(255,255,255),"Friendly fire is enabled for this round!") --We have FriendlyFire Enabled when it's TTT
                 timer.Create("BreachRespawn_Spectators", 12, 1, function()   Link2006_RespawnSpecs(nil,"mtf",nil) end) --let's allow them to respawn as MTF anyway...
@@ -538,7 +538,7 @@ hook.Add("PlayerInitialSpawn","br_ForceRespawn_OnJoin",function(ply)
 			if postround then
 				return --Stop.
 			end
-			if (roundtype.name == ROUNDS.spies.name) then --If it's the TTT Gamemode, spawn them as a Guard :^) lmao
+			if (roundtype.name == "ROUNDS.spies.name is DISABLED") then --If it's the TTT Gamemode, spawn them as a Guard :^) lmao
 				ply:SetGuard()
 				ply:SetPos(table.Random(Link2006_GetSpawns(SPAWN_GUARD)))
 			elseif (roundtype.name == normalround.name) or (roundtype.name == ROUNDS.multiplebreaches.name) then
@@ -627,7 +627,7 @@ hook.Add("PlayerDeath","br_ForceRespawn", function(ply)
 		    elseif rl == ROLE_MTFNTF and plyTeam == TEAM_CHAOS then --if they are NTF Chaos (Spy)
 		        ply:SetChaosInsurgency(3) --Respawn as NTF Chaos
 		        if roundtype then
-		            if (roundtype.name == ROUNDS.spies.name) then --If it's the TTT Gamemode, respawn them lmao
+		            if (roundtype.name == "ROUNDS.spies.name is DISABLED") then --If it's the TTT Gamemode, respawn them lmao
 		                ply:SetPos(table.Random(Link2006_GetSpawns(SPAWN_GUARD)))
 		            else
 		                ply:SetPos(table.Random(Link2006_GetSpawns(SPAWN_OUTSIDE)))

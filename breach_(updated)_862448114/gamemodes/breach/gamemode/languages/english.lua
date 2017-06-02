@@ -40,7 +40,7 @@ english.starttexts = {
 		"You are a MTF Guard",
 		{"Your objective is to find and rescue all",
 		"of the researchers that are still in the facility",
-		"You have to kill any Class D or SCP that you will find",
+		"You may kill any Class D or SCP that you find",
 		"Listen to MTF Commander's orders and stick to your team"}
 	},
 	{
@@ -52,15 +52,15 @@ english.starttexts = {
 		"You are an MTF Commander",
 		{"Your objective is to find and rescue all",
 		"of the researchers that are still in the facility",
-		"You have to kill any Class Ds or SCPs that you will find",
+		"You may kill any Class D or SCP that you find",
 		"Give orders to Guards to simplify the task"}
 	},
 	{
 		"You are a MTF Unit Nine-Tailed Fox",
 		{"Your objective is to find and rescue all",
 		"of the researchers that are still in the facility",
-		"You have to kill any Class D or SCP that you will find",
-		"Go to the facility and help Guards to embrace a chaos"}
+		"You may kill any Class D or SCP that you find",
+		"Go to the facility and help Guards to find and kill the chaos"}
 	},
 	{
 		"You are a Class D",
@@ -71,8 +71,8 @@ english.starttexts = {
 	{
 		"You are a Researcher",
 		{"Your objective is to escape from the facility",
-		"You need to find a MTF Guard that will help you",
-		"Be on the look out of Class Ds as they might try to kill you"}
+		"You need to find an MTF Guard that will help you",
+		"Be on the look out for Class Ds as they might try to kill you"}
 	},
 	{
 		"You are the SCP-049-2",
@@ -81,16 +81,16 @@ english.starttexts = {
 	},
 	{
 		"You are the Chaos Insurgency Soldier",
-		{"Your objective is to capture as much Class Ds as it is possible",
-		"Escort them to the helipad outside of the facility",
-		"You have to kill anyone who will stop you"}
+		{"Your objective is to capture as many Class Ds as possible",
+		"Escort them to the escape zone outside of the facility",
+		"You may kill anyone who tries to stop you"}
 	},
 	{
 		"You are the Chaos Insurgency Spy",
 		{"Your objective is to kill all MTF Guards and capture the Class D",
 		"They are unaware of your disguise",
 		"Don't destroy your disguise",
-		"If you find any class ds, try to escort them to the helipad"}
+		"If you find any Class Ds, try to escort them to the escape zone"}
 	},
 	{
 		"You are the Chaos Insurgency Soldier",
@@ -100,12 +100,12 @@ english.starttexts = {
 	},
 	{
 		"You are a Spectator",
-		{'Use command "br_spectate" to come back'}
+		{'Use command "br_spectate" in console to come back'}
 	},
 	{
 		"You are the SCP-457",
 		{"Your objective is to escape then facility",
-		"You are always burning",
+		"You're always burning, unless you turn it off by right clicking",
 		"If you are close enough to a human, you will burn them"}
 	},
 	{
