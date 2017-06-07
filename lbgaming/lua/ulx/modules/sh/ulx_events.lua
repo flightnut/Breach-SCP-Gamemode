@@ -398,6 +398,7 @@ local brRounds = { --PLEASE NOTE: IF YOU ADD A ROUND, ADD IT HERE TOO
 	"zombieplague",
 	--"spies", --Disabled
 	"assault",
+	"superbreach",
 }
 
 function ulx.specialround (calling_ply,nextRound)

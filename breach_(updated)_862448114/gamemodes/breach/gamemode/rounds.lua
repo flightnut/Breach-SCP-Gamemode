@@ -1,6 +1,6 @@
-
+print("[rounds.lua] Loading...")
 function AssaultGamemode()
-	for k,v in pairs(player.GetAll()) do
+	for k,v in pairs(GetActivePlayers()) do
 		v:SetSpectator() --I dont know anymore :^l
 	end
 
@@ -80,7 +80,7 @@ function AssaultGamemode()
 end
 
 function ZombieGamemode()
-	for k,v in pairs(player.GetAll()) do
+	for k,v in pairs(GetActivePlayers()) do
 		v:SetSpectator() --I dont know anymore :^l
 	end
 	--Get All players
@@ -141,13 +141,13 @@ function InfectPeople()
 end
 
 function SpyGamemode()
-	for k,v in pairs(player.GetAll()) do
+	for k,v in pairs(GetActivePlayers()) do
 		v:SetSpectator() --I dont know anymore :^l
 	end
 	local all = GetActivePlayers()
 	local allspawns = {}
 	table.Add(allspawns, SPAWN_GUARD)
-	//table.Add(allspawns, SPAWN_OUTSIDE)
+	--table.Add(allspawns, SPAWN_OUTSIDE)
 	table.Add(allspawns, SPAWN_SCIENT)
 	table.Add(allspawns, SPAWN_CLASSD)
 	for i=1, (#GetActivePlayers() / 3) do
@@ -163,6 +163,119 @@ function SpyGamemode()
 		pl:SetGuard()
 		pl:SetPos(spawn)
 		table.RemoveByValue(allspawns, spawn)
+	end
+end
+
+if not ConVarExists("br_superbreach_hpmult") then CreateConVar( "br_superbreach_hpmult", "1.5", {FCVAR_SERVER_CAN_EXECUTE, FCVAR_NOTIFY}, "Multiplies SCP's Health by this much" ) end
+
+
+function SuperBreachRound()
+	-- Format for SetupPlayers()
+	--
+	for k,v in pairs(GetActivePlayers()) do
+		v:SetSpectator() --I dont know anymore :^l
+	end
+
+	local pnum = #GetActivePlayers()
+	local scpsnum = 1
+
+	--print('[rounds DEBUG] '..tostring(pnum))
+	if pnum < 7 then -- 0 to 6 players
+		--SetupPlayers({1, pnum, 0, 0, 0}) -- 1 SCP, Rest MTFs + 1 commander :^)
+		scpsnum = 1
+	elseif pnum > 6 and pnum < 13 then --7 to 12 players
+		--SetupPlayers({2, pnum, 0, 0, 0}) -- 2 SCPs, Rest MTFs + 1 commander :^)
+		scpsnum = 2
+	elseif pnum > 12 and pnum < 20 then --13 to 19 players
+		--SetupPlayers({3, pnum, 0, 0, 0})-- 3 SCPs, Rest MTFs + 1 commander :^)
+		scpsnum = 3
+	elseif pnum > 19 and pnum < 40 then -- 20 to 39 players
+		--SetupPlayers({4, pnum, 0, 0, 0}) -- 4 SCPs, Rest MTFs + 1 commander :^)
+		scpsnum = 4
+	elseif pnum > 39 and pnum < 60 then -- 40 to 59 players
+		--SetupPlayers({5, pnum, 0, 0, 0}) -- 5 SCPs, Rest MTFs + 1 commander :^)
+		scpsnum = 5
+	else --60+ Players
+		--SetupPlayers({6, pnum, 0, 0, 0}) -- 6 SCPs, Rest MTFs + 1 commander :^)
+		scpsnum = 6
+	end
+	--Reduce the number of players because we got how many SCPs we have to spawn
+
+	pnum = pnum - scpsnum
+	--print('[rounds DEBUG] SetupPlayers done.')
+
+
+	local allply = GetActivePlayers()
+	--print('[rounds DEBUG] '..tostring(allply))
+	local allspawns = {}
+	table.Add(allspawns, SPAWN_GUARD)
+	--table.Add(allspawns, SPAWN_OUTSIDE)
+	table.Add(allspawns, SPAWN_SCIENT)
+	table.Add(allspawns, SPAWN_CLASSD)
+	--print('[rounds DEBUG] '..tostring(allspawns))
+
+	local scpplys = {}
+	for k,v in pairs(allply) do
+		if v:GetNWBool("HasBeenSCP") ~= true then
+			table.insert(scpplys,v)
+		end
+	end
+	-- SCP
+	local spctab = table.Copy(SPCS)
+	for i=1, scpsnum do
+		if #spctab < 1 then
+			spctab = table.Copy(SPCS)
+			--print("not enough scps, copying another table")
+		end
+		--local pl = table.Random(allply)
+		local pl = table.Random(scpplys)
+		local scp = table.Random(spctab)
+		scp["func"](pl)
+		table.RemoveByValue(spctab, scp)
+		table.RemoveByValue(allply, pl)
+	end
+	scpplys = nil --Delete that table, we do not need it anymore
+	-- MTF Commander
+	for k,v in pairs(player.GetAll()) do
+		if v:Team() == TEAM_SCP then --The SCPs will get the flag set to true
+			v:SetNWBool("HasBeenSCP", true)
+		else --everyone else that DID NOT get this team, will have their flag reset.
+			v:SetNWBool("HasBeenSCP", false)
+		end
+	end
+
+
+	--print('[rounds DEBUG] GetActivePlayer is'..tostring(GetActivePlayers()))
+	--print('[rounds DEBUG] GetActivePlayer Count is'..tostring(#GetActivePlayers()))
+	--print('[rounds DEBUG] player.GetCount() is '..tostring(player.GetCount()))
+	for i=1,pnum do
+
+		--print('[rounds DEBUG] I:'..tostring(i))
+		local pl = table.Random(allply)
+
+		--print('[rounds DEBUG] pl:'..tostring(pl))
+		--print('[rounds DEBUG] pl is spectator')
+		pl:SetGuard()
+		pl:SetPos(table.Random(allspawns))
+		--print('[rounds DEBUG] === spawned player ===')
+		--print('[rounds DEBUG] Setting NoCollide...')
+		pl:SetNoCollideWithTeammates(true) --Force noCollide for this round, no matter who :)
+		table.RemoveByValue(allply, pl)
+		--print('[rounds DEBUG] =======done========')
+	end
+
+
+	local superbreach_convar = GetConVar("br_superbreach_hpmult")
+
+	if superbreach_convar == nil then
+		print("[Rounds.lua] GetConVar returned nil!")
+	end
+
+	for k,v in pairs(team.GetPlayers(TEAM_SCP)) do
+		--print('[rounds DEBUG] Setting Health on '..tostring(v).. ' ['..tostring(v:GetNClass())..'] with '..tostring(v:Health()*superbreach_convar:GetFloat())..'/'..tostring(v:GetMaxHealth()*superbreach_convar:GetFloat()))
+		v:SetMaxHealth(v:GetMaxHealth()*superbreach_convar:GetFloat())
+		v:SetHealth(v:Health()*superbreach_convar:GetFloat())
+		--print('[rounds DEBUG] Done health boost')
 	end
 end
 
@@ -186,6 +299,14 @@ ROUNDS = {
 		mtfandscpdelay = false,
 		onroundstart = nil
 	},
+	superbreach = {
+		playersetup = SuperBreachRound,
+		name = "Super breach",
+		minplayers = 4,
+		allowntfspawn = false,
+		mtfandscpdelay = false, --Due to Guards spawning outside MTF spawn anyway.
+		onroundstart = nil --I could make this play some sound tbh
+	},
 	--[[
 	spies = {
 		playersetup = SpyGamemode,
@@ -200,17 +321,17 @@ ROUNDS = {
 		playersetup = function()
 			local pnum = #GetActivePlayers()
 			if pnum < 7 then -- 0 to 6 players
-				SetupPlayers(GetRoleTableCustom(#GetActivePlayers(), 1, 0, 0, 0, false)) -- 1 SCP
+				SetupPlayers(GetRoleTableCustom(pnum, 1, 0, 0, 0, false)) -- 1 SCP
 			elseif pnum > 6 and pnum < 13 then --7 to 12 players
-				SetupPlayers(GetRoleTableCustom(#GetActivePlayers(), 2, 0, 0, 0, false)) -- 2 SCPs
+				SetupPlayers(GetRoleTableCustom(pnum, 2, 0, 0, 0, false)) -- 2 SCPs
 			elseif pnum > 12 and pnum < 20 then --13 to 19 players
-				SetupPlayers(GetRoleTableCustom(#GetActivePlayers(), 3, 0, 0, 0, false)) -- 3 SCPs
+				SetupPlayers(GetRoleTableCustom(pnum, 3, 0, 0, 0, false)) -- 3 SCPs
 			elseif pnum > 19 and pnum < 40 then -- 20 to 39 players
-				SetupPlayers(GetRoleTableCustom(#GetActivePlayers(), 4, 0, 0, 0, false)) -- 4 SCPs
+				SetupPlayers(GetRoleTableCustom(pnum, 4, 0, 0, 0, false)) -- 4 SCPs
 			elseif pnum > 39 and pnum < 60 then -- 40 to 59 players
-				SetupPlayers(GetRoleTableCustom(#GetActivePlayers(), 5, 0, 0, 0, false)) -- 5 SCPs
+				SetupPlayers(GetRoleTableCustom(pnum, 5, 0, 0, 0, false)) -- 5 SCPs
 			else --60+ Players
-				SetupPlayers(GetRoleTableCustom(#GetActivePlayers(), 6, 0, 0, 0, false)) -- 6 SCPs
+				SetupPlayers(GetRoleTableCustom(pnum, 6, 0, 0, 0, false)) -- 6 SCPs
 			end
 		end,
 		name = "Multiple breaches",
@@ -228,3 +349,5 @@ ROUNDS = {
 		onroundstart = InfectPeople --Disabled to make it so people gets Infected
 	},
 }
+
+print("[rounds.lua] Loaded.")
