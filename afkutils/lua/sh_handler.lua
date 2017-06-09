@@ -81,7 +81,7 @@ afkutil.handle.givewarning = function(ply)
 	ply.hasbeenwarned = true
 end
 
-afkutil.handle.loadthemes = function()	
+afkutil.handle.loadthemes = function()
 	local files, dirs = file.Find("afkutils_themes/*", "LUA")
 	for files, name in pairs(files) do
 		if !string.EndsWith(name, ".txt") then
@@ -90,7 +90,7 @@ afkutil.handle.loadthemes = function()
 				AddCSLuaFile("afkutils_themes/" .. name)
 			end
 			theme = {}
-			
+
 			-- Defaults
 			theme.__index = theme
 			theme.id = string.gsub(string.lower(name), ".lua", "") -- Remove .lua from string
@@ -113,7 +113,7 @@ afkutil.handle.loadthemes = function()
 							draw.SimpleText( afkutil.config.warnmsgbody_kick, "TargetIDSmall", ScrW() / 2 - 160, 60, Color( 255, 255, 255, 255 ), 0, 1 )
 						else
 							draw.SimpleText( afkutil.config.warnmsgbody_slay, "TargetIDSmall", ScrW() / 2 - 160, 60, Color( 255, 255, 255, 255 ), 0, 1 )
-						end 
+						end
 					end
 				end)
 			end
@@ -125,10 +125,10 @@ afkutil.handle.loadthemes = function()
 					drawwarning = true
 				end
 			end
-			
+
 			include("afkutils_themes/" .. name)
 			afkutil.themes[theme.id] = theme
-			
+
 			theme = nil
 		end
 	end
@@ -158,9 +158,9 @@ if afkutil.config.enabled then
 			ply.dontwarn = false
 		end)
 		hook.Add('PlayerSpawn','AFK_SpawnFix',function(ply)
-			ply.lastmoved = CurTime() --They spawned. 
-			ply.hasbeenwarned = false --They shouldnt be warned anymore, they respawned. 
-			ply.dontwarn = false --Dont warn! 
+			ply.lastmoved = CurTime() --They spawned.
+			ply.hasbeenwarned = false --They shouldnt be warned anymore, they respawned.
+			ply.dontwarn = false --Dont warn!
 		end)
 		hook.Add("PlayerDisconnect", "disconnecthook1", function(ply)
 			if(IsValid(ply.uid)) then
@@ -174,7 +174,7 @@ if afkutil.config.enabled then
 					ply.hasbeenwarned = false
 					afkutil.handle.removewarning(ply)
 					afkutil.handle.debugprint("Player "..ply:Nick().." is no longer afk!")
-					SendChatText( ply, afkutil.config.msgcolor, "Player "..ply:Nick().." is no longer afk!" ) 
+					SendChatText( ply, afkutil.config.msgcolor, "Player "..ply:Nick().." is no longer afk!" )
 					ply:SetRenderMode(RENDERMODE_NORMAL)
 					ply:SetColor(Color(255, 255, 255, 100))
 				end
@@ -184,7 +184,7 @@ if afkutil.config.enabled then
 				afkutil.variable.forcewarn = false
 				afkutil.handle.removewarning(ply)
 				afkutil.handle.debugprint("Player "..ply:Nick().." is no longer afk!")
-				SendChatText( ply, afkutil.config.msgcolor, "Player "..ply:Nick().." is no longer afk!" ) 
+				SendChatText( ply, afkutil.config.msgcolor, "Player "..ply:Nick().." is no longer afk!" )
 			end
 		end)
 		-- Ghost player from damage
@@ -203,7 +203,7 @@ if afkutil.config.enabled then
 				umsg.String( text )
 			umsg.End()
 		end
-		hook.Add("Think", "checkForAfkPlayers", function()		
+		hook.Add("Think", "checkForAfkPlayers", function()
 			if afkutil.time <= CurTime() then
 			--print('DEBUG: afkutil.time: '..tostring(afkutil.time))
 				--print('DEBUG: table.Count(afkutil.table.afkplayers)= '..tostring(table.Count(afkutil.table.afkplayers)))
@@ -225,7 +225,7 @@ if afkutil.config.enabled then
 										--print('settings is kick')
 											if v:IsAdmin() == false or afkutil.isgroupfromtable(afkutil.config.admingroups, v) == false then
 												--print('IsNotAdmin, AFK tho')
-												if #player.GetAll() >= afkutil.config.minplayers then 
+												if #player.GetAll() >= afkutil.config.minplayers then
 													--print('KICK!')
 													afkutil.table.afkplayers[id]:Kick(afkutil.config.kicktext)
 													afkutil.table.afkplayers[id] = nil
@@ -236,15 +236,17 @@ if afkutil.config.enabled then
 													afkutil.table.afkplayers[id]:Kill()
 													afkutil.handle.debugprint("Player "..v:Nick().." was slain for being afk!")
 													SendChatText( v, afkutil.config.msgcolor, "Player "..v:Nick().." was slain for being afk!" )
-													-- Actually Reset them, they're dead now. 
+                                                    afkutil.table.afkplayers[id].ActivePlayer = false
+													v:ChatPrint("You have been moved to spectator, type br_spectate in console to play next round")
+													-- Actually Reset them, they're dead now.
 													v.lastmoved = CurTime() --They spawned. 
-													v.hasbeenwarned = false --They shouldnt be warned anymore, they respawned. 
-													v.dontwarn = false --Dont warn! 
+													v.hasbeenwarned = false --They shouldnt be warned anymore, they respawned.
+													v.dontwarn = false --Dont warn!
 													--The player MIGHT still be AFK, but they actually shouldnt have the thing if they just got slain or w/e
 													afkutil.handle.removewarning(v)
 													v:SetRenderMode(RENDERMODE_NORMAL)
 													v:SetColor(Color(255, 255, 255, 100))
-												end 
+												end
 											end
 										end
 									end
@@ -255,7 +257,7 @@ if afkutil.config.enabled then
 									--print('v.dontwarn == false ')
 										if afkutil.config.action == "kick" then
 										--print('settings is kick')
-											if #player.GetAll() >= afkutil.config.minplayers then 
+											if #player.GetAll() >= afkutil.config.minplayers then
 												--print('KICK!')
 												afkutil.table.afkplayers[id]:Kick(afkutil.config.kicktext)
 												afkutil.table.afkplayers[id] = nil
@@ -266,15 +268,17 @@ if afkutil.config.enabled then
 												afkutil.table.afkplayers[id]:Kill()
 												afkutil.handle.debugprint("Player "..v:Nick().." was slain for being afk!")
 												SendChatText( v, afkutil.config.msgcolor, "Player "..v:Nick().." was slain for being afk!" )
-																									-- Actually Reset them, they're dead now. 
-													v.lastmoved = CurTime() --They spawned. 
-													v.hasbeenwarned = false --They shouldnt be warned anymore, they respawned. 
-													v.dontwarn = false --Dont warn! 
-													--The player MIGHT still be AFK, but they actually shouldnt have the thing if they just got slain or w/e
-													afkutil.handle.removewarning(v)
-													v:SetRenderMode(RENDERMODE_NORMAL)
-													v:SetColor(Color(255, 255, 255, 100))
-											end 
+                                                afkutil.table.afkplayers[id].ActivePlayer = false
+                                                v:ChatPrint("You have been moved to spectator, type br_spectate in console to play next round")
+												-- Actually Reset them, they're dead now.
+												v.lastmoved = CurTime() --They spawned.
+												v.hasbeenwarned = false --They shouldnt be warned anymore, they respawned.
+												v.dontwarn = false --Dont warn!
+												--The player MIGHT still be AFK, but they actually shouldnt have the thing if they just got slain or w/e
+												afkutil.handle.removewarning(v)
+												v:SetRenderMode(RENDERMODE_NORMAL)
+												v:SetColor(Color(255, 255, 255, 100))
+											end
 										end
 									end
 								end
@@ -343,7 +347,7 @@ if afkutil.config.enabled then
 											-- Non-Admins
 											if v.dontwarn == false then
 												if v:IsAdmin() == false or afkutil.isgroupfromtable(afkutil.config.admingroups, v) == false then
-													if #player.GetAll() >= afkutil.config.minplayers then 
+													if #player.GetAll() >= afkutil.config.minplayers then
 														--print('KICK!')
 														afkutil.table.afkplayers[id]:Kick(afkutil.config.kicktext)
 														afkutil.table.afkplayers[id] = nil
@@ -354,21 +358,23 @@ if afkutil.config.enabled then
 														afkutil.table.afkplayers[id]:Kill()
 														afkutil.handle.debugprint("Player "..v:Nick().." was slain for being afk!")
 														SendChatText( v, afkutil.config.msgcolor, "Player "..v:Nick().." was slain for being afk!" )
-																											-- Actually Reset them, they're dead now. 
-													v.lastmoved = CurTime() --They spawned. 
-													v.hasbeenwarned = false --They shouldnt be warned anymore, they respawned. 
-													v.dontwarn = false --Dont warn! 
-													--The player MIGHT still be AFK, but they actually shouldnt have the thing if they just got slain or w/e
-													afkutil.handle.removewarning(v)
-													v:SetRenderMode(RENDERMODE_NORMAL)
-													v:SetColor(Color(255, 255, 255, 100))
-													end 
+                                                        afkutil.table.afkplayers[id].ActivePlayer = false
+    													v:ChatPrint("You have been moved to spectator, type br_spectate in console to play next round")
+                                                        -- Actually Reset them, they're dead now.
+                                                        v.lastmoved = CurTime() --They spawned.
+                                                        v.hasbeenwarned = false --They shouldnt be warned anymore, they respawned.
+                                                        v.dontwarn = false --Dont warn!
+                                                        --The player MIGHT still be AFK, but they actually shouldnt have the thing if they just got slain or w/e
+                                                        afkutil.handle.removewarning(v)
+                                                        v:SetRenderMode(RENDERMODE_NORMAL)
+                                                        v:SetColor(Color(255, 255, 255, 100))
+													end
 												end
 											end
 										else
 											-- Admins
 											if v.dontwarn == false then
-												if #player.GetAll() >= afkutil.config.minplayers then 
+												if #player.GetAll() >= afkutil.config.minplayers then
 													--print('KICK!')
 													afkutil.table.afkplayers[id]:Kick(afkutil.config.kicktext)
 													afkutil.table.afkplayers[id] = nil
@@ -379,15 +385,17 @@ if afkutil.config.enabled then
 													afkutil.table.afkplayers[id]:Kill()
 													afkutil.handle.debugprint("Player "..v:Nick().." was slain for being afk!")
 													SendChatText( v, afkutil.config.msgcolor, "Player "..v:Nick().." was slain for being afk!" )
-													-- Actually Reset them, they're dead now. 
-													v.lastmoved = CurTime() --They spawned. 
-													v.hasbeenwarned = false --They shouldnt be warned anymore, they respawned. 
-													v.dontwarn = false --Dont warn! 
+                                                    afkutil.table.afkplayers[id].ActivePlayer = false
+													v:ChatPrint("You have been moved to spectator, type br_spectate in console to play next round")
+													-- Actually Reset them, they're dead now.
+													v.lastmoved = CurTime() --They spawned.
+													v.hasbeenwarned = false --They shouldnt be warned anymore, they respawned.
+													v.dontwarn = false --Dont warn!
 													--The player MIGHT still be AFK, but they actually shouldnt have the thing if they just got slain or w/e
 													afkutil.handle.removewarning(v)
 													v:SetRenderMode(RENDERMODE_NORMAL)
 													v:SetColor(Color(255, 255, 255, 100))
-												end 
+												end
 											end
 										end
 									elseif (v.lastmoved + (afkutil.config.gakwarn)) - CurTime() < 0 then
@@ -422,7 +430,7 @@ if afkutil.config.enabled then
 				end
 				afkutil.time = CurTime() + 1
 			end
-		end)		
+		end)
 	else
 		-- Client code
 		function RecieveChatText( um )
@@ -431,7 +439,7 @@ if afkutil.config.enabled then
 			local b = um:ReadShort()
 			local color = Color( r, g, b )
 			local text = um:ReadString()
-			
+
 			chat.AddText( color, text )
 		end
 		usermessage.Hook( "chatmsg", RecieveChatText )
