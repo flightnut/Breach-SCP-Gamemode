@@ -199,6 +199,16 @@ function Link2006_AddFiles(name,remLength)
 	end
 end
 
+print("[Link2006] Fixing 914...")
+hook.Add('AcceptInput','ParuFix914Death',function(ent, input, activator, caller, value)
+	if ent:IsPlayer() and input == 'SetHealth' then
+		print('Blocked 914 death for '..ent:GetName())
+		return true
+	end
+end)
+print("[Link2006] Done.")
+
+
 --Cats Shit---
 Link2006_AddFiles("addons/cat_shit/sound",string.len("addons/cat_shit/")) -- string Folder, string (length) to remove
 Link2006_AddFiles("addons/cat_shit/models",string.len("addons/cat_shit/")) -- string Folder, string (length) to remove
