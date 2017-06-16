@@ -173,7 +173,7 @@ end
 --NTF
 --NTF Weapons
 function mply:GiveNTFwep()
-	self:GiveRandomWep({"weapon_chaos_famas", "weapon_mtf_ump45"})
+	self:GiveRandomWep({"mwr_m4a1", "tfa_l4d2_ctm200"})
 end
 --NTF Armor
 function mply:NTFArmor()
@@ -274,7 +274,7 @@ end
 --MTF
 --MTF Weapons
 function mply:GiveMTFwep()
-	self:GiveRandomWep({"weapon_mtf_tmp", "weapon_mtf_ump45", "weapon_mtf_p90"})
+	self:GiveRandomWep({"tfa_ins2_krissv", "tfa_l4d2_ctm200", "mwr_p90"})
 end
 --MTF Armor
 function mply:MTFArmor()
@@ -327,12 +327,12 @@ function mply:SetCommander()
 	self:Give("keycard_level4")
 	self:Give("item_medkit")
 	self:Give("weapon_stunstick")
-	self:Give("weapon_mtf_mp5")
+	self:Give("mwr_mp5sd")
 	self:Give("item_radio")
 	self:Give("nightvision")
 	self:Give("weapon_shove")
-	self:GetWeapon("weapon_mtf_mp5"):SetClip1(30)
-	self:SelectWeapon("weapon_mtf_mp5")
+	self:GetWeapon("mwr_mp5sd"):SetClip1(30)
+	self:SelectWeapon("mwr_mp5sd")
 	self:GiveAmmo(150, "SMG1", false)
 	self:SetupHands()
 	self.canblink = true
@@ -393,7 +393,7 @@ end
 --Chaos
 --Chaos Weapons
 function mply:GiveCIwep()
-	self:GiveRandomWep({"weapon_chaos_famas", "weapon_chaos_ak47", "weapon_chaos_m249"})
+	self:GiveRandomWep({"mwr_m4a1", "mwr_ak74u", "mwr_m249saw"})
 end
 --
 function mply:DeleteItems()
@@ -646,14 +646,14 @@ function mply:SetSCP035()
 	timer.Create( "035weps", 5, 1, function()
 	if self:GetNClass() == ROLE_SCP035 then
 	--self:GiveNTFwep()
-	self:Give("weapon_mtf_deagle") --YOU GET A DEAGLE INSTEAD. >:(
-	--self:GiveAmmo(450, "SMG1", true) --No.
-	--self:GiveAmmo(450, "AR2", true) -- Nope.
-	self:GiveAmmo(1000, "Pistol") --Yes.
+	self:Give("mwr_skorp") --YOU GET A SKORP. >:(
+	self:GiveAmmo(1000, "SMG1", true) --No.
+	--self:GiveAmmo(1000, "AR2", true) -- Nope.
+	--self:GiveAmmo(1000, "Pistol") --Yes.
 	self:Give("weapon_crowbar")
 	self:Give("keycard_level3")
 	self:Give("item_radio")
-	self:SelectWeapon("weapon_mtf_deagle")
+	self:SelectWeapon("mwr_skorp")
 	end
 	end)
 	self:SetupHands()
@@ -1189,7 +1189,7 @@ function mply:SetSiteDirector(spawn)
 	self.Active = true
 	self:Give("item_radio")
 	self:Give("keycard_level5")
-	self:Give("weapon_mtf_deagle")
+	self:Give("mwr_skorp")
 	self:GiveAmmo(35, "Pistol", false)
 	self:SetModel("models/player/breen.mdl")
 	self:SetPlayerColor( Vector(0,0,0) )

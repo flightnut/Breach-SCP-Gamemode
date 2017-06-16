@@ -314,7 +314,7 @@ function SpawnAllItems()
 		end
 	end
 	for k,v in pairs(SPAWN_PISTOLS) do
-		local wep = ents.Create( table.Random({"weapon_mtf_usp", "weapon_mtf_deagle"}) )
+		local wep = ents.Create( table.Random({"mwr_colt45", "mwr_skorp"}) )
 		if IsValid( wep ) then
 			wep:Spawn()
 			wep:SetPos( v + Vector(0,0,-25) )
@@ -323,7 +323,7 @@ function SpawnAllItems()
 		end
 	end
 	for k,v in pairs(SPAWN_SMGS) do
-		local wep = ents.Create( table.Random({"weapon_mtf_p90", "weapon_mtf_tmp", "weapon_mtf_ump45"}) )
+		local wep = ents.Create( table.Random({"mwr_p90", "tfa_ins2_krissv", "tfa_l4d2_ctm200"}) )
 		if IsValid( wep ) then
 			wep:Spawn()
 			wep:SetPos( v + Vector(0,0,-25) )
@@ -332,7 +332,7 @@ function SpawnAllItems()
 		end
 	end
 	for k,v in pairs(SPAWN_RIFLES) do
-		local wep = ents.Create( table.Random({"weapon_chaos_ak47", "weapon_chaos_famas"}) )
+		local wep = ents.Create( table.Random({"mwr_ak74u", "mwr_m4a1"}) )
 		if IsValid( wep ) then
 			wep:Spawn()
 			wep:SetPos( v + Vector(0,0,-25) )
