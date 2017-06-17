@@ -324,16 +324,20 @@ function mply:SetCommander()
 	self:SetNoDraw(false)
 	self:SetNClass(ROLE_MTFCOM)
 	self.Active = true
+	timer.Create( "mtfcomweps", 5, 1, function()
+	if self:GetNClass() == ROLE_MTFCOM then
+	self:Give("mwr_mp5sd")
+	self:GiveAmmo(180, "ar2", false) -- God dam ammo types fuck tfa
+	--self:GetWeapon("mwr_mp5sd"):SetClip1(30) --Br0ken!
 	self:Give("keycard_level4")
 	self:Give("item_medkit")
-	self:Give("weapon_stunstick")
-	self:Give("mwr_mp5sd")
+	self:Give("weapon_stunstick")	
 	self:Give("item_radio")
-	self:Give("nightvision")
 	self:Give("weapon_shove")
-	self:GetWeapon("mwr_mp5sd"):SetClip1(30)
-	self:SelectWeapon("mwr_mp5sd")
-	self:GiveAmmo(180, "ar2", false) -- God dam ammo types fuck tfa
+	self:SelectWeapon("mwr_mp5sd")	
+	end
+	end)
+	self:Give("nightvision")
 	self:SetupHands()
 	self.canblink = true
 	self:AllowFlashlight( true )
