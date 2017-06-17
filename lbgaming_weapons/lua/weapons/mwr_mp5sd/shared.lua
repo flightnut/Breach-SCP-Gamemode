@@ -49,7 +49,7 @@ SWEP.MuzzleFlashEffect 		= "tfa_muzzleflash_silenced"
 SWEP.Primary.Sound				= Sound("mwr_mp5.Silenced")		-- Script that calls the primary fire sound
 SWEP.Primary.RPM				= 800		-- This is in Rounds Per Minute
 SWEP.Primary.ClipSize			= 30		-- Size of a clip
-SWEP.Primary.DefaultClip		= 0		-- Bullets you start with
+SWEP.Primary.DefaultClip		= 0			-- Bullets you start with
 SWEP.Primary.KickUp				= 0.3		-- Maximum up recoil (rise)
 SWEP.Primary.KickDown			= 0.3		-- Maximum down recoil (skeet)
 SWEP.Primary.KickHorizontal		= 0.3		-- Maximum up recoil (stock)
@@ -93,6 +93,18 @@ SWEP.Offset = {
         },
 		Scale = 1.0
 }
+
+--Stupid Breach Function to give spawned guns 1 clip of ammo
+function SWEP:Equip()
+	if SERVER and IsValid(self.Owner) and self.Primary.Ammo != "none" then
+		if self.Owner.gettingammo then
+			--print(self.Owner.gettingammo)
+			self:SetClip1(self.Owner.gettingammo)
+			self.Owner.gettingammo = 0
+		end
+	end
+end
+
 SWEP.ViewModelBoneMods = {
 	["tag_weapon"] = { scale = Vector(1, 1, 1), pos = Vector(0, -0.477, 0.15), angle = Angle(0, 0, 0) }
 }

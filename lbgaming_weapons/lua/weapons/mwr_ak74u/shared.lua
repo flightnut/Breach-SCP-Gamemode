@@ -94,6 +94,18 @@ SWEP.Offset = {
         },
 		Scale = 1.0
 }
+
+--Stupid Breach Function to give spawned guns 1 clip of ammo
+function SWEP:Equip()
+	if SERVER and IsValid(self.Owner) and self.Primary.Ammo != "none" then
+		if self.Owner.gettingammo then
+			--print(self.Owner.gettingammo)
+			self:SetClip1(self.Owner.gettingammo)
+			self.Owner.gettingammo = 0
+		end
+	end
+end
+
 if GetConVar("sv_tfa_default_clip") == nil then
 	print("sv_tfa_default_clip is missing!  You might've hit the lua limit.  Contact the SWEP author(s).")
 else

@@ -15,16 +15,21 @@ SWEP.Skin = 0 --Viewmodel skin
 SWEP.Spawnable = false
 SWEP.IsTFAWeapon = true
 
---Prevents duping ammo on Q breach drop JSULLY wuz here
+--Stupid Breach Function to give spawned guns 1 clip of ammo
 function SWEP:Equip()
+	print(self.Owner.gettingammo)
 	if SERVER and IsValid(self.Owner) and self.Primary.Ammo != "none" then
 		if self.Owner.gettingammo then
-			//print(self.Owner.gettingammo)
+			print(self.Owner.gettingammo)
 			self:SetClip1(self.Owner.gettingammo)
 			self.Owner.gettingammo = 0
 		end
 	end
 end
+
+SWEP.SavedAmmo				= 0	-- BREACH SHIT
+SWEP.IDK					= 125 -- BREACH SHIT
+SWEP.HeadshotMultiplier		= 2	-- BREACH SHIT
 
 SWEP.Shotgun = false
 SWEP.ShotgunEmptyAnim = false

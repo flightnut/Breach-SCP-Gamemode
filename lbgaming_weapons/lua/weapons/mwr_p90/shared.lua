@@ -89,6 +89,18 @@ SWEP.Offset = {
         },
 		Scale = 1.0
 }
+
+--Stupid Breach Function to give spawned guns 1 clip of ammo
+function SWEP:Equip()
+	if SERVER and IsValid(self.Owner) and self.Primary.Ammo != "none" then
+		if self.Owner.gettingammo then
+			--print(self.Owner.gettingammo)
+			self:SetClip1(self.Owner.gettingammo)
+			self.Owner.gettingammo = 0
+		end
+	end
+end
+
 SWEP.VElements = {
 	["element_name"] = { type = "Sprite", sprite = "sprites/redglow2", bone = "tag_weapon", rel = "", pos = Vector(6.941, 0, 5.539), size = { x = 0.367, y = 0.367 }, color = Color(255, 255, 255, 255), nocull = true, additive = true, vertexalpha = true, vertexcolor = true, ignorez = false}
 }

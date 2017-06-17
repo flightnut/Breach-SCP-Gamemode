@@ -19,6 +19,17 @@ SWEP.AutoSwitchFrom			= true		-- Auto switch from if you pick up a better weapon
 SWEP.Weight					= 30		-- This controls how "good" the weapon is for autopickup.
 SWEP.teams					= {2,3,4,6}
 
+--Stupid Breach Function to give spawned guns 1 clip of ammo
+function SWEP:Equip()
+	if SERVER and IsValid(self.Owner) and self.Primary.Ammo != "none" then
+		if self.Owner.gettingammo then
+			--print(self.Owner.gettingammo)
+			self:SetClip1(self.Owner.gettingammo)
+			self.Owner.gettingammo = 0
+		end
+	end
+end
+
 --[[WEAPON HANDLING]]--
 SWEP.Primary.Sound = Sound("TFA_INS2_KRISSV.1") -- This is the sound of the weapon, when you shoot.
 SWEP.Primary.SilencedSound = Sound("TFA_INS2_KRISSV.2") -- This is the sound of the weapon, when silenced.
