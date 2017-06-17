@@ -333,7 +333,7 @@ function mply:SetCommander()
 	self:Give("weapon_shove")
 	self:GetWeapon("mwr_mp5sd"):SetClip1(30)
 	self:SelectWeapon("mwr_mp5sd")
-	self:GiveAmmo(150, "SMG1", false)
+	self:GiveAmmo(180, "ar2", false) -- God dam ammo types fuck tfa
 	self:SetupHands()
 	self.canblink = true
 	self:AllowFlashlight( true )
@@ -1190,7 +1190,7 @@ function mply:SetSiteDirector(spawn)
 	self:Give("item_radio")
 	self:Give("keycard_level5")
 	self:Give("mwr_skorp")
-	self:GiveAmmo(35, "Pistol", false)
+	self:GiveAmmo(5000, "SMG1", false) --MO MONEY HA HA HA
 	self:SetModel("models/player/breen.mdl")
 	self:SetPlayerColor( Vector(0,0,0) )
 	self:SetupHands()
