@@ -57,3 +57,11 @@ To purge the persistent world database of all entities, run:
 
 To remove all persistent world entities from the map, run: 
 * PermaWorld_CleanMap
+
+To Find Button Positions
+* ulx sendlua ^ print(LocalPlayer():GetEyeTrace().Entity:GetClass(),LocalPlayer():GetEyeTrace().Entity:GetPos())
+
+To Check Map Config
+* lua_openscript parsee/shitty_breach_teleporter.lua
+* br_teleportme SPAWN_KEYCARD3 lcz1
+
