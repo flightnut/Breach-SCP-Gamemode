@@ -60,6 +60,8 @@ To remove all persistent world entities from the map, run:
 
 To Find Button Positions
 * ulx sendlua ^ print(LocalPlayer():GetEyeTrace().Entity:GetClass(),LocalPlayer():GetEyeTrace().Entity:GetPos())
+* ulx luarun hook.Add('PlayerUse','ParseePlease',function(ply,ent) print(ply) print(ent) print(ent:GetPos()) end)
+* ulx luarun hook.Remove('PlayerUse','ParseePlease')
 
 To Check Map Config
 * lua_openscript parsee/shitty_breach_teleporter.lua
