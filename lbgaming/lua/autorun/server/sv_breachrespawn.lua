@@ -516,11 +516,24 @@ hook.Add("PostCleanupMap","Link2006_AutoSpawn",function() --On New Round
     end)
 	--Remove previous SCP-294 model from map
 	timer.Simple(1,function()
-		print("[BreachRespawn] Removing all scp-294 models ...")
-		local scp294 = ents.FindByModel("models/vinrax/scp294/scp294.mdl")
-		for _,prop in pairs(scp294) do
-			prop:Remove()
+		print("[BreachRespawn] Removing all duplicate models ...")
+		--
+
+		print("Removing scp-294...")
+		for _,prop in pairs(ents.FindByModel("models/vinrax/scp294/scp294.mdl")) do
+			prop:Remove() --This worked so w/e sure.
 		end
+		print("Removing prop_physics dupes...")
+		for _,prop in pairs(ents.FindByClass('prop_physics')) do
+			if prop:GetModel() == "models/vinrax/scp_cb/book.mdl" then
+				print("Removing scp-1025..")
+				prop:Remove() --Safety.
+			elseif prop:GetModel() == "models/foundation/items/scp178.mdl" then
+				print("Removing scp-178...")
+				prop:Remove() --Safety.
+			end
+		end
+
 	end)
 	--Load permaprops
 	timer.Simple(2,function()
