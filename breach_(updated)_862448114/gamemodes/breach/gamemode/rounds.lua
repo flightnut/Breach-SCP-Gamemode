@@ -196,10 +196,10 @@ function SuperBreachRound()
 		--SetupPlayers({5, pnum, 0, 0, 0}) -- 5 SCPs, Rest MTFs + 1 commander :^)
 		scpsnum = 5
 	elseif pnum > 59 and pnum < 69 then -- 40 to 59 players
-		--SetupPlayers({5, pnum, 0, 0, 0}) -- 5 SCPs, Rest MTFs + 1 commander :^)
+		--SetupPlayers({5, pnum, 0, 0, 0}) -- 6 SCPs, Rest MTFs + 1 commander :^)
 		scpsnum = 6
 	else --60+ Players
-		--SetupPlayers({6, pnum, 0, 0, 0}) -- 6 SCPs, Rest MTFs + 1 commander :^)
+		--SetupPlayers({6, pnum, 0, 0, 0}) -- 7 SCPs, Rest MTFs + 1 commander :^)
 		scpsnum = 7
 	end
 	--Reduce the number of players because we got how many SCPs we have to spawn
