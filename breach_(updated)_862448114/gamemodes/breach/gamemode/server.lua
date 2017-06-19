@@ -177,7 +177,7 @@ function GetRoleTable(all)
 	elseif all > 49 and all < 60 then  -- 50 to 59 players
 		scps = 5
 		all = all - 5
-	elseif all > 59 and all < 60 then  -- 60 to 69 players
+	elseif all > 59 and all < 70 then  -- 60 to 69 players
 		scps = 6
 		all = all - 6
 	elseif all > 69 then  -- 70+ players
