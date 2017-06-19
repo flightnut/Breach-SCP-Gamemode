@@ -141,7 +141,7 @@ MAPBUTTONS = table.Copy(BUTTONS)
 
 
 function GM:PlayerSpray( sprayer )
-	return !sprayer:Team() == TEAM_SPEC
+	return true
 end
 
 function GetActivePlayers()

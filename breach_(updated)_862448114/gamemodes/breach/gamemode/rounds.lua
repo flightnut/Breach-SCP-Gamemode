@@ -195,9 +195,12 @@ function SuperBreachRound()
 	elseif pnum > 39 and pnum < 60 then -- 40 to 59 players
 		--SetupPlayers({5, pnum, 0, 0, 0}) -- 5 SCPs, Rest MTFs + 1 commander :^)
 		scpsnum = 5
+	elseif pnum > 59 and pnum < 69 then -- 40 to 59 players
+		--SetupPlayers({5, pnum, 0, 0, 0}) -- 5 SCPs, Rest MTFs + 1 commander :^)
+		scpsnum = 6
 	else --60+ Players
 		--SetupPlayers({6, pnum, 0, 0, 0}) -- 6 SCPs, Rest MTFs + 1 commander :^)
-		scpsnum = 6
+		scpsnum = 7
 	end
 	--Reduce the number of players because we got how many SCPs we have to spawn
 
@@ -330,8 +333,10 @@ ROUNDS = {
 				SetupPlayers(GetRoleTableCustom(pnum, 4, 0, 0, 0, false)) -- 4 SCPs
 			elseif pnum > 39 and pnum < 60 then -- 40 to 59 players
 				SetupPlayers(GetRoleTableCustom(pnum, 5, 0, 0, 0, false)) -- 5 SCPs
-			else --60+ Players
+			elseif pnum > 59 and pnum < 69 then -- 40 to 59 players
 				SetupPlayers(GetRoleTableCustom(pnum, 6, 0, 0, 0, false)) -- 6 SCPs
+			else --70+ Players
+				SetupPlayers(GetRoleTableCustom(pnum, 7, 0, 0, 0, false)) -- 7 SCPs
 			end
 		end,
 		name = "Multiple breaches",

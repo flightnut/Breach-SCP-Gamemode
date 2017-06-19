@@ -651,9 +651,9 @@ function mply:SetSCP035()
 	if self:GetNClass() == ROLE_SCP035 then
 	--self:GiveNTFwep()
 	self:Give("mwr_skorp") --YOU GET A SKORP. >:(
-	self:GiveAmmo(1000, "SMG1", true) --No.
-	--self:GiveAmmo(1000, "AR2", true) -- Nope.
-	--self:GiveAmmo(1000, "Pistol") --Yes.
+	self:GiveAmmo(1000, "smg1", true) --No.
+	--self:GiveAmmo(1000, "ar2", true) -- Nope.
+	--self:GiveAmmo(1000, "pistol") --Yes.
 	self:Give("weapon_crowbar")
 	self:Give("keycard_level3")
 	self:Give("item_radio")
@@ -1194,7 +1194,7 @@ function mply:SetSiteDirector(spawn)
 	self:Give("item_radio")
 	self:Give("keycard_level5")
 	self:Give("mwr_skorp")
-	self:GiveAmmo(5000, "SMG1", false) --MO MONEY HA HA HA
+	self:GiveAmmo(5000, "smg1", false) --MO MONEY HA HA HA
 	self:SetModel("models/player/breen.mdl")
 	self:SetPlayerColor( Vector(0,0,0) )
 	self:SetupHands()
