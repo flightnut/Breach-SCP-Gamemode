@@ -108,3 +108,15 @@ SWEP.Secondary.Attacks = {}
 
 SWEP.Secondary.CanBash = true
 SWEP.Secondary.BashDamage = 50
+
+function SWEP:Deploy()
+	self.Weapon:SendWeaponAnim(ACT_VM_DRAW)
+	if not IsValid(self) or not IsValid(self.Owner) then return end
+
+	if SERVER then
+		self.Owner:DrawWorldModel( true )
+	end
+	self.Owner:SetJumpPower(400)
+
+	return true
+end
