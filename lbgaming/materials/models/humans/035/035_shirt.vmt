@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" 	"models\humans\035\035_shirt"
+	"$bumpmap" "models\scp\Tanker_Shirt_N"
+
+	"$normalmapalphaenvmapmask" 1
+	"$envmapcontrast" 1
+	"$surfaceprop" "flesh"
+        "$nocull" 1
+}

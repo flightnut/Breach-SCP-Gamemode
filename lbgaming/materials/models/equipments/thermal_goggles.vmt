@@ -1,0 +1,14 @@
+"VertexLitGeneric"
+{
+$baseTexture "models\dgdayz\equipments/Thermal_goggles"
+$bumpmap "effects/flat_normal"
+
+$phongboost 1
+$phongexponent 10
+$phongfresnelranges "[1 4 30]"
+$BASEMAPLUMINANCEPHONGMASK 1
+$halflambert 1
+$phong 0
+"GPU>=2?$phong" 1
+$nocull 1
+}

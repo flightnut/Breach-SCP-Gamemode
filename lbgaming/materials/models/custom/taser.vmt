@@ -1,0 +1,21 @@
+VertexLitGeneric
+{
+    $basetexture "models/custom/taser"
+    $bumpmap "models/custom/taser_nm"
+    $surfaceprop Plastic_Box
+
+    $envmap "env_cubemap"
+    $envmaptint "[0.012 0.012 0.012]"
+    $envmapsaturation 0.98
+
+    $phong 1
+    $phongfresnelranges "[4 1 5]"
+    $phongexponent 6
+    $phongboost 0
+
+    $rimlight 1
+    $rimlightexponent 3
+    $rimlightboost 1
+
+    $model 1
+}

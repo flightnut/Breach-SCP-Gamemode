@@ -1,0 +1,9 @@
+"vertexlitgeneric" 
+{
+    "$basetexture" "models\player\goc\crynetsoldier_assault"
+	"$bumpmap"     "models\player\goc\crynetsoldier_assault_ddn"
+
+ 	"$phong" "1"
+	"$phongexponent" "3"
+	"$phongfresnelranges"	"[1 1 1]"
+}

@@ -1,0 +1,5 @@
+VertexLitGeneric
+{
+"$basetexture" "models\player\ntf\beltwaygearA"
+$bumpmap "models\player\ntf\beltwaygear_n"
+}

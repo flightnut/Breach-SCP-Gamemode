@@ -1,0 +1,6 @@
+"vertexlitgeneric"
+{
+	"$baseTexture" "models/player/mtf/belt02"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models/player/mtf/belt02_ref"
+}

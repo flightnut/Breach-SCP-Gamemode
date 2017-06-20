@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"models/wheatleymodels/isolation_locker/Material _27_Roughness"
+	"$bumpmap"	"models/wheatleymodels/isolation_locker/Material _27_Normal"
+
+	"$envmap" 			"env_cubemap"
+	"$envmaptint" 			"[ .03 .03 .03 ]"
+}

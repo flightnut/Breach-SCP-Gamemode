@@ -1,0 +1,6 @@
+"vertexlitgeneric"
+{
+	"$baseTexture" "models/player/mtf/hvelt"
+        "$bumpmap" "models/player/mtf/hvelt_norm"
+}
+

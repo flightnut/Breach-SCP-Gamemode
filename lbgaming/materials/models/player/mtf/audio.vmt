@@ -1,0 +1,6 @@
+"vertexlitgeneric"
+{
+	"$baseTexture" "models/player/mtf/audio"
+        "$bumpmap" "models/player/mtf/audio_norm"
+}
+

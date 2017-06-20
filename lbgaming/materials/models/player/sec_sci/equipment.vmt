@@ -1,0 +1,22 @@
+
+VertexLitGeneric
+{
+	"$basetexture"	"models\player\sec_sci\equipment"
+        "$bumpmap"      "models\player\sec_sci\equipment_n"
+
+
+
+
+        "$phong" "1"
+//	"$phongexponent" "4"	    
+        "$phongboost"		"1"
+	"$phongfresnelranges"	"[.05 .25 1]"        
+	 
+
+      
+
+	
+									
+
+}
+ 

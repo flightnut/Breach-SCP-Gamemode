@@ -1,0 +1,8 @@
+"vertexlitgeneric"
+{
+	"$baseTexture" "models/player/mtf/night"
+// Specularity
+	"$envmap" 			"env_cubemap"
+	"$envmapmask" "models/player/mtf/night_n"
+}
+

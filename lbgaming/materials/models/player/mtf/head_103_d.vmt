@@ -1,0 +1,14 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models\player\mtf/Head_103_D"
+	"$bumpmap" "models\player\mtf/Head_103_N"
+	"$phong" "1"
+	"$phongexponent" "5"
+
+	"$phongboost" ".2"	
+	"$phongfresnelranges"	"[.1 0.2 1]"
+
+	"$rimlight" "1"										
+	"$rimlightexponent" "88"							
+	"$rimlightboost" "0.2"
+}

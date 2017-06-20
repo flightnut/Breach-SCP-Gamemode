@@ -1,0 +1,18 @@
+"vertexlitgeneric"
+{
+	"$baseTexture" "glass/offwndwb"
+	
+
+// Specularity
+	"$envmap" 			"env_cubemap"
+	"$envmapmask" "models\player\mtf/ct_gign_glass_spec"
+
+
+// Transparency
+	"$translucent" 1
+	"$nocull" 1
+
+	
+	
+}
+

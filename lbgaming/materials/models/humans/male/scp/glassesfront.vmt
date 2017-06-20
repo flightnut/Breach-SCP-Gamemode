@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	// Original shader: VertexLitMaskedEnvMappedTexture
+	"$basetexture" "models/humans/male/scp/glassesfront"
+	"$envmapmask" "models/humans/male/scp/glassesfrontmask"
+	"$envmap" "env_cubemap"
+}

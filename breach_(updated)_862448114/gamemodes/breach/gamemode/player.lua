@@ -323,7 +323,7 @@ function GM:PlayerCanPickupWeapon( ply, wep )
 		elseif ply:GetNClass() == ROLE_SCP966 then
 			return wep:GetClass() == "weapon_scp_966"
 		elseif ply:GetNClass() == ROLE_SCP0762 then
-			return wep:GetClass() == "weapon_katana" 
+			return wep:GetClass() == "tfa_l4d2_kfkat" 
 		else
 			return false
 		end

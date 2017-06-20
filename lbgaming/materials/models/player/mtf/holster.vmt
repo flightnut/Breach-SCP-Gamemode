@@ -1,0 +1,6 @@
+"vertexlitgeneric"
+{
+	"$baseTexture" "models/player/mtf/holster"
+        "$bumpmap" "models/player/mtf/holster_norm"
+}
+
