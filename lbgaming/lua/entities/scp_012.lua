@@ -11,11 +11,15 @@ ENT.Editable = false
 ENT.Spawnable = true
 ENT.AdminOnly = true
 
+local textureindex = 1
+local used = false
+
 function ENT:Initialize()
 
 	if (CLIENT) then return end
 
-	self:SetModel("models/vinrax/scp_cb/book.mdl")
+	self:SetModel("models/scp012comp/scp012comp.mdl")
+	self:SetSkin(1)
 	self:PhysicsInit(SOLID_VPHYSICS)
 	self:SetMoveType(MOVETYPE_VPHYSICS)
 	self:SetSolid(SOLID_VPHYSICS)
@@ -39,37 +43,46 @@ end
 
 function ENT:Think()
 
-	if (CLIENT) then return end
-	self:NextThink( CurTime() + 1 )
-	for k, ply in pairs(ents.FindInSphere(self:GetPos(), 125)) do
+	if self:GetPos():WithinAABox(Vector(-350,-250,-150),Vector(-300,-200,-100)) then return end 
 
-		if (ply:IsPlayer()) then
+	for k, ply in pairs (ents.FindInSphere(self:GetPos(), 123)) do
+	
+		if ((ply:IsPlayer() == true) and not (ply:Team() == TEAM_SCP) and not (ply:Team() == TEAM_SPEC) and not ply:HasGodMode()) then 
 
-			if ply:Alive() and (ply:Team() ~= TEAM_SPEC) and (ply:Team() ~= TEAM_SCP) and not preparing and not postround then
-			ply:PrintMessage(HUD_PRINTCENTER, "You try using your blood to finish the composition.")
-			ply:SetHealth(ply:Health()-5)
-			if (ply:Health() <= 0) then
+			ply:SetEyeAngles((self:GetPos() - ply:GetShootPos()):Angle())
+			ply:SetHealth(ply:Health() - 3)
+			ply:EmitSound("ambient/creatures/town_scared_breathing1.wav" ,30 , 100, 1, CHAN_VOICE)
+			if ((ply:Health() <= 0) and (SERVER) and ply:Alive()) then
 
 				ply:Kill()
 
 			end
-			math.randomseed(os.time())
-			local num = math.random(1,4)
-			if (num == 3) then
 
-				ply:EmitSound("ambient/creatures/town_scared_breathing1.wav", 100, 100, 1, CHAN_VOICE)
+			if (used == false) then
+
+				textureindex = textureindex + 1
+				used = true
+				timer.Simple(1, function() 
+					used = false 
+				end)
+
+			end
+
+			if (textureindex == 5) then
+
+				textureindex = 1
 
 			end
 
-			if (num == 4) then
+			self:SetSkin(textureindex)
 
-				ply:EmitSound("ambient/creatures/town_scared_breathing2.wav", 100, 100, 1, CHAN_VOICE)
+			if (CLIENT) then
 
-			end
+				self:DrawModel()
+
 			end
 
 		end
 
 	end
-	return true --Oops apparently you gotta do this. 
 end

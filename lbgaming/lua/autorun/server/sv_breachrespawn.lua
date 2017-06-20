@@ -698,4 +698,32 @@ hook.Add("PlayerDeath","br_ForceRespawn", function(ply)
         end)
     end
 end)
+
+
+local parseeEntities = {
+	scp_012 = Vector(-320,-222.50,-110),
+	--Name = Position 
+}
+
+print("[BreachRespawn] Creating hook to respawn entity ...")
+hook.Add('PostCleanupMap','ParseeEntSpawner',function()
+	timer.Remove("ParseeEntSpawnTimer")
+	timer.Create("ParseeEntSpawnTimer",4,1,function()
+		--Create entities here. 
+		for kClass,vPos in pairs(parseeEntities) do 
+		print("[BreachRespawn] Spawning "..kClass.. " @ "..tostring(vPos).."...")
+			local vEnt = ents.Create(kClass)
+			if not IsValid(vEnt) then 
+				print("[BreachRespawn] Failed to spawn "..kClass) 
+			else
+				if kClass == "scp_012" then 
+					vEnt:SetAngles(Angle(0,-90,0))
+				end	
+				vEnt:SetPos(vPos)
+				vEnt:Spawn()
+			end
+		end 
+	end)
+	
+end)
 print("[BreachRespawn] Ready.")
