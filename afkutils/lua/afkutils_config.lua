@@ -26,11 +26,11 @@ afkutil.config = {}
 -- Enables or disables afkutil completely
 afkutil.config.enabled = true
 
---Link2006 Edit: 
---minimum players before enabling Anti-AFK kick 
+--Link2006 Edit:
+--minimum players before enabling Anti-AFK kick
 --set to 0 to always trigger :)
-afkutil.config.minplayers = 64
- 
+afkutil.config.minplayers = 60
+
 -- Gamemode
 -- The gamemode that you are using for your server
 -- "ttt" for Trouble in Terrorist Town
@@ -53,7 +53,9 @@ afkutil.config.warnspectators = false
 -- The gui theme you see when you are afk
 -- Use the theme id found in the theme's file
 -- All themes are located in the "themes" folder
-afkutil.config.themeid = "minimal2"
+-- afkutil.config.themeid = "minimal2"
+afkutil.config.themeid = "nogui"
+
 
 -- Debug printing
 -- Print out error messages and debug info in console
@@ -68,7 +70,7 @@ afkutil.config.prefix = "[AFKUTIL]"
 -- Afk actions
 -- The action taken when afk
 -- "kick" = Kick player on afk after warning shown
---		Link2006's note: I made this NOT kick if the 
+--		Link2006's note: I made this NOT kick if the
 -- "ghost" = Ghost player on afk after warning shown to protect the player from all damage
 afkutil.config.action = "kick"
 
@@ -121,7 +123,7 @@ afkutil.config.warnadmins = false
 -- Admin groups
 -- If warnadmins is not working correctly, add all the admin groups here
 -- Only tested on ULX Admin Menu
-afkutil.config.admingroups = {"Assistant", "AssistantV", "moderatorV", "adminV", "moderator", "admin", "superadmin", "headadmin", "Owner"}
+afkutil.config.admingroups = {"Assistant", "AssistantV", "moderatorV", "adminV", "moderator", "admin", "superadmin", "headadmin", "Owner", "senior admin", "senior moderator"}
 
 
 --[[==== Advanced Config ====]]--
