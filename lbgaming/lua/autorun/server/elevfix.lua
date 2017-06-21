@@ -242,3 +242,21 @@ Link2006_AddFiles("addons/scp-513_entity_[working]_770291148/sound",string.len("
 Link2006_AddFiles("addons/scp-513_entity_[working]_770291148/sound/scp_pack",string.len("addons/scp-513_entity_[working]_770291148/")) --:^l oops
 
 print("[Link2006] Ready. Version "..Link2006_version)
+
+
+local function preventPlayerSpray( ply )
+	local checkFunc = function( ply )
+		if ply:Team() == TEAM_SPEC then return false end
+	
+		local validExtensions = {
+			VIP = true,
+			AssistantV = true,
+			moderatorV = true,
+		}
+		
+		return ply:IsAdmin() or validExtensions[ ply:GetUserGroup() ]
+	end
+	
+	return !checkFunc( ply )
+end
+hook.Add( "PlayerSpray", "SprayLimitations", preventPlayerSpray )

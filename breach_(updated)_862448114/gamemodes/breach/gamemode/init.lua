@@ -139,11 +139,6 @@ postround = false
 roundcount = 0
 MAPBUTTONS = table.Copy(BUTTONS)
 
-
-function GM:PlayerSpray( sprayer )
-	return true
-end
-
 function GetActivePlayers()
 	local tab = {}
 	for k,v in pairs(player.GetAll()) do
