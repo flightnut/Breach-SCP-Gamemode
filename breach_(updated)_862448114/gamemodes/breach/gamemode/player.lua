@@ -96,6 +96,14 @@ function GM:PlayerDeathThink( ply )
 	end
 end
 
+br_roundnodrop = CreateConVar("br_roundnodrop","0",{FCVAR_NOTIFY},"Prevents players dropping their weapons on death")
+
+hook.Add("PostCleanupMap","br_roundnodrop_reset",function()
+	if br_roundnodrop:GetBool() then
+		br_roundnodrop:SetBool(false)
+	end
+end)
+
 function GM:PlayerDeath( victim, inflictor, attacker )
 	victim.nextspawn = CurTime() + 5
 	if attacker:IsPlayer() then
@@ -176,6 +184,9 @@ function GM:PlayerDeath( victim, inflictor, attacker )
 				if v.droppable == false then
 					candrop = false
 				end
+			end
+			if br_roundnodrop:GetBool() then
+				candrop = false
 			end
 			if candrop then
 				local wep = ents.Create( v:GetClass() )
@@ -323,7 +334,7 @@ function GM:PlayerCanPickupWeapon( ply, wep )
 		elseif ply:GetNClass() == ROLE_SCP966 then
 			return wep:GetClass() == "weapon_scp_966"
 		elseif ply:GetNClass() == ROLE_SCP0762 then
-			return wep:GetClass() == "tfa_l4d2_kfkat" 
+			return wep:GetClass() == "tfa_l4d2_kfkat"
 		else
 			return false
 		end

@@ -13,4 +13,7 @@ theme.information = "Removes the gui entirely."
 
 if SERVER then return end
 
---This should have nothing i think? 
+function theme:InitWarning()
+    print("[afkutils] NoGUI Theme ready.")
+end
+--This should have nothing i think?

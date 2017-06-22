@@ -414,6 +414,30 @@ specialround:defaultAccess( ULib.ACCESS_SUPERADMIN )
 specialround:addParam{ type=ULib.cmds.StringArg, hint="Select a round", completes=brRounds }
 specialround:help( "Sets the next special round to the specified round" )
 
+
+
+function ulx.enablenodrops (calling_ply)
+	if SERVER then
+		RunConsoleCommand("br_roundnodrop","1")
+	end
+	ulx.fancyLogAdmin( calling_ply, "#A enabled br_roundnodrop (No weapon drop on death)")
+end
+local enablenodrops = ulx.command( "Link2006", "ulx enablenodrops", ulx.enablenodrops, "!enablenodrops" )
+enablenodrops:defaultAccess( ULib.ACCESS_SUPERADMIN )
+enablenodrops:help( "Turns on br_roundnodrop" )
+
+
+function ulx.disablenodrops (calling_ply)
+	if SERVER then
+		RunConsoleCommand("br_roundnodrop","0")
+	end
+	ulx.fancyLogAdmin( calling_ply, "#A disabled br_roundnodrop (No weapon drop on death)")
+end
+local disablenodrops = ulx.command( "Link2006", "ulx disablenodrops", ulx.disablenodrops, "!disablenodrops" )
+disablenodrops:defaultAccess( ULib.ACCESS_SUPERADMIN )
+disablenodrops:help( "Turns off br_roundnodrop" )
+
+
 --[[
 -- This is all the other commands i have to do
 --TODO: fgodbring <player-based> which does:
