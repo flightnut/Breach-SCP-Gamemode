@@ -113,6 +113,7 @@ net.Receive( "DropWeapon", function( len, ply )
 			end
 		end
 		if wep:GetClass() == nil then return end
+		if wep:GetClass() == "weapon_slam" then return end
 		--Nightvision support here
 		if wep:GetClass() == "nightvision" then
 			wep.Nightvision = false
