@@ -523,6 +523,10 @@ hook.Add("PostCleanupMap","Link2006_AutoSpawn",function() --On New Round
 		for _,prop in pairs(ents.FindByModel("models/vinrax/scp294/scp294.mdl")) do
 			prop:Remove() --This worked so w/e sure.
 		end
+		print("Removing Fire Extinguisher")
+		for _,prop in pairs(ents.FindByModel("models/props/cs_office/fire_extinguisher.mdl")) do
+			prop:Remove() --This worked so w/e sure.
+		end
 		print("Removing prop_physics dupes...")
 		for _,prop in pairs(ents.FindByClass('prop_physics')) do
 			if prop:GetModel() == "models/vinrax/scp_cb/book.mdl" then
