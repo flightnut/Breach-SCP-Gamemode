@@ -39,10 +39,14 @@ hook.Add('EntityTakeDamage','GateHealth.EntityTakeDamage',function(prop,dmginfo)
                         --print(dmginfo:GetAttacker())
                         if IsValid(dmginfo:GetAttacker()) then
                             --print(dmginfo:GetAttacker():GetActiveWeapon())
-                            if IsValid(dmginfo:GetAttacker():GetActiveWeapon()) then
-                                --print(dmginfo:GetAttacker():GetActiveWeapon():GetClass())
-                                if dmginfo:GetAttacker():GetActiveWeapon():GetClass() == "tfa_l4d2_kfkat" then -- new weapon then
-                                    prop:SetHealth(prop:Health() - math.random(1,5)) --Lower this by that much health
+                            if dmginfo:GetAttacker().GetActiveWeapon then --Makes sure this is not nil <.<
+                                if IsValid(dmginfo:GetAttacker():GetActiveWeapon()) then
+                                    --print(dmginfo:GetAttacker():GetActiveWeapon():GetClass())
+                                    if dmginfo:GetAttacker():GetActiveWeapon():GetClass() == "tfa_l4d2_kfkat" then -- new weapon then
+                                        prop:SetHealth(prop:Health() - math.random(1,5)) --Lower this by that much health
+                                    else
+                                        prop:SetHealth(prop:Health() - dmginfo:GetDamage()) --Lower this by that much health
+                                    end
                                 else
                                     prop:SetHealth(prop:Health() - dmginfo:GetDamage()) --Lower this by that much health
                                 end
