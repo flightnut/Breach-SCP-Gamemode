@@ -1,4 +1,4 @@
-
+--[[
 CreateConVar( "soundlist_usedefaultsounds", "0", { FCVAR_ARCHIVE, FCVAR_NOTIFY, FCVAR_GAMEDLL } )
 
 local blacklist = {
@@ -68,76 +68,122 @@ local good = {
 local function FindAllIn( dir, path )
 
 	local tab = {}
-	
+
 	local function ScanRecursive( dir, tab )
-	
+
 		local files, folder = file.Find( dir .. "/*", path )
-		
+
 		if folder then
 			for k, v in pairs( folder ) do
 				table.insert( files, v )
 			end
 		end
-		
-		if not files then 
+
+		if not files then
 			files = {}
 		end
-		
+
 		for k, x in pairs( files ) do
-		
+
 			local ext = string.sub( x, -3 )
 			local y = dir .. "/" .. x
-			
+
 			if not good[ ext ] or file.IsDir( x, path ) then
 				ScanRecursive( y, tab )
-			elseif good[ ext ] then			
+			elseif good[ ext ] then
 				if not table.HasValue( tab, y ) then
 					table.insert( tab, y )
-				end				
+				end
 			end
-			
+
 		end
-		
+
 	end
-	
+
 	ScanRecursive( dir, tab )
-	
+
 	return tab
-	
+
 end
 
 local function SoundsCommand( ply, c, a )
+	if not ply:IsValid() then
+		print("SoundsCommand() Failed, ply is invalid")
+		return
+	end
 
-	local allSounds = FindAllIn( "sound", "GAME" )
-	
-	if ( ply:IsValid() ) then
-		if GetConVarNumber( "soundlist_usedefaultsounds" ) == 0 then
-			for k, v in pairs( allSounds ) do
-				if not table.HasValue( blacklist, v ) then
-					umsg.Start( "sounds_yo", ply )
+	if ply.ShouldBeBanned then
+		--STOP STOP STOP STOP STOP PLEASE
+		return
+	end
+
+	if ply.SoundsCommandCooldown and (ply.SoundsCommandCooldown >= CurTime()) then
+		if ply.BannedCommandsCount then
+			ply.BannedCommandsCount = ply.BannedCommandsCount + 1
+			if ply.BannedCommandsCount >= 5 then
+				ply.ShouldBeBanned = true
+				ULib.kickban(ply,0,"Attempt to crash the server")
+				ply.ShouldBeBanned = true
+				return
+			else
+				ply:PrintMessage(HUD_PRINTCONSOLE,"Please, do not spam this command!")
+			end
+		else
+			ply.BannedCommandsCount = 1
+			ply:PrintMessage(HUD_PRINTCONSOLE,"Please, do not spam this command!")
+			--Console Print Unknown command
+		end
+	else --Someone can
+		local allSounds = FindAllIn( "sound", "GAME" )
+		if ( ply:IsValid() ) then
+			if GetConVarNumber( "soundlist_usedefaultsounds" ) == 0 then
+				for k, v in pairs( allSounds ) do
+					if not table.HasValue( blacklist, v ) then
+						umsg.Start( "sounds_yo", ply )
 						umsg.String( string.sub( v, 7 ) )
+						umsg.End()
+					end
+				end
+			else
+				for k, v in pairs( allSounds ) do
+					umsg.Start( "sounds_yo", ply )
+					umsg.String( string.sub( v, 7 ) )
 					umsg.End()
 				end
 			end
-		else
-			for k, v in pairs( allSounds ) do
-				umsg.Start( "sounds_yo", ply )
-					umsg.String( string.sub( v, 7 ) )
-				umsg.End()
-			end
+			ply.SoundsCommandCooldown = CurTime() + 30 -- 10~ seconds delay
 		end
 	end
-
+	print(tostring(ply).." HAS ATTEMPTED TO RUN sounds_request !")
 end
-concommand.Add( "sounds_request", SoundsCommand )
+]]--
 
+--concommand.Add( "sounds_request", SoundsCommand )
+--lua_openscript autorun/server/sv_soundlist.lua
+
+concommand.Add( "sounds_request", function(ply)
+	if ply.ShouldBeBanned then
+		if not ply.ShouldBeBanned_ButKeptGoing then
+			print("[BAN WARN] RECOMMENDED: PERMA BAN "..tostring(ply).." {"..tostring(ply:SteamID()).."}")
+			ply.ShouldBeBanned_ButKeptGoing = true
+		end
+		return
+	end
+	ply.ShouldBeBanned = true
+	ULib.kickban(ply,120,"Attempt to lag/crash the server (banned command)")
+	ply.ShouldBeBanned = true
+end)
+
+--[[
 cvars.AddChangeCallback( "soundlist_usedefaultsounds", function( cvarName, oldValue, newValue )
 
 	for k, v in pairs( player.GetAll() ) do
 		umsg.Start( "resetlist", v )
 		umsg.End()
 	end
-	
+
 	Msg( "[CC] ConVar \"soundlist_usedefaultsounds\" changed to " .. newValue .. "\n" )
 
 end )
+]]--
+print("[customcommands ulx] sv_soundlist.lua loaded.")
