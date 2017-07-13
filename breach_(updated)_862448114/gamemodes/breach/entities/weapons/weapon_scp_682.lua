@@ -134,7 +134,7 @@ function SWEP:PrimaryAttack()
 					ent:TakeDamage( 20000, self.Owner, self.Owner )
 				elseif ent:GetClass() == 'prop_dynamic' then
 					if string.lower(ent:GetModel()) == 'models/foundation/containment/door01.mdl' then
-						ent:TakeDamage( math.Round(math.random(30,46)), self.Owner, self.Owner )
+						ent:TakeDamage( math.Round(math.random(40,65)), self.Owner, self.Owner )
 						ent:EmitSound(Sound('MetalGrate.BulletImpact'))
 					end
 				end
