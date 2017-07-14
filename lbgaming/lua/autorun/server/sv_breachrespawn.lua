@@ -706,8 +706,13 @@ end)
 
 local parseeEntities = {
 	scp_012 = Vector(-320,-222.50,-110),
+	npc_scp_939a = Vector(1139.425049,22.350645,-739.968750),
+	npc_scp_939b = Vector(2025.817383,-787.103455,-739.968750),
+	npc_scp_939c = Vector(1793.306763,-1728.281250,-739.968750),
+	scp_1162 = Vector(1777.695068, 881.130493, 43.745945),
 	--Name = Position 
 }
+
 
 print("[BreachRespawn] Creating hook to respawn entity ...")
 hook.Add('PostCleanupMap','ParseeEntSpawner',function()

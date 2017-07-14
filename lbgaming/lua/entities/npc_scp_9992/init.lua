@@ -29,16 +29,11 @@ ENT.SCP131A_NextCloseSoundTime = 0
 ENT.SCP131A_BeethovenActivated = false
 
 
-
-
-
 ENT.HasOnPlayerSight = true 
 ENT.RunAwayOnUnknownDamage = true -- Should run away on damage
 ENT.NextRunAwayOnDamageTime = 5 -- Until next run after being shot when not alerted
 ENT.FriendsWithAllPlayerAllies = true -- Should this SNPC be friends with all other player allies that are running on VJ Base?
-ENT.MoveOutOfFriendlyPlayersWay = true -- Should the SNPC move out of the way when a friendly player comes close to it
-
-
+ENT.MoveOutOfFriendlyPlayersWay = true -- Should the SNPC move out of the way when a friendly player comes close to it?
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 function ENT:CustomOnInitialize()
@@ -64,7 +59,7 @@ function ENT:CustomOnThink_AIEnabled()
 				if self:GetPos():Distance(v:GetPos()) <= 50 && CurTime() > self.SCP131A_NextCloseSoundTime then
 					self:StopMoving()
 					if math.random(1,15) == 1 then
-						self.SCP131A_BeethovenActivated = true
+						self.SCP131A_BeethovenActivated = false
 						self:AlertSoundCode({"vj_scp066/Beethoven.wav"})
 						self.NextIdleTime = CurTime() + math.random(11,12)
 						self.SCP131A_NextCloseSoundTime = CurTime() + 26
