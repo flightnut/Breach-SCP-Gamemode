@@ -1,11 +1,12 @@
 nextspecialround = nil
 
-ROUND_STATE = 1
 
 ROUND_WAIT = 1
 ROUND_PREP = 2
 ROUND_ACTIVE = 3
 ROUND_POST = 4
+
+ROUND_STATE = ROUND_WAIT
 
 function GetRoundState()
 	return ROUND_STATE
@@ -181,8 +182,8 @@ function RoundRestart()
 			//PrintMessage(HUD_PRINTTALK, "Time is over, Class Ds and SCPs didn't escape the facility in time. MTF wins!")
 			postround = false
 			postround = true
-			--Do not tell SpecDM the round just ended.
-			--hook.Call( "BreachEndRound", nil, nil )
+			--We HAVE to call BreachEndRound because otherwise it breaks SpecDM when a round starts ...
+			hook.Call( "BreachEndRound", nil, nil )
 			SetRoundState( ROUND_POST )
 			// send all round info
 			net.Start("SendRoundInfo")
@@ -262,7 +263,7 @@ function CheckEscape()
 						v.isescaping = false
 					end)
 				end
-				hook.Run('BreachPlayerEscape',v,false) --Should tell that a player escaped, no matter who 
+				hook.Run('BreachPlayerEscape',v,false) --Should tell that a player escaped, no matter who
 			end
 		end
 	end
@@ -399,6 +400,9 @@ function WinCheck()
 			net.WriteInt(GetPostTime(), 6)
 			net.WriteInt(2, 4)
 		net.Broadcast()
+		--The round ended, let's stop SpecDM
+		hook.Call( "BreachEndRound", nil, nil )
+		SetRoundState( ROUND_POST )
 		timer.Create("PostTime", GetPostTime(), 1, function()
 			RoundRestart()
 		end)
