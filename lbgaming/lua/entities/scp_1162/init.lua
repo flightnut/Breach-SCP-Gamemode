@@ -203,7 +203,7 @@ function ENT:Use(c, a)
 			end
 		else
 			c:PrintMessage(HUD_PRINTTALK,"Invalid input for SCP-1162")
-			c:PrintMessage(weapon)
+			c:PrintMessage(tostring(weapon))
 		end
 	end
 end
