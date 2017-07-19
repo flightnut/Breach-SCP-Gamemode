@@ -817,7 +817,21 @@ BUTTONS = {
 	{
 		name = "SCP 1162",
 		pos = Vector(1569.000000, 892.000000, 53.000000),
-		clevel = 2
+		//clevel = 2
+		customdenymsg = "Wait for the round to start",
+		canactivate = function(pl, ent)
+			if roundtype then
+				if roundtype.mtfandscpdelay == false then
+					return true
+				end
+			end
+			if preparing then
+				//pl:PrintMessage(HUD_PRINTCENTER, "Wait for the round to start")
+				return false
+			else
+				return true
+			end
+		end
 	},
 	{
 		name = "Checkpoint 1",

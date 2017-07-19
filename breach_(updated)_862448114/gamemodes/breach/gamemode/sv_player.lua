@@ -9,6 +9,12 @@ function SetTurnMeBack(ply,rl,plyTeam)
 			ply.OrigModel = ply.BaseStats.model --Model that the player got in their basestats (which is for when they have MTF vest
 		end
 	end
+	
+	if ply:Team() ~= TEAM_SCP and ply:Team() ~= TEAM_SPEC then
+		ply.VJ_NoTarget = false
+	else
+		ply.VJ_NoTarget = true
+	end
 
 	ply.OrigModel_Fallback = ply:GetModel() -- Just in case ;)
 

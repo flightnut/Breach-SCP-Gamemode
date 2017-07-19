@@ -151,7 +151,7 @@ end, "TFAUpdateDefaultClip")
 --print("Default clip size con var created")
 --end
 if GetConVar("sv_tfa_unique_slots") == nil then
-	CreateConVar("sv_tfa_unique_slots", "0", {FCVAR_REPLICATED, FCVAR_NOTIFY, FCVAR_ARCHIVE}, "Give TFA-based Weapons unique slots? 1 for true, 0 for false. RESTART AFTER CHANGING.")
+	CreateConVar("sv_tfa_unique_slots", "1", {FCVAR_REPLICATED, FCVAR_NOTIFY, FCVAR_ARCHIVE}, "Give TFA-based Weapons unique slots? 1 for true, 0 for false. RESTART AFTER CHANGING.")
 	--print("Unique slot con var created")
 end
 

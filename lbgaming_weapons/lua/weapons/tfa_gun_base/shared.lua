@@ -593,7 +593,7 @@ Purpose:  Standard SWEP Function
 local finalstat
 
 function SWEP:PlayerThink()
-	if self.Owner:IsNPC() then
+	if self.Owner:IsNPC() then 
 		return
 	end
 	ft = TFA.FrameTime()
