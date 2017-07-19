@@ -1,0 +1,5 @@
+VertexLitGeneric
+{
+	"$basetexture"	"models\vehicles\humvee\humvee_wheel"
+	"$bumpmap"	"models\vehicles\humvee\humvee_wheel_nm"
+}

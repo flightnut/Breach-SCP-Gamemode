@@ -1,0 +1,7 @@
+VertexLitGeneric
+{
+	"$basetexture"	"models\vehicles\humvee\glass_exterior"
+//	"$alpha" "1"
+//	"$alphatest" "1"
+	"$translucent" "1"
+}

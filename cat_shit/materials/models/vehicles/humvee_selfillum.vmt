@@ -1,0 +1,7 @@
+"vertexlitgeneric"
+{
+	"$baseTexture"  "models/vehicles/humvee_selfillum"
+	"$model" 1
+	"$selfillum" 1
+
+}

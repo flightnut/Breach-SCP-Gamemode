@@ -1,0 +1,16 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models/bubblegun/bubble_lod3"
+
+	"$basemapalphaphongmask"	"1"
+	"$model" 1 
+//	"$nocull" 1
+	"$translucent" 1
+	"$additive" "1"
+
+	"$nodecal"			"1"
+
+
+
+	"$surfaceprop"			"ball_bouncy"
+}

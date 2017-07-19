@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/k64_waddle_doo/waddle_doo_hair"
+	"$translucent" 1
+}

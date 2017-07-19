@@ -1,0 +1,7 @@
+VertexLitGeneric
+{
+	"$basetexture"	"models\vehicles\humvee\glass"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models\vehicles\humvee\glass_SpecularMap"
+	"$translucent" "1"
+}

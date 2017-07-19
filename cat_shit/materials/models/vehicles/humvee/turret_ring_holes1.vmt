@@ -1,0 +1,6 @@
+VertexLitGeneric
+{
+	"$basetexture"	"models\vehicles\humvee\turret_ring_holes1"
+	"$alpha" "1"
+	"$alphatest" "1"
+}

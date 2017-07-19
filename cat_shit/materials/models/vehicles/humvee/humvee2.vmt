@@ -1,0 +1,8 @@
+VertexLitGeneric
+{
+	"$basetexture"	"models\vehicles\humvee\humvee2"
+	"$envmap" "env_cubemap"
+	"$envmapmask" "models\vehicles\humvee\humvee_env"
+	"$alpha" "1"
+	"$alphatest" "1"
+}

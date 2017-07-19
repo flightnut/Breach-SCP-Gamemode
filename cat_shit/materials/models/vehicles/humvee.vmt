@@ -1,0 +1,17 @@
+"VertexLitGeneric"
+{
+	"$baseTexture"  		"models/vehicles/humvee"
+	"$bumpmap" 		  	"models/vehicles/humvee_normal"
+	"$PhongExponentTexture"		"models/vehicles/humvee_exp"
+	
+	$phong 				"1"
+	$PhongAlbedoTint 		"1"	
+	$BasemapLuminancePhongMask	"1"
+	
+	$phongboost 			"40"
+	$phongfresnelranges		"[0 .5 1]"
+
+	$rimlight               	"1"
+	$rimlightexponent       	"30"
+	$rimlightboost          	".25"
+}

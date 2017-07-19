@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+
+	$basetexture "green_partyhat/green"
+
+
+	 $nocull "1"
+}

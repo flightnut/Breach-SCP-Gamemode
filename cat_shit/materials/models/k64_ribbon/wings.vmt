@@ -1,0 +1,5 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/k64_ribbon/wings"
+	"$translucent" 1
+}

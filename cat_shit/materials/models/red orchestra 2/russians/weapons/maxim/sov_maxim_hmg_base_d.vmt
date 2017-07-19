@@ -1,0 +1,13 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "Models/Red Orchestra 2/Russians/Weapons/Maxim/Sov_Maxim_HMG_Base_D"
+	"$bumpmap" "Models/Red Orchestra 2/Russians/Weapons/Maxim/Sov_Maxim_HMG_Base_N"
+	"$surfaceprop" "Metal"
+	"$alphatest" 1
+	"$nocull" 1
+	"$phong" "1"
+	"$phongboost" "0.25"
+	"$phongexponent" "3"
+	"$phongfresnelranges"	"[ 0.25 0.5 0.9 ]"
+	"$phongalbedotint" "0"
+}
