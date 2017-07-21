@@ -27,16 +27,28 @@ surface.CreateFont( "173font", {
 } )
 
 clang = nil
+cwlang = nil
 ALLLANGUAGES = {}
+WEPLANG = {}
 
 local files, dirs = file.Find(GM.FolderName .. "/gamemode/languages/*.lua", "LUA" )
 for k,v in pairs(files) do
 	local path = "languages/"..v
-	if string.Right(v, 3) == "lua" then
+	if string.Right(v, 3) == "lua" and string.Left(v, 3) != "wep" then
 		include( path )
 		print("Loading language: " .. path)
 	end
 end
+
+local files, dirs = file.Find(GM.FolderName .. "/gamemode/languages/wep_*.lua", "LUA" )
+for k,v in pairs(files) do
+	local path = "languages/"..v
+	if string.Right(v, 3) == "lua" then
+		include( path )
+		print("Loading weapon lang file: " .. path)
+	end
+end
+
 
 langtouse = CreateClientConVar( "br_language", "english", true, false ):GetString()
 //defaultlang = GetConVar("br_defaultlanguage"):GetString()
@@ -50,6 +62,9 @@ cvars.AddChangeCallback( "br_language", function( convar_name, value_old, value_
 	if ALLLANGUAGES[langtouse] then
 		clang = ALLLANGUAGES[langtouse]
 	end
+	if WEPLANG[langtouse] then
+		cwlang = WEPLANG[langtouse]
+	end
 end )
 
 print("langtouse:")
@@ -62,6 +77,12 @@ if ALLLANGUAGES[langtouse] then
 	clang = ALLLANGUAGES[langtouse]
 else
 	clang = ALLLANGUAGES.english
+end
+
+if WEPLANG[langtouse] then
+	cwlang = WEPLANG[langtouse]
+else
+	cwlang = WEPLANG.english
 end
 
 mapfile = "mapconfigs/" .. game.GetMap() .. ".lua"
@@ -252,6 +273,8 @@ end)
 
 net.Receive( "PrepStart", function( len )
 	cltime = net.ReadInt(8)
+	postround = false
+	preparing = true
 	chat.AddText(string.Replace( clang.preparing,  "{num}", cltime ))
 	StartTime()
 	drawendmsg = nil
@@ -275,6 +298,7 @@ net.Receive( "PrepStart", function( len )
 end)
 
 net.Receive( "RoundStart", function( len )
+	preparing = false
 	cltime = net.ReadInt(12)
 	chat.AddText(clang.round)
 	StartTime()
@@ -282,6 +306,7 @@ net.Receive( "RoundStart", function( len )
 end)
 
 net.Receive( "PostStart", function( len )
+	postround = true
 	cltime = net.ReadInt(6)
 	win = net.ReadInt(4)
 	drawendmsg = win
@@ -520,4 +545,9 @@ function CalcView3DPerson( ply, pos, angles, fov )
 end
 hook.Add( "CalcView", "CalcView3DPerson", CalcView3DPerson )
 */
+function GetWeaponLang()
+	if cwlang then
+		return cwlang
+	end
+end
 print("cl_init loads")

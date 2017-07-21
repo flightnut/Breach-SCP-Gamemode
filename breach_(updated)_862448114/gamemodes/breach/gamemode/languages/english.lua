@@ -145,6 +145,24 @@ english.starttexts = {
 		{"Your objective is to escape the facility",
 		"Kill others with your blades!"}
 	},
+	{
+		"You are the SCP-939",
+		{"Your objective is to escape the facility",
+		"Your are fast and strong",
+		"You can deceive your targets by talking in their voice chat",
+		"LMB - attack, RMB - change voice chat"}
+	},
+	{
+		"You are the SCP-999",
+		{"Your objective is to escape the facility",
+		"You can heal anybody you want",
+		"You have to co-operate with other personnel or SCPs"}
+	},
+	{
+		"You are the SCP-1048-B",
+		{"Your objective is to escape the facility",
+		"Kill'em all"}
+	},
 }
 
 english.lang_end1 = "The game ends here"
@@ -182,10 +200,13 @@ english.escapemessages = {
 
 --Link2006's edit
 english.ROLE_SCP035 = "SCP-035"
-english.ROLE_SCP1048A = "SCP-1048A"
+english.ROLE_SCP1048A = "SCP-1048-A"
 english.ROLE_SCP682 = "SCP-682"
 english.ROLE_SCP966 = "SCP-966"
 english.ROLE_SCP0762 = "SCP-076-2"
+english.ROLE_SCP939 = "SCP-939"
+english.ROLE_SCP999 = "SCP-999"
+english.ROLE_SCP1048B = "SCP-1048-B"
 ---End of link2006
 english.ROLE_SCP173 = "SCP-173"
 english.ROLE_SCP106 = "SCP-106"

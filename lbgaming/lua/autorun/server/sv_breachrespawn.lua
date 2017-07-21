@@ -409,16 +409,33 @@ hook.Add( "PlayerSay", "Link2006_SpecSpawn", function( ply, text)
 								plySpawn:SetSCP0762()
 								--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as SCP-106",plySpawn) --Tell everyone an admin respawned a player as what
 								Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as SCP-076-2")
+							elseif string.lower(spec_chatArgs[3]) == "scp-939" then
+								plySpawn:SetSCP939()
+								--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as SCP-106",plySpawn) --Tell everyone an admin respawned a player as what
+								Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as SCP-939")
+							elseif string.lower(spec_chatArgs[3]) == "scp-999" then
+								plySpawn:SetSCP999()
+								--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as SCP-106",plySpawn) --Tell everyone an admin respawned a player as what
+								Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as SCP-999")
+							elseif string.lower(spec_chatArgs[3]) == "scp-1048b" then
+								plySpawn:SetSCP1048B()
+								--ulx.fancyLogAdmin( pAdmin, "#A respawned #T as SCP-106",plySpawn) --Tell everyone an admin respawned a player as what
+								Link2006_tSayColor(ply,"respawned ",team.GetColor(plySpawn:Team()),plySpawn:Nick(),Color(255,255,255)," as SCP-1048B")
 							else
 								ULib.tsayError(ply,"Invalid class specified, Valid Choices are: ",true)
 								ULib.tsayError(ply,"classd,researcher,commander,mtf,chaos,sitedirector,ntf",true)
-								ULib.tsayError(ply,"scp-173,scp-1048a,scp-106,scp-049,scp-457,scp-008-2,scp-049-2,scp-035,scp-682,scp-966,scp-076-2",true)
+								ULib.tsayError(ply,"scp-173,scp-1048a,scp-106,scp-049,scp-457,scp-008-2",true)
+								ULib.tsayError(ply,"scp-049-2,scp-035,scp-682,scp-966,scp-076-2,scp-939",true)
+								ULib.tsayError(ply,"scp-999,scp-1048b",true)
 							end
 						end
 					else
 						ULib.tsayError(ply,"No class specified, Valid Choices are: ",true)
 						ULib.tsayError(ply,"classd,researcher,commander,mtf,chaos,sitedirector,ntf",true)
-						ULib.tsayError(ply,"scp-173,scp-1048a,scp-106,scp-049,scp-457,scp-008-2,scp-049-2,scp-035,scp-682,scp-966,scp-076-2",true)
+						ULib.tsayError(ply,"scp-173,scp-1048a,scp-106,scp-049,scp-457,scp-008-2",true)
+						ULib.tsayError(ply,"scp-049-2,scp-035,scp-682,scp-966,scp-076-2,scp-939",true)
+						ULib.tsayError(ply,"scp-999,scp-1048b",true)
+
 					end
 				else
 					if plyErr then
@@ -429,7 +446,9 @@ hook.Add( "PlayerSay", "Link2006_SpecSpawn", function( ply, text)
 				ULib.tsayError(ply,"No target specified. Use !spawn target class [force]",true)
 				ULib.tsayError(ply,"No class specified, Valid Choices are: ",true)
 				ULib.tsayError(ply,"classd,researcher,commander,mtf,chaos,sitedirector,ntf",true)
-				ULib.tsayError(ply,"scp-173,scp-1048a,scp-106,scp-049,scp-457,scp-008-2,scp-049-2,scp-035",true)
+				ULib.tsayError(ply,"scp-173,scp-1048a,scp-106,scp-049,scp-457,scp-008-2",true)
+				ULib.tsayError(ply,"scp-049-2,scp-035,scp-682,scp-966,scp-076-2,scp-939",true)
+				ULib.tsayError(ply,"scp-999,scp-1048b",true)
 			end
 			return ""
 		end
@@ -710,7 +729,7 @@ local parseeEntities = {
 	npc_scp_939b = Vector(2025.817383,-787.103455,-739.968750),
 	npc_scp_939c = Vector(1793.306763,-1728.281250,-739.968750),
 	scp_1162 = Vector(1777.695068, 881.130493, 43.745945),
-	--Name = Position 
+	--Name = Position
 }
 
 
@@ -718,21 +737,21 @@ print("[BreachRespawn] Creating hook to respawn entity ...")
 hook.Add('PostCleanupMap','ParseeEntSpawner',function()
 	timer.Remove("ParseeEntSpawnTimer")
 	timer.Create("ParseeEntSpawnTimer",4,1,function()
-		--Create entities here. 
-		for kClass,vPos in pairs(parseeEntities) do 
+		--Create entities here.
+		for kClass,vPos in pairs(parseeEntities) do
 		print("[BreachRespawn] Spawning "..kClass.. " @ "..tostring(vPos).."...")
 			local vEnt = ents.Create(kClass)
-			if not IsValid(vEnt) then 
-				print("[BreachRespawn] Failed to spawn "..kClass) 
+			if not IsValid(vEnt) then
+				print("[BreachRespawn] Failed to spawn "..kClass)
 			else
-				if kClass == "scp_012" then 
+				if kClass == "scp_012" then
 					vEnt:SetAngles(Angle(0,-90,0))
-				end	
+				end
 				vEnt:SetPos(vPos)
 				vEnt:Spawn()
 			end
-		end 
+		end
 	end)
-	
+
 end)
 print("[BreachRespawn] Ready.")

@@ -43,6 +43,9 @@ function GetLangRole(rl)
 	if rl == ROLE_SCP682 then return clang.ROLE_SCP682 end
 	if rl == ROLE_SCP966 then return clang.ROLE_SCP966 end
 	if rl == ROLE_SCP0762 then return clang.ROLE_SCP0762 end
+	if rl == ROLE_SCP939 then return clang.ROLE_SCP939 end
+	if rl == ROLE_SCP999 then return clang.ROLE_SCP999 end
+	if rl == ROLE_SCP1048B then return clang.ROLE_SCP1048B end
 	if rl == ROLE_MTFGUARD then return clang.ROLE_MTFGUARD end
 	if rl == ROLE_MTFCOM then return clang.ROLE_MTFCOM end
 	if rl == ROLE_MTFNTF then return clang.ROLE_MTFNTF end
@@ -58,6 +61,9 @@ ROLE_SCP1048A = "SCP-1048A"
 ROLE_SCP682 = "SCP-682"
 ROLE_SCP966 = "SCP-966"
 ROLE_SCP0762 = "SCP-0762"
+ROLE_SCP939 = "SCP-939"
+ROLE_SCP1048B = "SCP-1048-B"
+ROLE_SCP999 = "SCP-999"
 --link2006 fix end
 ROLE_SCP173 = "SCP-173"
 ROLE_SCP106 = "SCP-106"

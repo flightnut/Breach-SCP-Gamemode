@@ -347,6 +347,9 @@ function Getrl()
 	if rl == ROLE_SCP682 then return 20 end
 	if rl == ROLE_SCP966 then return 21 end
 	if rl == ROLE_SCP0762 then return 22 end
+	if rl == ROLE_SCP939 then return 23 end
+	if rl == ROLE_SCP999 then return 24 end 
+	if rl == ROLE_SCP1048B then return 25 end
 	if rl == ROLE_MTFGUARD then
 		if roundtype == "Trouble in SCP Town" then
 			return 5

@@ -104,7 +104,18 @@ SPCS = {
 	func = function(pl)
 		pl:SetSCP0762()
 	end},
-
+	{name = "SCP 939",
+	func = function(pl)
+		pl:SetSCP939()
+	end},
+	{name = "SCP 999",
+	func = function(pl)
+		pl:SetSCP999()
+	end},
+	{name = "SCP 1048B",
+	func = function(pl)
+		pl:SetSCP1048B()
+	end},
 }
 
 /*

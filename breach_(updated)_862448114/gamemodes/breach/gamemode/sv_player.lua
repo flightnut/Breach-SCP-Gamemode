@@ -1,3 +1,11 @@
+hook.Add("PlayerSpawn","VJBaseNoTargetSCPS_OrSpecs",function(ply)
+	if ply:Team() ~= TEAM_SCP and ply:Team() ~= TEAM_SPEC then
+		ply.VJ_NoTarget = false
+	else
+		ply.VJ_NoTarget = true
+	end
+end)
+
 function SetTurnMeBack(ply,rl,plyTeam)
 	--Original code: self.TurnMeBack = function() self:SetClassD() end
 	--This part resets variable JUST IN CASE OK thx
@@ -8,12 +16,6 @@ function SetTurnMeBack(ply,rl,plyTeam)
 		if ply.BaseStats.model then
 			ply.OrigModel = ply.BaseStats.model --Model that the player got in their basestats (which is for when they have MTF vest
 		end
-	end
-	
-	if ply:Team() ~= TEAM_SCP and ply:Team() ~= TEAM_SPEC then
-		ply.VJ_NoTarget = false
-	else
-		ply.VJ_NoTarget = true
 	end
 
 	ply.OrigModel_Fallback = ply:GetModel() -- Just in case ;)
@@ -337,10 +339,10 @@ function mply:SetCommander()
 	--self:GetWeapon("mwr_mp5sd"):SetClip1(30) --Br0ken!
 	self:Give("keycard_level4")
 	self:Give("item_medkit")
-	self:Give("weapon_stunstick")	
+	self:Give("weapon_stunstick")
 	self:Give("item_radio")
 	self:Give("weapon_shove")
-	self:SelectWeapon("mwr_mp5sd")	
+	self:SelectWeapon("mwr_mp5sd")
 	end
 	end)
 	self:Give("nightvision")
@@ -1137,6 +1139,111 @@ function mply:SetSCP0762()
 	net.Send(self)
 	--Link2006's speed fix
 	self:SetCanWalk(true)
+end
+
+function mply:SetSCP939()
+	self.handsmodel = nil
+	self:UnSpectate()
+	self:GodDisable()
+	self:Spawn()
+	self:SetPos(SPAWN_939)
+	self:StripWeapons()
+	self:RemoveAllAmmo()
+	self:SetTeam(TEAM_SCP)
+	self:SetNClass(ROLE_SCP939)
+	self:SetModel("models/scp939/SCP_939_animated_pm_and_npc010.mdl")
+	self:SetHealth(1750)
+	self:SetMaxHealth(1750)
+	self:SetArmor(0)
+	self:SetWalkSpeed(220)
+	self:SetRunSpeed(220)
+	self:SetMaxSpeed(220)
+	self:SetJumpPower(200)
+	self:SetNoDraw(false)
+	self.Active = true
+	self.canblink = false
+	self:AllowFlashlight( false )
+	self.WasTeam = TEAM_SCP
+	self:SetNoTarget( true )
+	self:SetupHands()
+	self:Give("weapon_scp_939")
+	self:SelectWeapon("weapon_scp_939")
+	self.BaseStats = nil
+	self.UsingArmor = nil
+	self:SetNoCollideWithTeammates(false)
+	--Set player's model to scale
+	self:SetModelScale(1.0,0)
+	--ForceShow the objectives for the current player. (Link2006)
+	net.Start("RolesSelected")
+	net.Send(self)
+	--Link2006's speed fix
+	self:SetCanWalk(true)
+end
+
+function mply:SetSCP999()
+	self:Flashlight( false )
+	self.handsmodel = nil
+	self:UnSpectate()
+	self:GodDisable()
+	self:Spawn()
+	self:SetPos(SPAWN_999)
+	self:StripWeapons()
+	self:RemoveAllAmmo()
+	self:SetTeam(TEAM_SCP)
+	self:SetNClass(ROLE_SCP999)
+	self:SetModel("models/scp_9992/SCP_9992_animated_pm.mdl")
+	self:SetHealth(3575)
+	self:SetMaxHealth(3575)
+	self:SetArmor(0)
+	self:SetWalkSpeed(150)
+	self:SetRunSpeed(150)
+	self:SetMaxSpeed(500)
+	self:SetJumpPower(200)
+	self:SetNoDraw(false)
+	self.Active = true
+	self:SetupHands()
+	self.canblink = false
+	self.noragdoll = false
+	self:AllowFlashlight( false )
+	self.WasTeam = TEAM_SCP
+	self:SetNoTarget( true )
+	self:Give("weapon_scp_999")
+	self:SelectWeapon("weapon_scp_999")
+	self.BaseStats = nil
+	self.UsingArmor = nil
+end
+
+function mply:SetSCP1048B()
+	self:Flashlight( false )
+	self.handsmodel = nil--"models/player/teddy_bear/c_arms/teddy_bear.mdl"
+	self:UnSpectate()
+	self:GodDisable()
+	self:Spawn()
+	self:SetPos(SPAWN_173 + Vector(0, -30, 0))
+	self:StripWeapons()
+	self:RemoveAllAmmo()
+	self:SetTeam(TEAM_SCP)
+	self:SetNClass(ROLE_SCP1048B)
+	self:SetModel("models/player/teddy_bear/teddy_bear.mdl")
+	self:SetHealth(1900)
+	self:SetMaxHealth(1900)
+	self:SetArmor(0)
+	self:SetWalkSpeed(180)
+	self:SetRunSpeed(180)
+	self:SetMaxSpeed(180)
+	self:SetJumpPower(200)
+	self:SetNoDraw(false)
+	self.Active = true
+	self:SetupHands()
+	self.canblink = false
+	self.noragdoll = false
+	self:AllowFlashlight( false )
+	self.WasTeam = TEAM_SCP
+	self:SetNoTarget( true )
+	self:Give("weapon_scp_1048b")
+	self:SelectWeapon("weapon_scp_1048b")
+	self.BaseStats = nil
+	self.UsingArmor = nil
 end
 
 function mply:SetClassD()

@@ -335,6 +335,12 @@ function GM:PlayerCanPickupWeapon( ply, wep )
 			return wep:GetClass() == "weapon_scp_966"
 		elseif ply:GetNClass() == ROLE_SCP0762 then
 			return wep:GetClass() == "tfa_l4d2_kfkat"
+		elseif ply:GetNClass() == ROLE_SCP939 then
+			return wep:GetClass() == "weapon_scp_939"
+		elseif ply:GetNClass() == ROLE_SCP999 then
+			return wep:GetClass() == "weapon_scp_999"
+		elseif ply:GetNClass() == ROLE_SCP1048B then
+			return wep:GetClass() == "weapon_scp_1048b"
 		else
 			return false
 		end
@@ -374,6 +380,22 @@ function GM:PlayerCanPickupWeapon( ply, wep )
 			return false
 		end
 	end
+	if ply:GetNClass() != ROLE_SCP939 then
+		if wep:GetClass() == "weapon_scp_939" then
+			return false
+		end
+	end
+	if ply:GetNClass() != ROLE_SCP999 then
+		if wep:GetClass() == "weapon_scp_999" then
+			return false
+		end
+	end
+	if ply:GetNClass() != ROLE_SCP1048B then
+		if wep:GetClass() == "weapon_scp_1048b" then
+			return false
+		end
+	end
+	
 	if ply:Team() != TEAM_SPEC then
 		if wep.teams then
 			local canuse = false
