@@ -70,6 +70,7 @@ function SWEP:RenderLight()
 		end
 	end
 end
+
 function SWEP:Think()
 	if CLIENT then self:RenderLight() end
 end

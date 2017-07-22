@@ -55,13 +55,42 @@ function SWEP:Deploy()
 	end
 end
 
+function SWEP:RenderLight()
+	if self.toggleLight ~= true then return end --If Not true, return.
+	if CLIENT then
+		if IsValid(scp_nightVision) == false then
+			scp_nightVision = DynamicLight( self.Owner:EntIndex() ) --Do not take 0, Used for NV. This should be
+		end
+		if ( scp_nightVision ) then --Welp. :|
+			scp_nightVision.Pos = self.Owner:GetPos()
+			scp_nightVision.r = 128
+			scp_nightVision.g = 128
+			scp_nightVision.b = 128
+			scp_nightVision.Brightness = 0.85
+			scp_nightVision.Size = 900
+			scp_nightVision.DieTime = CurTime()+0.25 --Don't let it stay please.
+			scp_nightVision.Style = 0 -- https://developer.valvesoftware.com/wiki/Light_dynamic#Appearances
+		end
+	end
+end
+
 function SWEP:Holster()
 	return true;
 end
 
 function SWEP:Think()
-	if postround then return end
-	--
+	if CLIENT then self:RenderLight() end
+end
+
+scp_toggleLight_cooldown = 0
+function SWEP:Reload()
+	if scp_toggleLight_cooldown >= CurTime() then return end
+	if self.toggleLight then
+		self.toggleLight = false
+	else
+		self.toggleLight = true
+	end
+	scp_toggleLight_cooldown = CurTime() + 2
 end
 
 SWEP.NextPrimary = 0
@@ -95,7 +124,12 @@ function SWEP:PrimaryAttack()
 			end
 		else
 			if ent:GetClass() == "func_breakable" then
-				ent:TakeDamage(100, self.Owner, self.Owner)
+				ent:TakeDamage( 100, self.Owner, self.Owner )
+			elseif ent:GetClass() == 'prop_dynamic' then
+				if string.lower(ent:GetModel()) == 'models/foundation/containment/door01.mdl' then
+					ent:TakeDamage( math.Round(math.random(12,20)), self.Owner, self.Owner )
+					ent:EmitSound(Sound('MetalGrate.BulletImpact'))
+				end
 			end
 		end
 	end
@@ -160,10 +194,35 @@ function SWEP:DrawHUD()
 	
 	draw.Text( {
 		text = showtext2,
-		pos = { ScrW() / 2, ScrH() - 60 },
+		pos = { ScrW() / 2, ScrH() - 50 },
 		font = "173font",
 		color = showcolor2,
 		xalign = TEXT_ALIGN_CENTER,
 		yalign = TEXT_ALIGN_CENTER,
 	})
+	
+	local NvKey = input.LookupBinding('+reload') --Get key for reload
+	if type(NvKey) == 'no value' then NvKey = 'NOT BOUND' end -- The key is not bound!
+
+	draw.Text( {
+		text = "Press "..NvKey.." for nightvision",
+		pos = { ScrW() / 2, ScrH() - 70 },
+		font = "173font",
+		color = showcolor,
+		xalign = TEXT_ALIGN_CENTER,
+		yalign = TEXT_ALIGN_CENTER,
+	})
+	
+	local x = ScrW() / 2.0
+	local y = ScrH() / 2.0
+
+	local scale = 0.3
+	surface.SetDrawColor( self.CColor.r, self.CColor.g, self.CColor.b, 255 )
+
+	local gap = 5
+	local length = gap + 20 * scale
+	surface.DrawLine( x - length, y, x - gap, y )
+	surface.DrawLine( x + length, y, x + gap, y )
+	surface.DrawLine( x, y - length, x, y - gap )
+	surface.DrawLine( x, y + length, x, y + gap )
 end
