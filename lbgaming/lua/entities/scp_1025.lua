@@ -1,4 +1,4 @@
-AddCSLuaFile()AddCSLuaFile()
+AddCSLuaFile()
 
 DEFINE_BASECLASS("base_anim")
 
@@ -56,6 +56,7 @@ function ENT:Use(activator, ply)
 				ply:SetNWBool("MuscularMutation", false)
 				ply:SetNWBool("RegenerativeTrait", false)
 				ply:SetNWBool("PinkEye", false)
+				ply:SetNWBool("fingerCallus1", false)
 				timer.Remove(ply:SteamID64().."pinkTime")
 			
 			end
@@ -157,8 +158,8 @@ function ENT:Use(activator, ply)
 						else
 
 							ply:PrintMessage(4, "You need to catch your breath")
-							ply:SetRunSpeed(0)
-							ply:SetWalkSpeed(0)
+							ply:SetRunSpeed(1)
+							ply:SetWalkSpeed(1)
 							timer.Create(ply:SteamID64().."AsthmaB", 1, 0, function()
 
 								if (not ply:Alive()) or (ply:Team() == TEAM_SPEC) or (ply:Team() == TEAM_SCP) or preparing or postround then
@@ -278,7 +279,7 @@ function ENT:Use(activator, ply)
 
 		if ((number == 9) and (ply:GetNWInt("canBeInfected", 0) == 1)) then
 
-			timer.Simple(4, function() ply:PrintMessage(4, "Your fingers form a fleshy shell") end)
+			timer.Simple(4, function() ply:PrintMessage(4, "Your fingers form a fleshy shell") ply:SetNWBool("fingerCallus1", true) end)
 
 		end
 
@@ -324,3 +325,18 @@ function ENT:Use(activator, ply)
 	end
 
 end
+
+hook.Add("KeyPress", "FingerCallusFix", function(ply, key)
+
+	if ((key == IN_ATTACK) and (ply:GetNWBool("fingerCallus1", false) == true)) then
+
+		local trace = ply:GetEyeTrace()
+		if ((trace.Hit) and (trace.Entity:IsPlayer() == false) and (trace.Entity:IsValid())) then
+
+			trace.Entity:TakeDamage(100, ply, ply)
+
+		end
+
+	end
+
+end)
