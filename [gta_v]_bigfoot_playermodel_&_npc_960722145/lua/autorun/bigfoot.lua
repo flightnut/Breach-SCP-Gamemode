@@ -1,4 +1,3 @@
-AddCSLuaFile()
 player_manager.AddValidModel( "Bigfoot",                     "models/winningrook/gtav/bigfoot/bigfoot.mdl" )
 list.Set( "PlayerOptionsModel",  "Bigfoot",                     "models/winningrook/gtav/bigfoot/bigfoot.mdl" ) 
 
